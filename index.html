@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#743f2b">
+<title>東海道川崎宿 クイズラリー</title>
+<style>
+:root{--brown:#743f2b;--cream:#faf5ec;--ink:#2f2925;--green:#356b45;--muted:#70665f;--line:#e8ddd1}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif;line-height:1.7}
+header{padding:34px 18px 28px;background:var(--brown);color:white;text-align:center}
+.eyebrow{font-size:12px;letter-spacing:.18em;opacity:.85}
+h1{font-size:clamp(25px,6vw,36px);line-height:1.35;margin:8px 0}
+header p{margin:8px 0 0;font-size:14px}
+main{width:min(760px,100%);margin:auto;padding:16px}
+.panel,.spot{background:white;border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0;box-shadow:0 4px 16px #43271908}
+h2{font-size:20px;margin:0 0 8px}
+.muted{color:var(--muted);font-size:13px}
+.progressline{display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:14px}
+.track{height:9px;background:#eee5dc;border-radius:99px;overflow:hidden;margin:8px 0 16px}
+#progressBar{height:100%;width:0;background:var(--green);transition:width .25s}
+button,input{font:inherit;width:100%;border-radius:10px;padding:12px 14px;margin-top:8px}
+button{border:0;background:var(--brown);color:white;font-weight:700;cursor:pointer}
+button:disabled{opacity:.55;cursor:wait}
+.spot-head{display:flex;gap:12px;align-items:flex-start}
+.number{flex:0 0 38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#f0e4d9;color:var(--brown);font-weight:800}
+.spot h3{font-size:18px;margin:0}
+.address{font-size:13px;color:var(--muted);margin:4px 0 12px}
+.status{font-size:14px;font-weight:700;margin:10px 0}
+.status.good{color:var(--green)}
+.question{border-top:1px solid var(--line);margin-top:14px;padding-top:12px}
+.question p{margin:7px 0}
+input{border:1px solid #cfc2b7;background:white}
+input:focus,button:focus-visible{outline:3px solid #d9a77c;outline-offset:2px}
+.result{font-size:14px;font-weight:650;min-height:1.5em}
+.hidden{display:none!important}
+footer{text-align:center;padding:20px;font-size:12px;color:var(--muted)}
+.notice{background:#fff4d9;border:1px solid #ead5a3;border-radius:12px;padding:12px;font-size:13px}
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">HISTORICAL WALKING QUIZ</div>
+  <h1>東海道川崎宿<br>クイズラリー</h1>
+  <p>まちを歩いて、川崎宿の歴史を発見しよう。</p>
+</header>
+<main>
+  <section class="panel">
+    <h2>クイズラリーに挑戦</h2>
+    <p>各スポットの近くで現在地を確認して、クイズに答えましょう。</p>
+    <div class="progressline"><span>クリア状況</span><strong id="progressText">0 / 6 スポット</strong></div>
+    <div class="track"><div id="progressBar"></div></div>
+    <button id="gpsButton">現在地を確認する</button>
+    <p id="gpsStatus" class="muted" aria-live="polite">位置情報を使うには、ブラウザで許可してください。</p>
+    <div class="notice">GPS判定は通常の位置情報チェックです。端末の設定や周囲の建物により、位置に誤差が出ることがあります。</div>
+  </section>
+  <div id="spots"></div>
+  <section id="complete" class="panel hidden">
+    <h2>🎉 コンプリート！</h2>
+    <p>東海道川崎宿のクイズラリーをすべてクリアしました。</p>
+    <p>ご参加ありがとうございました！</p>
+  </section>
+  <section id="prizeEntry" class="panel hidden">
+    <h2>🎁 景品交換のご案内</h2>
+    <p>3問以上のクイズに正解しました！景品交換ページへ進めます。</p>
+    <button id="prizeButton">景品交換ページへ進む</button>
+  </section>
+  <p class="muted">試作版：座標・一部の正解は公開前に現地で確認してください。</p>
+</main>
+<footer>東海道川崎宿 クイズラリー</footer>
+<script>
+/*
+公開前に必ず確認してください：
+・lat / lng は現地で測った対象物の座標に差し替える
+・②宗三寺の正解を現地で確認して設定する
+・GPS判定はブラウザ側の簡易判定であり、不正対策として完全ではない
+*/
+const spots = [
+  {
+    id:1, name:"坂本九さんの記念碑",
+    address:"〒210-0007 神奈川県川崎市川崎区駅前本町（JR川崎駅東口駅広場）",
+    lat:35.5308, lng:139.6975, radius:80,
+    question:"JR東海道線の駅メロにもなっている坂本九さんの歌は何でしょう？",
+    answers:["上を向いて歩こう"],
+    hint:"ヒント：坂本九さんの代表曲です。"
+  },
+  {
+    id:2, name:"宗三寺",
+    address:"〒210-0006 神奈川県川崎市川崎区砂子1丁目4-3",
+    lat:35.5315, lng:139.7000, radius:80,
+    question:"敷地内にある、みんなの安全を祈るお地蔵さんは、どの方向を向いているでしょう？",
+    answers:[],
+    hint:"現地でお地蔵さんの向きを確認しましょう。"
+  },
+  {
+    id:3, name:"一行寺",
+    address:"〒210-0001 神奈川県川崎市川崎区本町1丁目1-5",
+    lat:35.5310, lng:139.6990, radius:80,
+    question:"東海道沿道の老舗和菓子店「東照」で再現されている、川崎の名物料理は何でしょう？",
+    answers:["奈良茶飯"],
+    hint:"ヒント：江戸時代の川崎宿で旅人に親しまれた料理です。"
+  },
+  {
+    id:4, name:"東海道かわさき宿交流館",
+    address:"〒210-0001 神奈川県川崎市川崎区本町1丁目8-4",
+    lat:35.5310, lng:139.7000, radius:80,
+    question:"東海道かわさき宿交流館の公認キャラクターの名前は何でしょう？",
+    answers:["飛脚の六さん"],
+    hint:"ヒント：飛脚の姿をしたキャラクターです。"
+  },
+  {
+    id:5, name:"妙遠寺・泉田二君功徳碑",
+    address:"〒210-0012 神奈川県川崎市川崎区宮前町6-5",
+    lat:35.5265, lng:139.7030, radius:80,
+    question:"小泉次大夫が完成に尽力した、川崎を通る用水の名称は何でしょう？",
+    answers:["二ヶ領用水","二ケ領用水"],
+    hint:"ヒント：稲毛・川崎の領域に関係する用水です。"
+  },
+  {
+    id:6, name:"佐藤惣之助の生誕地",
+    address:"〒210-0006 神奈川県川崎市川崎区砂子2丁目11付近",
+    lat:35.5290, lng:139.7000, radius:80,
+    question:"佐藤惣之助が作詞した、阪神タイガースの応援歌は何でしょう？",
+    answers:["六甲おろし","阪神タイガースの歌"],
+    hint:"ヒント：六甲山から吹き下ろす風の名前です。"
+  }
+];
+
+let currentPosition = null;
+let completed = readProgress();
+function readProgress(){
+  try {
+    const value = JSON.parse(localStorage.getItem("kawasakiQuizCompleted") || "[]");
+    return Array.isArray(value) ? value.filter(id => spots.some(s => s.id === id)) : [];
+  } catch(e){ return []; }
+}
+function saveProgress(){
+  try { localStorage.setItem("kawasakiQuizCompleted", JSON.stringify(completed)); }
+  catch(e){ console.warn("進捗を保存できませんでした", e); }
+}
+function normalize(s){ return s.trim().replace(/\s+/g,"").toLowerCase(); }
+function distanceMeters(lat1,lng1,lat2,lng2){
+  const rad = d => d * Math.PI / 180;
+  const dLat=rad(lat2-lat1), dLng=rad(lng2-lng1);
+  const a=Math.sin(dLat/2)**2 + Math.cos(rad(lat1))*Math.cos(rad(lat2))*Math.sin(dLng/2)**2;
+  return 6371000 * 2 * Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+function make(tag, className, text){
+  const el=document.createElement(tag);
+  if(className) el.className=className;
+  if(text !== undefined) el.textContent=text;
+  return el;
+}
+function render(){
+  const container=document.getElementById("spots");
+  container.replaceChildren();
+  spots.forEach(spot=>{
+    const done=completed.includes(spot.id);
+    const distance=currentPosition ? Math.round(distanceMeters(
+      currentPosition.latitude,currentPosition.longitude,spot.lat,spot.lng
+    )) : null;
+    const nearby=distance!==null && distance<=spot.radius;
+    const card=make("section","spot");
+    const head=make("div","spot-head");
+    head.append(make("div","number",String(spot.id)));
+    const titleWrap=make("div","");
+    titleWrap.append(make("h3","",spot.name));
+    titleWrap.append(make("div","address",spot.address));
+    head.append(titleWrap); card.append(head);
+
+    const status=make("p","status");
+    if(done){status.textContent="✓ クリア済み";status.classList.add("good");}
+    else if(nearby){status.textContent=`📍 対象エリア内（約${distance}m）`;status.classList.add("good");}
+    else if(distance!==null){status.textContent=`対象エリア外（約${distance}m）`;}
+    else {status.textContent="現在地を確認してください";}
+    card.append(status);
+
+    if(done){
+      card.append(make("p","muted","このスポットはクリア済みです。"));
+    }else if(nearby){
+      const q=make("div","question");
+      q.append(make("p","",spot.question));
+      q.append(make("p","muted",spot.hint));
+      const input=make("input","");
+      input.placeholder="回答を入力してください";
+      input.setAttribute("aria-label",spot.name+"の回答");
+      input.autocomplete="off";
+      q.append(input);
+      const result=make("p","result","");
+      result.setAttribute("aria-live","polite");
+      q.append(result);
+      const submit=make("button","","回答する");
+      submit.addEventListener("click",()=>{
+        if(!spot.answers.length){
+          result.textContent="このクイズの正解は未設定です。主催者が正解を設定するまで回答できません。";
+          return;
+        }
+        if(!navigator.geolocation){
+          result.textContent="このブラウザでは位置情報を利用できません。";
+          return;
+        }
+        submit.disabled=true; result.textContent="現在地を再確認しています…";
+        navigator.geolocation.getCurrentPosition(pos=>{
+          const d=distanceMeters(pos.coords.latitude,pos.coords.longitude,spot.lat,spot.lng);
+          currentPosition=pos.coords;
+          if(d>spot.radius){
+            result.textContent="対象エリア外です。現地で再度お試しください。";
+            submit.disabled=false; render(); return;
+          }
+          if(spot.answers.some(a=>normalize(a)===normalize(input.value))){
+            if(!completed.includes(spot.id)) completed.push(spot.id);
+            saveProgress(); render();
+          }else{
+            result.textContent="不正解です。ヒントを見てもう一度挑戦しましょう。";
+            submit.disabled=false;
+          }
+        },()=>{
+          result.textContent="現在地を確認できません。位置情報の許可と端末の設定を確認してください。";
+          submit.disabled=false;
+        },{enableHighAccuracy:true,timeout:15000,maximumAge:0});
+      });
+      q.append(submit); card.append(q);
+    }else{
+      card.append(make("p","muted","この場所の近くに着いたら、上の「現在地を確認する」を押してください。"));
+    }
+    container.append(card);
+  });
+  document.getElementById("progressText").textContent=`${completed.length} / ${spots.length} スポット`;
+  document.getElementById("progressBar").style.width=`${completed.length/spots.length*100}%`;
+  document.getElementById("complete").classList.toggle("hidden",completed.length!==spots.length);
+  document.getElementById("prizeEntry").classList.toggle("hidden",completed.length<3);
+}
+document.getElementById("gpsButton").addEventListener("click",()=>{
+  const button=document.getElementById("gpsButton");
+  const status=document.getElementById("gpsStatus");
+  if(!navigator.geolocation){status.textContent="このブラウザは位置情報に対応していません。";return;}
+  button.disabled=true;status.textContent="現在地を確認しています…";
+  navigator.geolocation.getCurrentPosition(pos=>{
+    currentPosition=pos.coords;
+    status.textContent=`位置情報を取得しました（精度：約${Math.round(pos.coords.accuracy)}m）。`;
+    button.disabled=false;render();
+  },err=>{
+    const messages={
+      1:"位置情報が許可されていません。ブラウザのサイト設定から位置情報を許可してください。",
+      2:"現在地を取得できません。端末の位置情報設定を確認してください。",
+      3:"位置情報の取得がタイムアウトしました。屋外でもう一度お試しください。"
+    };
+    status.textContent=messages[err.code]||"位置情報を取得できません。HTTPS接続と端末の設定を確認してください。";
+    button.disabled=false;
+  },{enableHighAccuracy:true,timeout:15000,maximumAge:0});
+});
+document.getElementById("prizeButton").addEventListener("click",()=>{
+  window.location.href="prize.html";
+});
+render();
+</script>
+</body>
+</html>
