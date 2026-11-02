@@ -9,7 +9,7 @@ function weighted(rng,weights){let total=weights.reduce((a,b)=>a+b,0),v=rng()*to
 function unique(rng,a,n){return shuffle(rng,a).slice(0,n)}
 function makeBoard(rng){let types=[...Array(10).fill('evidence'),...Array(20).fill('event'),...Array(10).fill('scene'),...Array(10).fill('interview'),...Array(30).fill('coin'),...Array(10).fill('card'),...Array(60).fill('normal')];
 // Reserve 2 or 3 of scene/interview in each zone.
-let board=Array.from({length:150},(_,i)=>({id:i,zone:ZONES[Math.floor(i/37.5)],type:'normal'}));
+let board=Array.from({length:150},(_,i)=>({id:i,zone:(()=>{let row=Math.floor(i/15),col=row%2?14-i%15:i%15;return row<5?(col<8?'住宅街':'商店街'):(col<8?'裏山':'中心街')})(),type:'normal'}));
 const allocations=[3,2,3,2];let used=new Set();
 for(const type of ['scene','interview'])for(let z=0;z<4;z++){let slots=shuffle(rng,board.filter(t=>t.zone===ZONES[z]&&!used.has(t.id))).slice(0,allocations[z]);for(let s of slots){s.type=type;used.add(s.id)}}
 let rest=shuffle(rng,board.filter(t=>!used.has(t.id)));let needs={evidence:10,event:20,coin:30,card:10};let idx=0;for(let [type,count]of Object.entries(needs))for(let i=0;i<count;i++)rest[idx++].type=type;
@@ -28,7 +28,14 @@ function say(g,s){g.log.unshift(s);if(g.log.length>70)g.log.length=70}
 const current=g=>g.players[g.order[g.turn]];
 function roll(g){if(g.phase!=='roll')throw Error('not roll phase');g.roll=1+rand(g.rng,6);g.phase='choice';say(g,`${current(g).name}の出目は${g.roll}`);return g.roll}
 function endTurn(g){let p=current(g);p.actions++;if(p.actions%5===0){}g.turn=(g.turn+1)%4;g.roll=null;g.phase='roll';if(g.turn===0){g.round++;if(g.round%5===0){startInference(g,'all');return}}let next=current(g);if(next.skip>0){next.skip--;say(g,`${next.name}は1回休み`);endTurn(g)}}
-function move(g){if(g.phase!=='choice')throw Error('cannot move');let p=current(g);p.pos=(p.pos+g.roll)%150;p.cycleDistance+=g.roll;say(g,`${p.name}は${g.roll}マス進み、${g.board[p.pos].zone}へ`);g.phase='tile';resolveTile(g,p,g.board[p.pos])}
+// Grid board: 15 columns x 10 rows, serpentine IDs for backwards compatibility.
+const GRID_W=15,GRID_H=10;
+function gridCoord(id){let row=Math.floor(id/GRID_W),off=id%GRID_W;return {x:row%2?GRID_W-1-off:off,y:row}}
+function gridId(x,y){if(x<0||x>=GRID_W||y<0||y>=GRID_H)return -1;return y*GRID_W+(y%2?GRID_W-1-x:x)}
+function neighbors(id){let {x,y}=gridCoord(id);return [[x-1,y],[x+1,y],[x,y-1],[x,y+1]].map(([a,b])=>gridId(a,b)).filter(v=>v>=0)}
+function reachable(origin,steps){let seen=new Set([origin]),front=new Set([origin]);for(let n=0;n<steps;n++){let next=new Set();for(let id of front)for(let other of neighbors(id))next.add(other);front=next;for(let id of front)seen.add(id)}return [...front].sort((a,b)=>a-b)}
+function shortestDistance(a,b){let p=gridCoord(a),q=gridCoord(b);return Math.abs(p.x-q.x)+Math.abs(p.y-q.y)}
+function move(g,destination){if(g.phase!=='choice')throw Error('cannot move');let p=current(g);let to=destination===undefined?reachable(p.pos,g.roll)[rand(g.rng,reachable(p.pos,g.roll).length)]:Number(destination);if(!Number.isInteger(to)||!reachable(p.pos,g.roll).includes(to))throw Error('出目の歩数で到達できないマスです');p.pos=to;p.cycleDistance+=g.roll;say(g,`${p.name}は${g.roll}マス進み、${g.board[p.pos].zone}へ`);g.phase='tile';resolveTile(g,p,g.board[p.pos])}
 function grantCard(g,p,name){p.cards.push(name);say(g,`${p.name}は「${name}」を入手`)}
 function randomCard(g){return CARDS[weighted(g.rng,CARDS.map(c=>c.weight))].name}
 function revealScene(g,p,zone){let yes=g.solution.zone===zone;p.notes.zones[zone]=yes;say(g,`${p.name}：${zone}は${yes?'殺人現場':'殺人現場ではない'}`);if(yes&&Object.values(p.notes.zones).includes(true)){let t=p.cards.includes('鑑識')||g.rng()<.5?g.solution.time:pick(g.rng,TIMES.filter(x=>x!==g.solution.time));p.notes.times[t]=p.cards.includes('鑑識')?'確定':'未確認';say(g,`${p.name}が死亡時刻「${t}」の情報を得た（${p.cards.includes('鑑識')?'確定':'真偽不明'}）`)}}
@@ -44,5 +51,5 @@ function infer(g,answer){if(g.phase!=='inference')throw Error('not inference');l
 function botAction(g){if(g.phase==='finished')return;if(g.phase==='inference'){let p=g.players[g.inference.queue[g.inference.index]];if(!p.bot)return;let traits=p.notes.traits,candidates=SUSPECTS.filter(s=>!p.notes.excludedSuspects.includes(s)&&traits.every(t=>g.traitSets[SUSPECTS.indexOf(s)].includes(t)));let ans={evidence:pick(g.rng,p.evidence.length?p.evidence:EVIDENCE),zone:ZONES.find(z=>p.notes.zones[z]===true)||pick(g.rng,ZONES),motive:p.notes.motive||pick(g.rng,MOTIVES),time:Object.keys(p.notes.times).find(t=>p.notes.times[t]==='確定')||pick(g.rng,TIMES.filter(t=>p.notes.times[t]!=='除外')),suspect:p.notes.knownSuspect||pick(g.rng,candidates.length?candidates:SUSPECTS)};infer(g,ans);return}
 let p=current(g);if(!p.bot)return;if(g.phase==='roll'){roll(g);return}if(g.phase==='choice'){if(p.cards.includes('監視カメラ確認')&&g.roll>=2&&g.rng()<.35)useCard(g,'監視カメラ確認');else if(p.cards.includes('辻褄')&&g.roll>=2&&g.rng()<.35)useCard(g,'辻褄');else if(p.cards.includes('情報提供')&&g.roll>=2&&g.rng()<.35)useCard(g,'情報提供');else if(p.cards.includes('宝くじ')&&g.roll>=1&&g.rng()<.3)useCard(g,'宝くじ');else if(p.cards.includes('閃く')&&g.roll>=5&&p.evidence.includes(g.solution.evidence)&&g.board[p.pos].zone===g.solution.zone)useCard(g,'閃く');else move(g);return}if(g.phase==='shop'){let t=g.board[p.pos],items=t.stock.filter(n=>p.coins>=(CARDS.find(c=>c.name===n)?.price||g.prices[n]));if(t.type==='evidence')items.sort((a,b)=>(p.evidence.includes(a)?1:0)-(p.evidence.includes(b)?1:0));if(items.length&&g.rng()<.8)shop(g,items[0]);else skipShop(g);return}if(g.phase==='interview-choice')interviewChoice(g,p.notes.motive?'trait':'motive')}
 function publicState(g){return {...g,solution:undefined,rng:undefined,players:g.players.map(p=>({...p,notes:p.notes})),log:g.log.slice()}}
-return {EVIDENCE,ZONES,MOTIVES,TIMES,SUSPECTS,TRAITS,CARDS,newGame,current,roll,move,shop,skipShop,useCard,interviewChoice,infer,botAction,publicState,makeBoard};
+return {EVIDENCE,ZONES,MOTIVES,TIMES,SUSPECTS,TRAITS,CARDS,newGame,current,roll,move,shop,skipShop,useCard,interviewChoice,infer,botAction,publicState,makeBoard,gridCoord,gridId,neighbors,reachable,shortestDistance};
 });
