@@ -25,20 +25,67 @@ select{background:white;color:#263e52;border-color:#acc9d1}
 #privacyGate .gateCard{background:#fffdf5;border:5px solid #ffcb73;border-radius:25px;max-width:480px;width:100%;padding:30px;text-align:center;box-shadow:0 15px 60px #10253488}
 #privacyGate h2{font-size:26px}.step{display:inline-block;background:#ffebbb;padding:5px 12px;border-radius:25px;font-size:13px}
 @media(max-width:650px){.tile{min-height:18px}}
-</style></head><body><header><div><div class="muted">4人対戦・推理すごろく</div><h1>🔎 ミステリー・タウン</h1></div><div><label for="bots">BOT人数 </label><select id="bots"><option value="3">3人（1人で遊ぶ）</option><option value="2">2人（2人で遊ぶ）</option><option value="1">1人（3人で遊ぶ）</option><option value="0">0人（4人で遊ぶ）</option></select> <button onclick="start()">新しい事件を開始</button></div></header><div id="privacyGate"><div class="gateCard"><div style="font-size:58px">🕵️‍♀️</div><h2 id="gateTitle">探偵を交代してください</h2><p>前の探偵のメモは非公開です。次の探偵だけが画面を見てください。</p><button onclick="unlockTurn()">自分の番を開始する</button></div></div><main>
+
+/* Deluxe detective board-game styling */
+:root{--ink:#f5e6c6;--gold:#ffcd71}
+body{background:radial-gradient(ellipse at 50% -10%,#334e73 0,#14283e 43%,#091321 100%);color:#f5e6c6}
+header{background:linear-gradient(100deg,#14243a,#243c61,#15233a);border-bottom:3px solid #d8a456;box-shadow:0 5px 22px #0008}
+h1{color:#ffce75;text-shadow:0 2px 4px #000,0 0 18px #c07e4080;font-family:Georgia,serif}
+h2{color:#f4c776;font-family:Georgia,serif}
+.panel{background:linear-gradient(145deg,#1c304aee,#111e31f5);border:1px solid #ba935e;box-shadow:0 12px 26px #0008,inset 0 1px #ffffff20}
+.muted{color:#c4cfdb}.notes td:first-child{color:#edc985}.notes td{border-color:#43546b}
+button{border:1px solid #ffe0a3;border-radius:12px;background:linear-gradient(#ffe0a1,#d99a43);color:#2b2330;box-shadow:0 3px 0 #845422,0 4px 15px #0005;transition:transform .18s,filter .18s}
+button:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.12)}button:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 #845422}
+button.secondary{background:linear-gradient(#526b8e,#293c5a);color:#fff;border-color:#8193b4}
+.turn{background:linear-gradient(100deg,#2a405e,#1d2c45);border:1px solid #d7ad63;color:#f5e6c6}
+.suspect,.shop-item{background:#243955;color:#f5e6c6;border:1px solid #4b617e}.suspect small{color:#b9c8dc}.face{background:#344c70}
+.pill{background:#344b69;color:#fff;border:1px solid #64738c}.log div{border-color:#425674}
+select{background:#263d5a;color:white;border-color:#ac9268}.field label{color:#f4d99f}.inference{background:#433c38;border-color:#f6c778}
+.zone{min-height:260px;border:3px solid #c89b5b;border-radius:17px;box-shadow:0 6px 18px #0008,inset 0 0 24px #0004;padding:12px}
+.residential{background:linear-gradient(#142a40a0,#152638b0),url('assets/residential.svg') center/cover}
+.shopping{background:linear-gradient(#1c253b90,#382633a8),url('assets/shopping.svg') center/cover}
+.downtown{background:linear-gradient(#15263c9a,#192e4dbb),url('assets/downtown.svg') center/cover}
+.mountain{background:linear-gradient(#10283c88,#1b322baf),url('assets/mountain.svg') center/cover}
+.zone h3{background:#172a44d9;color:#ffe2a6;border:1px solid #d3a766;padding:6px 12px;border-radius:9px;text-shadow:0 2px 4px #000}
+.tiles{grid-template-columns:repeat(8,minmax(0,1fr));gap:3px}
+.tile{background:linear-gradient(140deg,#fff5db,#e9d7ad);color:#253044;border-radius:8px;border:2px solid #fff0c7;box-shadow:0 2px 0 #8b785b,0 4px 5px #0007;font-size:clamp(11px,1.2vw,18px);transition:transform .2s,box-shadow .2s}
+.tile.normal{background:linear-gradient(140deg,#f9ebcc,#d8cba9)}.tile.event{background:linear-gradient(140deg,#e7b9fa,#a77ccf)}.tile.evidence{background:linear-gradient(140deg,#c5f5e6,#64c9ad)}.tile.scene{background:linear-gradient(140deg,#ffd0ae,#f18b70)}.tile.interview{background:linear-gradient(140deg,#d8e8ff,#86a8e9)}.tile.coin{background:linear-gradient(140deg,#fff6b5,#efb93b)}.tile.card{background:linear-gradient(140deg,#d6ffb9,#83c87c)}
+.tile.active-tile{outline:3px solid #fff4a8;box-shadow:0 0 14px #ffcb54,0 0 0 4px #f0a444;transform:scale(1.13);z-index:3}
+.pawn{font-size:12px;bottom:-5px;right:-4px;background:#172744;border:2px solid #f6d49b;box-shadow:0 0 8px #000}
+.board{gap:12px}.dice-scene{min-height:130px;display:flex;align-items:center;justify-content:center;gap:22px;background:radial-gradient(ellipse,#375b87,#17283f 70%);border:1px solid #d3a66c;border-radius:15px;margin:10px 0 14px;overflow:hidden;position:relative}
+.dice-cube{font-size:78px;line-height:1.1;filter:drop-shadow(0 8px 9px #0008);transform-origin:center;transition:transform .25s}.dice-cube.rolling{animation:diceRoll .12s linear infinite}
+@keyframes diceRoll{0%{transform:rotate(-16deg) scale(.85)}50%{transform:rotate(16deg) scale(1.1)}100%{transform:rotate(-16deg) scale(.85)}}
+.dice-caption{font-size:20px;color:#ffe4a8;font-weight:900;text-shadow:0 2px 4px #000}
+#fxOverlay{position:fixed;inset:0;z-index:95;display:none;align-items:center;justify-content:center;background:#071526b8;backdrop-filter:blur(5px);pointer-events:none}
+#fxOverlay.show{display:flex}.fx-card{width:min(330px,78vw);min-height:390px;padding:26px 18px;border:5px solid #f4c477;border-radius:19px;background:linear-gradient(145deg,#3e526f,#182840 60%,#312943);box-shadow:0 0 45px #f6ba5d,0 20px 65px #000c;text-align:center;animation:cardEntrance .7s cubic-bezier(.2,1.4,.5,1)}
+.fx-card .art{font-size:100px;margin:25px 0;filter:drop-shadow(0 0 20px #ffca65)}.fx-card h2{font-size:30px;color:#ffdd91}.fx-card p{font-size:16px}
+@keyframes cardEntrance{from{transform:translateY(120px) rotate(-24deg) scale(.3);opacity:0}to{transform:translateY(0) rotate(0) scale(1);opacity:1}}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#172b44f2;border:2px solid #e4b76c;border-radius:16px;color:#fff0d2;padding:13px 25px;box-shadow:0 10px 25px #000a;z-index:110;display:none;font-weight:bold;text-align:center}
+#privacyGate{background:#071528f5}#privacyGate .gateCard{background:linear-gradient(140deg,#1e3554,#15243a);border-color:#e1b66d;color:#f5e6c6}#privacyGate h2{color:#ffce79}
+.step{background:#374969;color:#ffe0aa}.guide{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.guide span{padding:7px 11px;background:#253d59;border:1px solid #8b755c;border-radius:10px;font-size:12px}
+@media(max-width:650px){.zone{min-height:170px;padding:5px}.tile{border-width:1px}.dice-cube{font-size:58px}.dice-scene{min-height:110px}}
+</style><style>
+.mapShell{position:relative;border:3px solid #b78c4b;border-radius:18px;overflow:hidden;background:#132b34;box-shadow:0 18px 30px #0009,inset 0 0 25px #f3c96b44}
+#cityCanvas{display:block;width:100%;height:auto;aspect-ratio:4/3}
+.mapLegend{position:absolute;bottom:9px;left:10px;right:10px;text-align:center;background:#091626c9;border:1px solid #d7b576;border-radius:9px;padding:7px;color:#ffe3ad;font-size:12px;pointer-events:none}
+</style></head><body><header><div><div class="muted">4人対戦・推理すごろく</div><h1>🔎 ミステリー・タウン</h1></div><div><label for="bots">BOT人数 </label><select id="bots"><option value="3">3人（1人で遊ぶ）</option><option value="2">2人（2人で遊ぶ）</option><option value="1">1人（3人で遊ぶ）</option><option value="0">0人（4人で遊ぶ）</option></select> <button onclick="start()">新しい事件を開始</button></div></header><div id="privacyGate"><div class="gateCard"><div style="font-size:58px">🕵️‍♀️</div><h2 id="gateTitle">探偵を交代してください</h2><p>前の探偵のメモは非公開です。次の探偵だけが画面を見てください。</p><button onclick="unlockTurn()">自分の番を開始する</button></div></div><div id="fxOverlay" aria-hidden="true"><div class="fx-card" id="fxCard"></div></div><div id="toast" role="status"></div><main>
 <aside class="left"><div class="panel sticky notes"><h2>📒 探偵メモ</h2><div class="muted">捜査メモは本人専用。容疑者の特徴だけ全員共通で公開されます。</div><div id="viewer"></div><div id="notes"></div><h2 style="margin-top:20px">👥 容疑者の特徴</h2><div id="suspects"></div></div></aside>
-<section class="center"><div class="panel"><h2>🗺️ 事件の街・150マス</h2><div class="muted">色の付いたマスに止まるとイベント発生。番号はマス番号、丸数字は探偵の位置です。</div><div id="board" class="board"></div><div class="muted" style="margin-top:9px">🔍証拠品　❓イベント　👣現場検証　💬聞き込み　🪙コイン　🃏カード　・通常</div></div><div class="panel" style="margin-top:12px"><h2>🎲 行動エリア</h2><div id="turnArea"></div></div></section>
+<section class="center"><div class="panel"><h2>🏰 事件の街・150マス</h2><div class="muted">豪華な街を巡って証拠を集めよう！ 光るマスが探偵の現在地です。</div><div class="guide"><span>① 🎲 サイコロ</span><span>② 👣 移動またはカード</span><span>③ 🔎 マスを調査</span><span>④ 🧠 5行動ごとに推理</span></div><div class="mapShell"><canvas id="cityCanvas" width="1320" height="990" aria-label="立体的な街のすごろく盤面"></canvas><div class="mapLegend">🏘️ 住宅街　🛍️ 商店街　🌲 裏山　🏙️ 中心街　｜　光るマスが現在地</div></div><div class="muted" style="margin-top:9px">🔍証拠品　❓イベント　👣現場検証　💬聞き込み　🪙コイン　🃏カード　・通常</div></div><div class="panel" style="margin-top:12px"><h2>🎲 行動エリア</h2><div class="dice-scene"><div id="diceCube" class="dice-cube">⚄</div><div><div class="dice-caption" id="diceCaption">事件の街へ出発！</div><div class="muted">サイコロを振って街を調査</div></div></div><div id="turnArea"></div></div></section>
 <aside class="right"><div class="panel"><h2>🏅 プレイヤー</h2><div id="players"></div></div><div class="panel" style="margin-top:12px"><h2>📜 捜査ログ</h2><div id="log" class="log"></div></div><div class="panel" style="margin-top:12px"><h2>ℹ️ 遊び方</h2><div class="muted">サイコロを振り、移動するか出目以下のコストのカードを1枚使います。各プレイヤーが5行動するごとに全員推理タイム。事件の5項目を当て、正しい証拠品を持って正しい現場エリアにいれば勝利です。</div></div></aside></main><footer>ローカル対戦・BOT対戦プロトタイプ｜オンライン通信は未接続</footer><script src="engine.js"></script><script>
-const E=window.MysteryEngine;let g=null,botTimer=null,lastHumanKey=null,gateUnlocked=false;const $=id=>document.getElementById(id),safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const icon={normal:'·',evidence:'🔍',event:'❓',scene:'👣',interview:'💬',coin:'🪙',card:'🃏'};function start(){try{if(!E)throw Error('engine.jsが読み込まれていません。index.htmlと同じ場所に配置してください。');g=E.newGame({botCount:Number($('bots').value)});lastHumanKey=null;gateUnlocked=false;render();tickBots()}catch(err){console.error(err);alert('ゲーム開始エラー: '+err.message)}}
-function tickBots(){clearTimeout(botTimer);if(!g||g.phase==='finished')return;let p=g.phase==='inference'?g.players[g.inference.queue[g.inference.index]]:E.current(g);if(p.bot){botTimer=setTimeout(()=>{try{E.botAction(g)}catch(e){alert(e.message)}render();tickBots()},140)}}
-function act(fn){try{fn()}catch(e){alert(e.message)}render();tickBots()}
+const E=window.MysteryEngine;let g=null,botTimer=null,lastHumanKey=null,gateUnlocked=false,fxBusy=false,fxTimer=null,previousState=null;const $=id=>document.getElementById(id),safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const icon={normal:'·',evidence:'🔍',event:'❓',scene:'👣',interview:'💬',coin:'🪙',card:'🃏'};function start(){try{if(fxBusy)return;if(!E)throw Error('engine.jsが読み込まれていません。index.htmlと同じ場所に配置してください。');g=E.newGame({botCount:Number($('bots').value)});lastHumanKey=null;gateUnlocked=false;render();tickBots()}catch(err){console.error(err);alert('ゲーム開始エラー: '+err.message)}}
+function tickBots(){clearTimeout(botTimer);if(fxBusy)return;if(!g||g.phase==='finished')return;let p=g.phase==='inference'?g.players[g.inference.queue[g.inference.index]]:E.current(g);if(p.bot){botTimer=setTimeout(()=>{try{E.botAction(g)}catch(e){alert(e.message)}render();tickBots()},140)}}
+function showToast(msg){let t=$('toast');t.textContent=msg;t.style.display='block';clearTimeout(t._timer);t._timer=setTimeout(()=>t.style.display='none',2200)}
+function showCardFx(name){let symbols={'鑑識':'🔬','聞き上手':'💬','タクシーチケット':'🚕','閃く':'💡','足止め':'🛑','監視カメラ確認':'📷','辻褄':'🕰️','宝くじ':'🎟️','情報提供':'📜'};let c=$('fxCard');c.innerHTML=`<div class="muted">DETECTIVE CARD</div><div class="art">${symbols[name]||'🃏'}</div><h2>${safe(name)}</h2><p>探偵カード発動！</p>`;$('fxOverlay').classList.add('show');clearTimeout(fxTimer);fxTimer=setTimeout(()=>$('fxOverlay').classList.remove('show'),1250)}
+function rollAnimated(){if(fxBusy)return;fxBusy=true;let d=$('diceCube');d.classList.add('rolling');$('diceCaption').textContent='運命のサイコロ…';let ticks=0;let timer=setInterval(()=>{d.textContent=['⚀','⚁','⚂','⚃','⚄','⚅'][Math.floor(Math.random()*6)];ticks++;if(ticks>=13){clearInterval(timer);try{E.roll(g);d.textContent=['⚀','⚁','⚂','⚃','⚄','⚅'][g.roll-1];$('diceCaption').textContent='出目 '+g.roll+'！';showToast('🎲 '+g.roll+' マス進める！')}catch(e){alert(e.message)}d.classList.remove('rolling');fxBusy=false;render();tickBots()}},75)}
+function moveAnimated(){if(fxBusy)return;let p=E.current(g),n=g.roll,origin=p.pos;fxBusy=true;let count=0;let timer=setInterval(()=>{count++;let pos=(origin+count)%150;drawCity(pos);if(count>=n){clearInterval(timer);try{E.move(g);showToast('📍 '+g.board[p.pos].zone+'に到着！')}catch(e){alert(e.message)}fxBusy=false;render();tickBots()}},190)}
+function act(fn){if(fxBusy)return;try{fn()}catch(e){alert(e.message)}render();tickBots()}
 function unlockTurn(){gateUnlocked=true;$('privacyGate').style.display='none';render()}
 function render(){if(!g)return;let p=E.current(g),inferenceP=g.phase==='inference'?g.players[g.inference.queue[g.inference.index]]:null,viewer=inferenceP||p;
 let humanKey=viewer&&!viewer.bot&&g.phase!=='finished'?viewer.id+':'+(g.phase==='inference'?'infer'+g.inference.index:g.round+'-'+viewer.actions):null;
 if(humanKey!==lastHumanKey){lastHumanKey=humanKey;gateUnlocked=false}
 let gate=!!humanKey&&!gateUnlocked;$('privacyGate').style.display=gate?'flex':'none';
-$('gateTitle').textContent=viewer?viewer.name+' の番です':'探偵を交代してください';
-$('board').innerHTML=[[0,38,'住宅街','residential','🏘️'],[38,75,'商店街','shopping','🛍️'],[113,150,'裏山','mountain','🌲'],[75,113,'中心街','downtown','🏙️']].map(([a,b,z,cl,em])=>`<div class="zone ${cl}"><h3>${em} ${z}</h3><div class="tiles">${g.board.slice(a,b).map(t=>{let pawns=g.players.filter(q=>q.pos===t.id);return `<div class="tile ${t.type}" title="${t.id+1}番 ${t.type}">${icon[t.type]}${pawns.length?`<span class="pawn">${pawns.map(q=>q.id+1).join('')}</span>`:''}</div>`}).join('')}</div></div>`).join('');
+$('gateTitle').textContent=viewer?viewer.name+' の番です':'探偵を交代してください';if(g.phase==='choice'&&g.roll){$('diceCube').textContent=['⚀','⚁','⚂','⚃','⚄','⚅'][g.roll-1];$('diceCaption').textContent='出目 '+g.roll+'！'}
+drawCity();
 $('viewer').innerHTML=`<div class="step">🔒 ${safe(viewer.name)} 専用メモ</div>`;renderNotes();
 $('suspects').innerHTML=g.traitSets.map((tr,i)=>`<div class="suspect"><span class="face">🕵️</span><div><b>${E.SUSPECTS[i]}</b><small>${tr.join('・')}</small></div></div>`).join('');
 $('players').innerHTML=g.players.map(q=>`<div class="suspect"><span class="face">${q.bot?'🤖':'🕵️'}</span><div><b>${safe(q.name)}</b> ${q.id===p.id?'◀':''}<small>🪙${q.coins}　📦${q.evidence.length}　🃏${q.cards.length}　${q.actions%5}/5行動</small></div></div>`).join('');$('log').innerHTML='<div>🔒 捜査の詳細は各自の探偵メモで確認してください。</div>';
@@ -46,11 +93,67 @@ let html=`<div class="turn"><b>${safe(p.name)}のターン</b>　<span class="mu
 if(g.phase==='finished')html=`<div class="inference"><h2>🏆 ${safe(g.players[g.winner].name)} の勝利！</h2>事件を解決しました。<div class="muted">証拠品：${g.solution.evidence}／現場：${g.solution.zone}／動機：${g.solution.motive}／死亡時刻：${g.solution.time}／犯人：${g.solution.suspect}</div></div>`;
 else if(g.phase==='inference'){let q=inferenceP;html=`<div class="inference"><h2>🧠 ${safe(q.name)}の推理タイム</h2>${q.bot?'<p>BOTが推理中…</p>':`<div class="muted">5項目を選択。正解の証拠品を所持し、正解の現場にいる必要があります。</div>${[['evidence','証拠品',E.EVIDENCE],['zone','殺人現場',E.ZONES],['motive','動機',E.MOTIVES],['time','死亡時刻',E.TIMES],['suspect','犯人',E.SUSPECTS]].map(([key,label,items])=>`<div class="field"><label>${label}</label><select id="ans_${key}">${items.map(v=>`<option>${v}</option>`).join('')}</select></div>`).join('')}<button onclick="act(()=>E.infer(g,Object.fromEntries(['evidence','zone','motive','time','suspect'].map(k=>[k,$('ans_'+k).value]))))">この推理で回答</button>`}</div>`}
 else if(p.bot)html+='<p>🤖 BOTが考えています…</p>';
-else if(g.phase==='roll')html+='<button onclick="act(()=>E.roll(g))">🎲 サイコロを振る</button>';
-else if(g.phase==='choice'){html+=`<div>🎲 出目：<strong>${g.roll}</strong></div><div class="actions"><button onclick="act(()=>E.move(g))">👣 ${g.roll}マス進む</button></div><h2 style="margin-top:15px">探偵カードを使用</h2>`;let usable=p.cards.filter(n=>E.CARDS.find(c=>c.name===n)?.type==='use'&&E.CARDS.find(c=>c.name===n).cost<=g.roll);html+=usable.length?usable.map(n=>`<div class="shop-item"><span>${n}（コスト${E.CARDS.find(c=>c.name===n).cost}）</span><button class="secondary" onclick="cardAction('${n}')">使用</button></div>`).join(''):'<p class="muted">この出目で使用できるカードはありません。</p>'}
-else if(g.phase==='shop'){let t=g.board[p.pos];html+=`<h2>${t.type==='evidence'?'🔍 証拠品散策':'🃏 探偵カード販売'}</h2>`+t.stock.map(n=>{let price=E.CARDS.find(c=>c.name===n)?.price??g.prices[n];return `<div class="shop-item"><span>${n}　🪙${price}</span><button ${p.coins<price?'disabled':''} onclick="act(()=>E.shop(g,'${n}'))">購入</button></div>`}).join('')+'<button class="secondary" onclick="act(()=>E.skipShop(g))">買わずに終了</button>'}
+else if(g.phase==='roll')html+='<button onclick="rollAnimated()">🎲 サイコロを振る</button>';
+else if(g.phase==='choice'){html+=`<div>🎲 出目：<strong>${g.roll}</strong></div><div class="actions"><button onclick="moveAnimated()">👣 ${g.roll}マス進む</button></div><h2 style="margin-top:15px">探偵カードを使用</h2>`;let usable=p.cards.filter(n=>E.CARDS.find(c=>c.name===n)?.type==='use'&&E.CARDS.find(c=>c.name===n).cost<=g.roll);html+=usable.length?usable.map(n=>`<div class="shop-item"><span>${n}（コスト${E.CARDS.find(c=>c.name===n).cost}）</span><button class="secondary" onclick="cardAction('${n}')">使用</button></div>`).join(''):'<p class="muted">この出目で使用できるカードはありません。</p>'}
+else if(g.phase==='shop'){let t=g.board[p.pos];html+=`<h2>${t.type==='evidence'?'🔍 証拠品散策':'🃏 探偵カード販売'}</h2>`+t.stock.map(n=>{let price=E.CARDS.find(c=>c.name===n)?.price??g.prices[n];return `<div class="shop-item"><span>${n}　🪙${price}</span><button ${p.coins<price?'disabled':''} onclick="purchaseItem('${n}')">購入</button></div>`}).join('')+'<button class="secondary" onclick="act(()=>E.skipShop(g))">買わずに終了</button>'}
 else if(g.phase==='interview-choice')html+='<h2>💬 聞き上手</h2><div class="actions"><button onclick="act(()=>E.interviewChoice(g,\'trait\'))">犯人の特徴を調べる</button><button onclick="act(()=>E.interviewChoice(g,\'motive\'))">動機を調べる</button></div>';
 $('turnArea').innerHTML=html}
-function renderNotes(){let active=g.phase==='inference'?g.players[g.inference.queue[g.inference.index]]:E.current(g);if(!active||active.bot||!gateUnlocked){$('notes').innerHTML='<p class="muted">🔒 自分の番になったらメモを確認できます。</p>';return}let q=active,n=q.notes;let z=E.ZONES.find(z=>n.zones[z]===true),excluded=E.ZONES.filter(z=>n.zones[z]===false);let rows=[['証拠品',q.evidence.length?q.evidence.join('・')+'（所持品）':'未判明'],['殺人現場',z||'未判明'],['動機',n.motive||'未判明'],['死亡時刻',Object.entries(n.times).map(([k,v])=>k+'：'+v).join('／')||'未判明'],['犯人',n.knownSuspect||'未判明']];$('notes').innerHTML=`<table>${rows.map(([a,b])=>`<tr><td>${a}</td><td>${safe(b)}</td></tr>`).join('')}</table><p class="muted">現場ではない：${excluded.join('・')||'なし'}</p><p class="muted">犯人ではない：${n.excludedSuspects.join('・')||'なし'}</p><p class="muted">犯人の特徴：${n.traits.join('・')||'未判明'}</p><h2>🎒 所持品</h2><div>${q.evidence.map(x=>`<span class="pill">🔍${x}</span>`).join('')||'なし'}</div><h2 style="margin-top:12px">🃏 探偵カード</h2><div>${q.cards.map(x=>`<span class="pill">${x}</span>`).join('')||'なし'}</div>`}
-function cardAction(name){let arg;if(name==='タクシーチケット'){let zones=E.ZONES.filter(z=>z!==g.board[E.current(g).pos].zone);arg=prompt('移動先のゾーンを入力：'+zones.join('／'),zones[0]);if(!zones.includes(arg))return}else if(name==='足止め'){let opts=g.players.filter(p=>p.id!==E.current(g).id);let id=prompt('足止めする相手の番号：'+opts.map(p=>`${p.id+1}:${p.name}`).join('／'),opts[0].id+1);if(!opts.some(p=>p.id+1===Number(id)))return;arg=Number(id)-1}act(()=>E.useCard(g,name,arg))}start();
+
+const CITY={canvas:null,ctx:null,positions:[],trees:[],houses:[],seed:91};
+function cityRand(n){let x=Math.sin(n*128.417+8.23)*43758.5453;return x-Math.floor(x)}
+function isoPoint(x,y){return {x:660+(x-y)*37.2,y:125+(x+y)*19.2}}
+function polygon(c,pts,fill,stroke='#17212b',line=1){c.beginPath();c.moveTo(pts[0].x,pts[0].y);pts.slice(1).forEach(p=>c.lineTo(p.x,p.y));c.closePath();c.fillStyle=fill;c.fill();if(stroke){c.lineWidth=line;c.strokeStyle=stroke;c.stroke()}}
+function block3d(c,x,y,w,d,h,wall,side,roof){let a=isoPoint(x,y),b=isoPoint(x+w,y),cc=isoPoint(x+w,y+d),dd=isoPoint(x,y+d);let top=[a,b,cc,dd].map(p=>({x:p.x,y:p.y-h}));polygon(c,[a,dd,top[3],top[0]],side);polygon(c,[dd,cc,top[2],top[3]],wall);polygon(c,[a,b,top[1],top[0]],wall);polygon(c,top,roof,'#f9df9c',1.2);return top}
+function cityLabel(c,text,x,y){c.save();c.font='bold 23px sans-serif';c.textAlign='center';c.shadowColor='#000';c.shadowBlur=7;c.fillStyle='#fff5ce';c.fillText(text,x,y);c.restore()}
+function drawCity(spot=null){
+ if(!g)return;
+ let canvas=$('cityCanvas');if(!canvas)return;
+ let c=canvas.getContext('2d');if(!c)return;
+ c.clearRect(0,0,1320,990);
+ let bg=c.createLinearGradient(0,0,0,990);bg.addColorStop(0,'#0c2139');bg.addColorStop(.55,'#19394a');bg.addColorStop(1,'#102e31');c.fillStyle=bg;c.fillRect(0,0,1320,990);
+ // continuous isometric land slab
+ block3d(c,-1,-1,20,20,0,'#284e44','#264737','#345b52');
+ // quarters are decorated as a miniature tabletop city
+ for(let y=0;y<19;y+=.85)for(let x=0;x<19;x+=.85){
+   let p=isoPoint(x,y),r=cityRand(x*17+y*29);
+   if(p.x<25||p.x>1290||p.y>925)continue;
+   let q=x<9.5?(y<9.5?'res':'mount'):(y<9.5?'shop':'city');
+   if(r<.20){let roof=q==='res'?'#d67e69':q==='shop'?'#f2aa52':q==='mount'?'#47795c':'#6685b4';
+     let wall=q==='mount'?'#536e55':q==='city'?'#6e83a3':'#b9a78d';
+     let h=q==='city'?30+r*95:q==='shop'?25+r*52:q==='mount'?15+r*33:18+r*47;
+     block3d(c,x+.08,y+.08,.63,.63,h,wall,'#4b5663',roof);
+     // windows
+     if(q!=='mount'){c.fillStyle='#ffe59b';for(let k=0;k<Math.floor(h/20);k++)c.fillRect(p.x-6,p.y-h+14+k*15,4,5)}
+   }else if(r<.34){c.beginPath();c.ellipse(p.x,p.y-9,9+r*16,12+r*13,0,0,Math.PI*2);c.fillStyle=q==='mount'?'#326e50':'#398b69';c.fill();c.beginPath();c.arc(p.x-5,p.y-16,6,0,7);c.fillStyle='#71b88b';c.fill()}
+ }
+ // four named districts
+ cityLabel(c,'🏘️ 住宅街',370,315);cityLabel(c,'🛍️ 商店街',930,315);
+ cityLabel(c,'🌲 裏山',360,710);cityLabel(c,'🏙️ 中心街',940,710);
+ // 150-step winding closed ring: 38 along top, 37 right, 38 bottom, 37 left
+ const points=[];
+ const lerp=(a,b,t)=>a+(b-a)*t;
+ for(let i=0;i<150;i++){
+   let x,y;
+   if(i<38){x=lerp(210,1090,i/37);y=lerp(220,245,i/37)}
+   else if(i<75){x=lerp(1090,1050,(i-38)/36);y=lerp(245,785,(i-38)/36)}
+   else if(i<113){x=lerp(1050,210,(i-75)/37);y=lerp(785,765,(i-75)/37)}
+   else{x=lerp(210,210,(i-113)/36);y=lerp(765,220,(i-113)/36)}
+   points.push({x,y});
+ }
+ c.lineJoin='round';c.lineCap='round';c.beginPath();points.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));c.closePath();c.strokeStyle='#4b3022';c.lineWidth=32;c.stroke();c.strokeStyle='#f6d78d';c.lineWidth=25;c.stroke();
+ const colors={normal:'#eee1bd',coin:'#ffd568',evidence:'#5ed3bf',event:'#b98af3',scene:'#f58d76',interview:'#87b4f5',card:'#8bce81'};
+ for(let i=0;i<150;i++){let p=points[i],tile=g.board[i],active=spot===i||g.players.some(q=>q.pos===i);
+   c.save();c.translate(p.x,p.y);c.fillStyle='#302a2d';c.fillRect(-9,-9,20,21);c.fillStyle=colors[tile.type]||'#eee1bd';c.fillRect(-10,-12,19,19);c.strokeStyle=active?'#fff7b1':'#55432f';c.lineWidth=active?3:1;c.strokeRect(-10,-12,19,19);
+   if(active){c.shadowColor='#fff2a0';c.shadowBlur=18;c.strokeStyle='#fff6b4';c.strokeRect(-12,-14,23,23)}
+   if(tile.type!=='normal'){c.font='bold 12px sans-serif';c.textAlign='center';c.fillStyle='#1d2b38';c.fillText(({coin:'$',evidence:'◆',event:'?',scene:'!',interview:'●',card:'★'})[tile.type],0,2)}
+   c.restore()}
+ const pawnColors=['#52b6ff','#ff6868','#5ee1a4','#ffcc50'];
+ g.players.forEach((q,i)=>{let p=points[q.pos],offset=i*12-18;c.save();c.shadowColor=pawnColors[i];c.shadowBlur=14;c.fillStyle=pawnColors[i];c.strokeStyle='#fff8dc';c.lineWidth=3;c.beginPath();c.arc(p.x+offset,p.y-24,11,0,7);c.fill();c.stroke();c.fillStyle='#152331';c.font='bold 13px sans-serif';c.textAlign='center';c.fillText(String(i+1),p.x+offset,p.y-20);c.restore()});
+ c.font='bold 19px sans-serif';c.textAlign='center';c.fillStyle='#ffe5b5';c.fillText('MYSTERY TOWN  •  150マスの立体すごろく',660,65);
+}
+window.addEventListener('resize',()=>{if(g)drawCity()});
+
+function renderNotes(){let active=g.phase==='inference'?g.players[g.inference.queue[g.inference.index]]:E.current(g);if(!active||active.bot||!gateUnlocked){$('notes').innerHTML='<p class="muted">🔒 自分の番になったらメモを確認できます。</p>';return}let q=active,n=q.notes;let z=E.ZONES.find(z=>n.zones[z]===true),excluded=E.ZONES.filter(z=>n.zones[z]===false);let rows=[['証拠品',q.evidence.length?q.evidence.join('・')+'（所持品）':'未判明'],['殺人現場',z||'未判明'],['動機',n.motive||'未判明'],['死亡時刻',Object.entries(n.times).map(([k,v])=>k+'：'+v).join('／')||'未判明'],['犯人',n.knownSuspect||'未判明']];$('notes').innerHTML=`<table>${rows.map(([a,b])=>`<tr><td>${a}</td><td>${safe(b)}</td></tr>`).join('')}</table><p class="muted">現場ではない：${excluded.join('・')||'なし'}</p><p class="muted">犯人ではない：${n.excludedSuspects.join('・')||'なし'}</p><p class="muted">犯人の特徴：${n.traits.join('・')||'未判明'}</p><h2 style="margin-top:14px">❌ 過去に間違えた推理</h2><div>${(n.wrongAnswers||[]).length?(n.wrongAnswers||[]).map((a,i)=>`<div class="panel" style="padding:10px;margin:7px 0"><b>第${i+1}回の不正解</b><div style="font-size:13px">証拠品：${safe(a.evidence)} ／ 現場：${safe(a.zone)}<br>動機：${safe(a.motive)} ／ 死亡時刻：${safe(a.time)} ／ 犯人：${safe(a.suspect)}</div></div>`).join(''):'<p class="muted">まだ不正解の記録はありません。</p>'}</div><h2>🎒 所持品</h2><div>${q.evidence.map(x=>`<span class="pill">🔍${x}</span>`).join('')||'なし'}</div><h2 style="margin-top:12px">🃏 探偵カード</h2><div>${q.cards.map(x=>`<span class="pill">${x}</span>`).join('')||'なし'}</div>`}
+function purchaseItem(name){if(fxBusy)return;act(()=>E.shop(g,name));showToast('🎁 '+name+' を入手！');if(E.CARDS.some(c=>c.name===name))showCardFx(name)}
+function cardAction(name){let arg;if(name==='タクシーチケット'){let zones=E.ZONES.filter(z=>z!==g.board[E.current(g).pos].zone);arg=prompt('移動先のゾーンを入力：'+zones.join('／'),zones[0]);if(!zones.includes(arg))return}else if(name==='足止め'){let opts=g.players.filter(p=>p.id!==E.current(g).id);let id=prompt('足止めする相手の番号：'+opts.map(p=>`${p.id+1}:${p.name}`).join('／'),opts[0].id+1);if(!opts.some(p=>p.id+1===Number(id)))return;arg=Number(id)-1}showCardFx(name);act(()=>E.useCard(g,name,arg))}start();
 </script></body></html>
