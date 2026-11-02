@@ -23,7 +23,7 @@ return board}
 function newGame(options={}){let rng=options.rng||Math.random,botCount=options.botCount===undefined?3:options.botCount;let humans=options.humans===undefined?4-botCount:options.humans;if(botCount+humans!==4||humans<1||botCount<0)throw Error('4 players required');let names=options.names||[];
 let solution={evidence:pick(rng,EVIDENCE),zone:pick(rng,ZONES),motive:pick(rng,MOTIVES),time:pick(rng,TIMES),suspect:pick(rng,SUSPECTS)};
 let traitSets=[],seen=new Set();for(let i=0;i<5;i++){let arr,key;do{arr=unique(rng,TRAITS,3);key=arr.slice().sort().join('|')}while(seen.has(key));seen.add(key);traitSets.push(arr)}
-let order=shuffle(rng,[0,1,2,3]);let players=Array.from({length:4},(_,i)=>({id:i,name:names[i]||((i<humans?'探偵':'BOT')+(i+1)),bot:i>=humans,pos:[0,38,75,113][i],coins:0,evidence:[],cards:[],notes:{zones:{},times:{},excludedSuspects:[],traits:[],motive:null,knownSuspect:null,wrongAnswers:[]},actions:0,cycleDistance:0,skip:0}));order.forEach((id,i)=>players[id].coins=[10,20,30,30][i]);let prices=Object.fromEntries(EVIDENCE.map(x=>[x,50+rand(rng,101)]));let game={board:makeBoard(rng),solution,traitSets,prices,players,order,turn:0,phase:'roll',roll:null,round:0,inference:null,winner:null,log:[],rng,allInferenceCount:0};say(game,'事件発生！ 事件の真相は非公開です。');return game}
+let order=shuffle(rng,[0,1,2,3]);let players=Array.from({length:4},(_,i)=>({id:i,name:names[i]||((i<humans?'探偵':'BOT')+(i+1)),bot:i>=humans,pos:[0,38,75,113][i],coins:0,evidence:[],cards:[],notes:{zones:{},times:{},excludedSuspects:[],traits:[],motive:null,knownSuspect:null,wrongAnswers:[]},actions:0,cycleDistance:0,skip:0}));order.forEach((id,i)=>players[id].coins=[10,20,30,30][i]);let prices=Object.fromEntries(EVIDENCE.map(x=>[x,50+rand(rng,101)]));let game={board:makeBoard(rng),roads:buildRoads(rng),solution,traitSets,prices,players,order,turn:0,phase:'roll',roll:null,round:0,inference:null,winner:null,log:[],rng,allInferenceCount:0};say(game,'事件発生！ 事件の真相は非公開です。');return game}
 function say(g,s){g.log.unshift(s);if(g.log.length>70)g.log.length=70}
 const current=g=>g.players[g.order[g.turn]];
 function roll(g){if(g.phase!=='roll')throw Error('not roll phase');g.roll=1+rand(g.rng,6);g.phase='choice';say(g,`${current(g).name}の出目は${g.roll}`);return g.roll}
@@ -32,21 +32,42 @@ function endTurn(g){let p=current(g);p.actions++;if(p.actions%5===0){}g.turn=(g.
 const GRID_W=15,GRID_H=10;
 function gridCoord(id){let row=Math.floor(id/GRID_W),off=id%GRID_W;return {x:row%2?GRID_W-1-off:off,y:row}}
 function gridId(x,y){if(x<0||x>=GRID_W||y<0||y>=GRID_H)return -1;return y*GRID_W+(y%2?GRID_W-1-x:x)}
-// Road network: a continuous 150-stop serpentine trunk, with sparse cross-streets.
-// The only legal moves follow these graph edges, not arbitrary grid adjacency.
-const ROAD_EDGES=Array.from({length:GRID_W*GRID_H},()=>new Set());
-function roadLink(a,b){if(a<0||b<0)return;ROAD_EDGES[a].add(b);ROAD_EDGES[b].add(a)}
-for(let id=0;id<GRID_W*GRID_H-1;id++)roadLink(id,id+1);
-// Deliberate junctions create alternative routes between neighborhoods.
-for(let y=0;y<GRID_H-1;y++)for(let x of (y%2===0?[2,8,12]:[4,10]))roadLink(gridId(x,y),gridId(x,y+1));
-function neighbors(id){return [...(ROAD_EDGES[id]||[])].sort((a,b)=>a-b)}
-function reachable(origin,steps){let front=new Set([origin]);for(let n=0;n<steps;n++){let next=new Set();for(let id of front)for(let other of neighbors(id))next.add(other);front=next}return [...front].sort((a,b)=>a-b)}
-function shortestDistance(a,b){if(a===b)return 0;let seen=new Set([a]),front=[a],dist=0;while(front.length){dist++;let next=[];for(let id of front)for(let v of neighbors(id)){if(v===b)return dist;if(!seen.has(v)){seen.add(v);next.push(v)}}front=next}return Infinity}
+// Randomized connected street graph, built afresh for every case.
+// The original 150 space identifiers and their zones remain unchanged.
+function buildRoads(rng){
+ const adj=Array.from({length:150},()=>new Set());
+ const link=(a,b)=>{if(a<0||b<0||a===b)return;adj[a].add(b);adj[b].add(a)};
+ const visited=new Set([0]),front=[0];
+ // Randomized growing tree guarantees connectivity, using physical neighbors.
+ while(front.length){let at=front[rand(rng,front.length)],p=gridCoord(at);
+  let opts=[[p.x-1,p.y],[p.x+1,p.y],[p.x,p.y-1],[p.x,p.y+1]].map(([x,y])=>gridId(x,y)).filter(n=>n>=0&&!visited.has(n));
+  if(!opts.length){front.splice(front.indexOf(at),1);continue}
+  let to=opts[rand(rng,opts.length)];link(at,to);visited.add(to);front.push(to)
+ }
+ // Extra junctions create route choices, but not a full grid.
+ for(let y=0;y<GRID_H;y++)for(let x=0;x<GRID_W;x++){
+  let a=gridId(x,y);for(let [xx,yy] of [[x+1,y],[x,y+1]]){
+   let b=gridId(xx,yy);if(b>=0&&!adj[a].has(b)&&rng()<.22)link(a,b)
+  }
+ }
+ return adj.map(set=>[...set].sort((a,b)=>a-b))
+}
+const neighbors=(g,id)=>g.roads[id]||[];
+function reachable(g,origin,steps){let front=new Set([origin]);for(let i=0;i<steps;i++){
+ let next=new Set();for(let p of front)for(let n of neighbors(g,p))next.add(n);front=next
+ }return [...front].sort((a,b)=>a-b)}
+function pathTo(g,origin,destination,steps){
+ let layer=new Map([[origin,[origin]]]);
+ for(let i=0;i<steps;i++){let next=new Map();for(let [pos,path] of layer)for(let n of neighbors(g,pos))if(!next.has(n))next.set(n,[...path,n]);layer=next}
+ return layer.get(destination)||null
+}
+function shortestDistance(g,a,b){if(a===b)return 0;let seen=new Set([a]),front=[a],d=0;while(front.length){d++;let next=[];for(let p of front)for(let n of neighbors(g,p)){if(n===b)return d;if(!seen.has(n)){seen.add(n);next.push(n)}}front=next}return Infinity}
 function completeMove(g,p){p.cycleDistance+=g.roll;say(g,`${p.name}は${g.roll}マス進み、${g.board[p.pos].zone}へ`);g.phase='tile';g.route=null;resolveTile(g,p,g.board[p.pos])}
-// Human movement is one space at a time. Direction choice happens at every junction.
-function step(g,destination){if(!['choice','route'].includes(g.phase))throw Error('移動フェイズではありません');let p=current(g),to=Number(destination);if(!neighbors(p.pos).includes(to))throw Error('道路でつながっていないマスです');if(g.phase==='choice')g.route={remaining:g.roll,from:p.pos};p.pos=to;g.route.remaining--;say(g,`${p.name}は${to+1}番マスへ進んだ（残り${g.route.remaining}）`);if(g.route.remaining===0)completeMove(g,p);else g.phase='route';return p.pos}
-// For BOTs, travel a valid route along the same road network.
-function move(g,destination){if(g.phase!=='choice')throw Error('cannot move');let p=current(g),target=destination===undefined?null:Number(destination);let path=[p.pos];for(let n=0;n<g.roll;n++){let choices=neighbors(path[path.length-1]);if(path.length>1&&choices.length>1){let noBack=choices.filter(v=>v!==path[path.length-2]);if(noBack.length)choices=noBack}path.push(choices[rand(g.rng,choices.length)])}if(target!==null&&path[path.length-1]!==target){let routes=[[p.pos]];for(let i=0;i<g.roll;i++){let next=[];for(let route of routes)for(let v of neighbors(route.at(-1))){next.push([...route,v]);if(next.length>15000)break}routes=next;if(routes.length>15000)break}let match=routes.find(r=>r.at(-1)===target);if(!match)throw Error('道路に沿った出目の歩数で到達できません');path=match}p.pos=path.at(-1);g.lastRoute=path;completeMove(g,p)}
+function move(g,destination){if(g.phase!=='choice')throw Error('cannot move');let p=current(g);
+ const options=reachable(g,p.pos,g.roll);let target=destination===undefined?options[rand(g.rng,options.length)]:Number(destination);
+ const path=pathTo(g,p.pos,target,g.roll);if(!path)throw Error('出目の歩数で到達できないマスです');
+ p.pos=target;g.lastRoute=path;completeMove(g,p);return path
+}
 function grantCard(g,p,name){p.cards.push(name);say(g,`${p.name}は「${name}」を入手`)}
 function randomCard(g){return CARDS[weighted(g.rng,CARDS.map(c=>c.weight))].name}
 function revealScene(g,p,zone){let yes=g.solution.zone===zone;p.notes.zones[zone]=yes;say(g,`${p.name}：${zone}は${yes?'殺人現場':'殺人現場ではない'}`);if(yes&&Object.values(p.notes.zones).includes(true)){let t=p.cards.includes('鑑識')||g.rng()<.5?g.solution.time:pick(g.rng,TIMES.filter(x=>x!==g.solution.time));p.notes.times[t]=p.cards.includes('鑑識')?'確定':'未確認';say(g,`${p.name}が死亡時刻「${t}」の情報を得た（${p.cards.includes('鑑識')?'確定':'真偽不明'}）`)}}
@@ -62,5 +83,5 @@ function infer(g,answer){if(g.phase!=='inference')throw Error('not inference');l
 function botAction(g){if(g.phase==='finished')return;if(g.phase==='inference'){let p=g.players[g.inference.queue[g.inference.index]];if(!p.bot)return;let traits=p.notes.traits,candidates=SUSPECTS.filter(s=>!p.notes.excludedSuspects.includes(s)&&traits.every(t=>g.traitSets[SUSPECTS.indexOf(s)].includes(t)));let ans={evidence:pick(g.rng,p.evidence.length?p.evidence:EVIDENCE),zone:ZONES.find(z=>p.notes.zones[z]===true)||pick(g.rng,ZONES),motive:p.notes.motive||pick(g.rng,MOTIVES),time:Object.keys(p.notes.times).find(t=>p.notes.times[t]==='確定')||pick(g.rng,TIMES.filter(t=>p.notes.times[t]!=='除外')),suspect:p.notes.knownSuspect||pick(g.rng,candidates.length?candidates:SUSPECTS)};infer(g,ans);return}
 let p=current(g);if(!p.bot)return;if(g.phase==='roll'){roll(g);return}if(g.phase==='choice'){if(p.cards.includes('監視カメラ確認')&&g.roll>=2&&g.rng()<.35)useCard(g,'監視カメラ確認');else if(p.cards.includes('辻褄')&&g.roll>=2&&g.rng()<.35)useCard(g,'辻褄');else if(p.cards.includes('情報提供')&&g.roll>=2&&g.rng()<.35)useCard(g,'情報提供');else if(p.cards.includes('宝くじ')&&g.roll>=1&&g.rng()<.3)useCard(g,'宝くじ');else if(p.cards.includes('閃く')&&g.roll>=5&&p.evidence.includes(g.solution.evidence)&&g.board[p.pos].zone===g.solution.zone)useCard(g,'閃く');else move(g);return}if(g.phase==='shop'){let t=g.board[p.pos],items=t.stock.filter(n=>p.coins>=(CARDS.find(c=>c.name===n)?.price||g.prices[n]));if(t.type==='evidence')items.sort((a,b)=>(p.evidence.includes(a)?1:0)-(p.evidence.includes(b)?1:0));if(items.length&&g.rng()<.8)shop(g,items[0]);else skipShop(g);return}if(g.phase==='interview-choice')interviewChoice(g,p.notes.motive?'trait':'motive')}
 function publicState(g){return {...g,solution:undefined,rng:undefined,players:g.players.map(p=>({...p,notes:p.notes})),log:g.log.slice()}}
-return {EVIDENCE,ZONES,MOTIVES,TIMES,SUSPECTS,TRAITS,CARDS,newGame,current,roll,move,shop,skipShop,useCard,interviewChoice,infer,botAction,publicState,makeBoard,gridCoord,gridId,neighbors,reachable,shortestDistance,step};
+return {EVIDENCE,ZONES,MOTIVES,TIMES,SUSPECTS,TRAITS,CARDS,newGame,current,roll,move,shop,skipShop,useCard,interviewChoice,infer,botAction,publicState,makeBoard,gridCoord,gridId,neighbors,reachable,shortestDistance,pathTo,buildRoads};
 });

@@ -134,7 +134,12 @@ button:not(.secondary){background:linear-gradient(180deg,#fff0b6,#df9e45 62%,#a5
 .eventPanel{width:min(590px,92vw);padding:36px 28px 32px;border:3px solid #eac477;border-radius:28px;text-align:center;background:linear-gradient(145deg,#273c63,#17192f 64%,#4a2859);box-shadow:0 0 0 8px #cfa65a2b,0 0 95px #ad7dff91,0 28px 80px #000d;animation:eventPop .65s cubic-bezier(.18,1.3,.33,1)}
 .eventKicker{letter-spacing:.22em;color:#f8d998;font-size:clamp(11px,1.3vw,15px);font-weight:900}.eventSymbol{font-size:clamp(84px,13vw,140px);filter:drop-shadow(0 0 25px #f6ce79);animation:eventFloat 1.3s ease-in-out infinite alternate}.eventPanel h2{font-size:clamp(29px,5vw,48px)!important;color:#ffe4a2!important;margin:8px 0 12px;text-shadow:0 0 22px #f3b64a}.eventPanel p{font-size:clamp(17px,2vw,24px);font-weight:800;color:white}.eventBy{color:#c6d8f6;font-size:14px;margin-top:20px}.eventProgress{height:5px;border-radius:8px;background:#ffdc8a;margin:28px auto 0;box-shadow:0 0 16px #ffcd6e;transform-origin:left;animation:eventCount 2.45s linear forwards}
 @keyframes eventPop{from{opacity:0;transform:scale(.3) rotate(-6deg)}to{opacity:1;transform:scale(1) rotate(0)}}@keyframes eventFade{from{opacity:0}to{opacity:1}}@keyframes eventFloat{from{transform:translateY(10px)}to{transform:translateY(-10px)}}@keyframes eventCount{to{transform:scaleX(0)}}
-</style></head><body><div id="titleScreen" class="screenLayer"><div class="titleBack"></div><div class="titleContent"><div class="eyebrow">MYSTERY BOARD GAME</div><h1 class="titleLogo">🔎 ミステリー・タウン</h1><p class="titleSub">— 事件の真相を、君の推理で暴け —</p><div class="titleButtons"><button class="goldButton" onclick="beginFromTitle()">▶ ゲームスタート</button><button onclick="openSettings()">⚙ ゲーム設定</button><button onclick="openRules()">📖 ルール・遊び方</button></div><div class="titleNote">4人対戦・BOT最大3人・150マスの立体風グリッド推理ゲーム</div></div></div>
+</style><style>
+.field-move{margin:10px 0 2px;padding:12px;border:2px solid #e8ad69;border-radius:13px;background:linear-gradient(120deg,#131c38,#392a4d);color:#ffe9ba;box-shadow:0 0 18px #d98e5d35}
+.field-move:empty{display:none}.field-move button{margin:4px;padding:9px 13px;border:2px solid #ff9a80;background:#702e49;color:white;border-radius:25px;cursor:pointer}.field-move button:hover{background:#b53c50;box-shadow:0 0 14px #ff6666}
+#cityCanvas{touch-action:manipulation}
+</style>
+</head><body><div id="titleScreen" class="screenLayer"><div class="titleBack"></div><div class="titleContent"><div class="eyebrow">MYSTERY BOARD GAME</div><h1 class="titleLogo">🔎 ミステリー・タウン</h1><p class="titleSub">— 事件の真相を、君の推理で暴け —</p><div class="titleButtons"><button class="goldButton" onclick="beginFromTitle()">▶ ゲームスタート</button><button onclick="openSettings()">⚙ ゲーム設定</button><button onclick="openRules()">📖 ルール・遊び方</button></div><div class="titleNote">4人対戦・BOT最大3人・150マスの立体風グリッド推理ゲーム</div></div></div>
 <div id="settingsScreen" class="screenLayer hidden"><div class="settingsPanel"><button class="closeSettings" onclick="closeSettings()">✕</button><h2>⚙ ゲーム詳細設定</h2><p class="settingsIntro">新しい事件の開始前に変更できます。</p><div class="settingTabs"><button data-tab="basic" onclick="settingsTab('basic')">基本設定</button><button data-tab="player" onclick="settingsTab('player')">プレイヤー</button><button data-tab="effects" onclick="settingsTab('effects')">演出設定</button></div>
 <div class="settingPage" data-page="basic"><label>対戦する人数 <select id="cfgHumans"><option value="1">1人 + BOT3人</option><option value="2">2人 + BOT2人</option><option value="3">3人 + BOT1人</option><option value="4">4人（BOTなし）</option></select></label><div class="settingHelp">プレイヤーは合計4人。複数人の場合は同じPCで順番に操作します。</div><label>BOTの思考速度 <select id="cfgBotSpeed"><option value="1000">ゆっくり</option><option value="420" selected>ふつう</option><option value="80">はやい</option></select></label><div class="settingHelp">事件の抽選や150マスの構成は固定ルールです。</div></div>
 <div class="settingPage hidden" data-page="player"><label>プレイヤー1の名前 <input id="cfgName1" maxlength="18" value="探偵1"></label><label>プレイヤー2の名前 <input id="cfgName2" maxlength="18" value="探偵2"></label><label>プレイヤー3の名前 <input id="cfgName3" maxlength="18" value="探偵3"></label><label>プレイヤー4の名前 <input id="cfgName4" maxlength="18" value="探偵4"></label><div class="settingHelp">BOT枠は名前に関係なく自動操作になります。</div></div>
@@ -142,14 +147,14 @@ button:not(.secondary){background:linear-gradient(180deg,#fff0b6,#df9e45 62%,#a5
 <div class="settingsFooter"><button onclick="resetSettings()">初期設定に戻す</button><button class="goldButton" onclick="saveSettings()">設定を保存</button></div></div></div>
 <div id="rulesScreen" class="screenLayer hidden"><div class="settingsPanel"><button class="closeSettings" onclick="closeRules()">✕</button><h2>📖 遊び方</h2><div class="rulesBody"><p>🎲 <b>1. サイコロ</b>：自分の番で振り、出目の数だけ進むか、出目以下のコストの探偵カードを使います。</p><p>🔍 <b>2. 街を調査</b>：証拠品の購入、現場検証、聞き込み、イベントで情報を集めます。</p><p>📒 <b>3. 探偵メモ</b>：自分だけの調査記録・過去の不正解を確認できます。容疑者の特徴は共通公開です。</p><p>🧠 <b>4. 推理タイム</b>：各プレイヤーが5行動するごとに発生。5項目を回答します。</p><p>🏆 <b>5. 勝利</b>：正しい現場エリアにいて、正しい証拠品を持ち、5項目すべて正解すると勝利です。</p></div><button class="goldButton" onclick="closeRules()">閉じる</button></div></div><header><div><div class="muted">4人対戦・立体風推理ボードゲーム</div><h1>🔎 ミステリー・タウン</h1></div><div class="headerActions"><button onclick="openSettings()">⚙ 設定</button><button onclick="returnToTitle()">⌂ タイトルへ</button><button onclick="beginFromTitle()">新しい事件</button></div></header><div id="privacyGate"><div class="gateCard"><div style="font-size:58px">🕵️‍♀️</div><h2 id="gateTitle">探偵を交代してください</h2><p>前の探偵のメモは非公開です。次の探偵だけが画面を見てください。</p><button onclick="unlockTurn()">自分の番を開始する</button></div></div><div id="fxOverlay" aria-hidden="true"><div class="fx-card" id="fxCard"></div></div><div id="toast" role="status"></div><main>
 <aside class="left"><div class="panel sticky notes"><h2>📒 探偵メモ</h2><div class="muted">捜査メモは本人専用。容疑者の特徴だけ全員共通で公開されます。</div><div id="viewer"></div><div id="notes"></div><h2 style="margin-top:20px">👥 容疑者の特徴</h2><div id="suspects"></div></div></aside>
-<section class="center"><div class="panel"><h2>🏰 事件の街・立体ミニチュアマップ</h2><div class="muted">近景は6×6マス。サイコロのあと、つながった道を1マスずつ進みます。交差点では進行方向を選択。右上で全体図と交換できます。</div><div class="guide"><span>① 🎲 サイコロ</span><span>② 👣 移動またはカード</span><span>③ 🔎 マスを調査</span><span>④ 🧠 5行動ごとに推理</span></div><div class="mapShell"><div id="gridHover">マスにカーソルを合わせると詳細を表示</div><canvas id="cityCanvas" width="1320" height="850" aria-label="現在地周辺6×6マスを映す立体風フィールド"></canvas><button id="mapSwap" type="button" onclick="swapMap()" aria-label="近景と全体マップを切り替え"><canvas id="miniCanvas" width="440" height="310"></canvas><span id="miniCaption">全体マップを拡大 ⇄</span></button><div class="mapLegend">近景6×6マス｜全体15×10マス｜右上で切替</div></div><div class="muted" style="margin-top:9px">🔍証拠品　❓イベント　👣現場検証　💬聞き込み　🪙コイン　🃏カード　・通常</div></div><div class="panel" style="margin-top:12px"><h2>🎲 行動エリア</h2><div class="dice-scene"><div id="diceCube" class="dice-cube">⚄</div><div><div class="dice-caption" id="diceCaption">事件の街へ出発！</div><div class="muted">サイコロを振って街を調査</div></div></div><div id="turnArea"></div></div></section>
+<section class="center"><div class="panel"><h2>🏰 事件の街・立体ミニチュアマップ</h2><div class="muted">近景は6×6マス。毎回ランダムに生成される道路で150マスを接続。サイコロ後に赤い終点を選ぶと一気に移動します。</div><div class="guide"><span>① 🎲 サイコロ</span><span>② 👣 移動またはカード</span><span>③ 🔎 マスを調査</span><span>④ 🧠 5行動ごとに推理</span></div><div class="mapShell"><div id="gridHover">マスにカーソルを合わせると詳細を表示</div><canvas id="cityCanvas" width="1320" height="850" aria-label="現在地周辺6×6マスを映す立体風フィールド"></canvas><button id="mapSwap" type="button" onclick="swapMap()" aria-label="近景と全体マップを切り替え"><canvas id="miniCanvas" width="440" height="310"></canvas><span id="miniCaption">全体マップを拡大 ⇄</span></button><div class="mapLegend">近景6×6マス｜全体15×10マス｜右上で切替</div></div><div id="fieldMove" class="field-move"></div><div class="muted" style="margin-top:9px">🔍証拠品　❓イベント　👣現場検証　💬聞き込み　🪙コイン　🃏カード　・通常</div></div><div class="panel" style="margin-top:12px"><h2>🎲 行動エリア</h2><div class="dice-scene"><div id="diceCube" class="dice-cube">⚄</div><div><div class="dice-caption" id="diceCaption">事件の街へ出発！</div><div class="muted">サイコロを振って街を調査</div></div></div><div id="turnArea"></div></div></section>
 <aside class="right"><div class="panel"><h2>🏅 プレイヤー</h2><div id="players"></div></div><div class="panel" style="margin-top:12px"><h2>📜 捜査ログ</h2><div id="log" class="log"></div></div><div class="panel" style="margin-top:12px"><h2>ℹ️ 遊び方</h2><div class="muted">サイコロを振り、移動するか出目以下のコストのカードを1枚使います。各プレイヤーが5行動するごとに全員推理タイム。事件の5項目を当て、正しい証拠品を持って正しい現場エリアにいれば勝利です。</div></div></aside></main><footer>ローカル対戦・BOT対戦｜3D風描画（Canvas）・オンライン通信は未接続</footer><script src="engine.js"></script><script>
 const E=window.MysteryEngine;let g=null,botTimer=null,lastHumanKey=null,gateUnlocked=false,fxBusy=false,fxTimer=null,previousState=null;let gameSettings={humans:1,botSpeed:420,dice:true,card:true,move:true,fxSpeed:1,size:"normal",names:["探偵1","探偵2","探偵3","探偵4"]};const $=id=>document.getElementById(id),safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const icon={normal:'·',evidence:'🔍',event:'❓',scene:'👣',interview:'💬',coin:'🪙',card:'🃏'};function start(){try{if(fxBusy)return;if(!E)throw Error('engine.jsが読み込まれていません。index.htmlと同じ場所に配置してください。');g=E.newGame({botCount:4-gameSettings.humans,names:gameSettings.names});lastHumanKey=null;gateUnlocked=false;lastEventSerial=0;render();tickBots()}catch(err){console.error(err);alert('ゲーム開始エラー: '+err.message)}}
 function tickBots(){clearTimeout(botTimer);if(fxBusy)return;if(!g||g.phase==='finished')return;let p=g.phase==='inference'?g.players[g.inference.queue[g.inference.index]]:E.current(g);if(p.bot){botTimer=setTimeout(()=>{try{E.botAction(g)}catch(e){alert(e.message)}render();if(!eventFxIfNew())tickBots()},gameSettings.botSpeed)}}
 function showToast(msg){let t=$('toast');t.textContent=msg;t.style.display='block';clearTimeout(t._timer);t._timer=setTimeout(()=>t.style.display='none',2200)}
 function showCardFx(name){if(!gameSettings.card)return;let symbols={'鑑識':'🔬','聞き上手':'💬','タクシーチケット':'🚕','閃く':'💡','足止め':'🛑','監視カメラ確認':'📷','辻褄':'🕰️','宝くじ':'🎟️','情報提供':'📜'};let c=$('fxCard');c.innerHTML=`<div class="muted">DETECTIVE CARD</div><div class="art">${symbols[name]||'🃏'}</div><h2>${safe(name)}</h2><p>探偵カード発動！</p>`;$('fxOverlay').classList.add('show');clearTimeout(fxTimer);fxTimer=setTimeout(()=>$('fxOverlay').classList.remove('show'),1250)}
 function rollAnimated(){if(fxBusy)return;if(!gameSettings.dice){act(()=>E.roll(g));$('diceCaption').textContent='出目 '+g.roll+'！';return}fxBusy=true;let d=$('diceCube');d.classList.add('rolling');$('diceCaption').textContent='運命のサイコロ…';let ticks=0;let timer=setInterval(()=>{d.textContent=['⚀','⚁','⚂','⚃','⚄','⚅'][Math.floor(Math.random()*6)];ticks++;if(ticks>=Math.round(13*gameSettings.fxSpeed)){clearInterval(timer);try{E.roll(g);d.textContent=['⚀','⚁','⚂','⚃','⚄','⚅'][g.roll-1];$('diceCaption').textContent='出目 '+g.roll+'！';showToast('🎲 '+g.roll+' マス進める！')}catch(e){alert(e.message)}d.classList.remove('rolling');fxBusy=false;render();tickBots()}},75)}
-function moveAnimated(target){if(fxBusy||!g||!['choice','route'].includes(g.phase))return;let p=E.current(g);if(target===undefined)target=E.neighbors(p.pos)[0];if(!E.neighbors(p.pos).includes(target)){showToast('道路がつながっていません');return}fxBusy=true;setTimeout(()=>{try{E.step(g,target)}catch(e){alert(e.message)}fxBusy=false;render();if(!eventFxIfNew())tickBots()},gameSettings.move?350*gameSettings.fxSpeed:30)}
+function moveAnimated(target){if(fxBusy||!g||g.phase!=='choice')return;let p=E.current(g);if(p.bot)return;const path=E.pathTo(g,p.pos,target,g.roll);if(!path){showToast('そのマスには到達できません');return}fxBusy=true;let frame=1;const step=()=>{if(frame<path.length){CITY.preview=path[frame++];drawCity();setTimeout(step,gameSettings.move?Math.max(65,135*gameSettings.fxSpeed):20);return}CITY.preview=null;try{E.move(g,target)}catch(e){alert(e.message)}fxBusy=false;render();if(!eventFxIfNew())tickBots()};step()}
 function act(fn){if(fxBusy)return;try{fn()}catch(e){alert(e.message)}render();tickBots()}
 function unlockTurn(){gateUnlocked=true;$('privacyGate').style.display='none';render()}
 function render(){if(!g)return;let p=E.current(g),inferenceP=g.phase==='inference'?g.players[g.inference.queue[g.inference.index]]:null,viewer=inferenceP||p;
@@ -166,14 +171,15 @@ if(g.phase==='finished')html=`<div class="inference"><h2>🏆 ${safe(g.players[g
 else if(g.phase==='inference'){let q=inferenceP;html=`<div class="inference"><h2>🧠 ${safe(q.name)}の推理タイム</h2>${q.bot?'<p>BOTが推理中…</p>':`<div class="muted">5項目を選択。正解の証拠品を所持し、正解の現場にいる必要があります。</div>${[['evidence','証拠品',E.EVIDENCE],['zone','殺人現場',E.ZONES],['motive','動機',E.MOTIVES],['time','死亡時刻',E.TIMES],['suspect','犯人',E.SUSPECTS]].map(([key,label,items])=>`<div class="field"><label>${label}</label><select id="ans_${key}">${items.map(v=>`<option>${v}</option>`).join('')}</select></div>`).join('')}<button onclick="act(()=>E.infer(g,Object.fromEntries(['evidence','zone','motive','time','suspect'].map(k=>[k,$('ans_'+k).value]))))">この推理で回答</button>`}</div>`}
 else if(p.bot)html+='<p>🤖 BOTが考えています…</p>';
 else if(g.phase==='roll')html+='<button onclick="rollAnimated()">🎲 サイコロを振る</button>';
-else if(g.phase==='route'){html+=`<h2>🛤️ 道路を移動中</h2><p>残り <strong>${g.route.remaining}</strong> マス。光っている隣のマスをクリックして進行方向を選んでください。</p><div class="actions">${E.neighbors(p.pos).map(id=>`<button onclick="moveAnimated(${id})">${id+1}番へ ${E.gridCoord(id).x>E.gridCoord(p.pos).x?'→':E.gridCoord(id).x<E.gridCoord(p.pos).x?'←':E.gridCoord(id).y>E.gridCoord(p.pos).y?'↓':'↑'}</button>`).join('')}</div>`}
-else if(g.phase==='choice'){html+=`<div>🎲 出目：<strong>${g.roll}</strong></div><div class="actions">${E.neighbors(p.pos).map(id=>`<button onclick="moveAnimated(${id})">${id+1}番へ ${E.gridCoord(id).x>E.gridCoord(p.pos).x?'→':E.gridCoord(id).x<E.gridCoord(p.pos).x?'←':E.gridCoord(id).y>E.gridCoord(p.pos).y?'↓':'↑'}</button>`).join('')}</div><h2 style="margin-top:15px">探偵カードを使用</h2>`;let usable=p.cards.filter(n=>E.CARDS.find(c=>c.name===n)?.type==='use'&&E.CARDS.find(c=>c.name===n).cost<=g.roll);html+=usable.length?usable.map(n=>`<div class="shop-item"><span>${n}（コスト${E.CARDS.find(c=>c.name===n).cost}）</span><button class="secondary" onclick="cardAction('${n}')">使用</button></div>`).join(''):'<p class="muted">この出目で使用できるカードはありません。</p>'}
+else if(g.phase==='choice'){html+=`<div>🎲 出目：<strong>${g.roll}</strong>　赤く光るマスを選んで一気に移動できます。</div><h2 style="margin-top:15px">探偵カードを使用</h2>`;let usable=p.cards.filter(n=>E.CARDS.find(c=>c.name===n)?.type==='use'&&E.CARDS.find(c=>c.name===n).cost<=g.roll);html+=usable.length?usable.map(n=>`<div class="shop-item"><span>${n}（コスト${E.CARDS.find(c=>c.name===n).cost}）</span><button class="secondary" onclick="cardAction('${n}')">使用</button></div>`).join(''):'<p class="muted">この出目で使用できるカードはありません。</p>'}
 else if(g.phase==='shop'){let t=g.board[p.pos];html+=`<h2>${t.type==='evidence'?'🔍 証拠品散策':'🃏 探偵カード販売'}</h2>`+t.stock.map(n=>{let price=E.CARDS.find(c=>c.name===n)?.price??g.prices[n];return `<div class="shop-item"><span>${n}　🪙${price}</span><button ${p.coins<price?'disabled':''} onclick="purchaseItem('${n}')">購入</button></div>`}).join('')+'<button class="secondary" onclick="act(()=>E.skipShop(g))">買わずに終了</button>'}
 else if(g.phase==='interview-choice')html+='<h2>💬 聞き上手</h2><div class="actions"><button onclick="act(()=>E.interviewChoice(g,\'trait\'))">犯人の特徴を調べる</button><button onclick="act(()=>E.interviewChoice(g,\'motive\'))">動機を調べる</button></div>';
-$('turnArea').innerHTML=html}
+$('turnArea').innerHTML=html;
+ const fm=$('fieldMove');if(fm){if(g.phase==='choice'&&!p.bot&&gateUnlocked){const ends=E.reachable(g,p.pos,g.roll);fm.innerHTML='<strong>🚩 移動先を選ぶ（赤いマス）</strong><div>出目 '+g.roll+'：到達可能 '+ends.length+' マス</div>'+ends.map(id=>`<button onclick="moveAnimated(${id})">${id+1}番 ${safe(g.board[id].zone)} ${icon[g.board[id].type]}</button>`).join('')}else fm.innerHTML='';}
+}
 
 // Live board renderer: interactive spaces come from g.board; scenery uses a reference image and procedural drawing.
-const CITY={overviewMain:false};
+const CITY={overviewMain:false,preview:null};
 const TILE_COLORS={normal:'#f2dcae',evidence:'#70dbc6',event:'#d49cff',scene:'#fa947e',interview:'#91baff',coin:'#ffd46b',card:'#8fdf87'};
 const TILE_ICONS={normal:'',evidence:'◆',event:'?',scene:'!',interview:'●',coin:'$',card:'★'};
 const PAWN_COLORS=['#4bbaff','#ff5f6b','#61df9a','#ffcf58'];
@@ -472,45 +478,45 @@ function renderGrid(canvas,focus,overview,small=false){
  const center=E.gridCoord(focus),cols=overview?15:6,rows=overview?10:6;
  const tw=overview?W*.050:W*.139,th=overview?H*.060:H*.105,dx=tw*.99,dy=th*.87;
  const originX=W*.5-(cols-1)*dx*.5,originY=overview?H*.18:H*.21;
- const selected=(['choice','route'].includes(g.phase)&&!E.current(g).bot)?new Set(E.neighbors(E.current(g).pos)):new Set();
+ const selected=(g.phase==='choice'&&!E.current(g).bot)?new Set(E.reachable(g,E.current(g).pos,g.roll)):new Set();
  if(canvas.id==='cityCanvas')gridHit=[];
  // The road lines show actual edges from the engine graph (including intersections).
  c.save();c.lineCap='round';c.lineJoin='round';
  const left=overview?0:Math.max(0,Math.min(9,center.x-2)),up=overview?0:Math.max(0,Math.min(4,center.y-2));
  for(let ry=0;ry<rows;ry++)for(let rx=0;rx<cols;rx++){
   let id=E.gridId(left+rx,up+ry);if(id<0)continue;
-  for(let other of E.neighbors(id)){
+  for(let other of E.neighbors(g,id)){
    let q=E.gridCoord(other),tx=q.x-left,ty=q.y-up;
    if(tx<0||ty<0||tx>=cols||ty>=rows||other<id)continue;
    let ax=originX+rx*dx,ay=originY+ry*dy,bx=originX+tx*dx,by=originY+ty*dy;
-   c.beginPath();c.moveTo(ax,ay);c.lineTo(bx,by);c.strokeStyle='#101526';c.lineWidth=overview?13:30;c.stroke();
-   c.strokeStyle='#c5a16b';c.lineWidth=overview?8:20;c.stroke();
-   c.setLineDash([overview?2:8,overview?3:10]);c.strokeStyle='#f9e4b3';c.lineWidth=overview?1:2;c.stroke();c.setLineDash([]);
+   c.beginPath();c.moveTo(ax,ay);c.lineTo(bx,by);c.strokeStyle='#101526';c.lineWidth=overview?16:45;c.stroke();
+   c.strokeStyle='#c5a16b';c.lineWidth=overview?12:34;c.stroke();
+   c.setLineDash([overview?2:8,overview?3:10]);c.strokeStyle='#f9e4b3';c.lineWidth=overview?1.5:3;c.stroke();c.setLineDash([]);
   }
  }
  c.restore();
  for(let ry=0;ry<rows;ry++)for(let rx=0;rx<cols;rx++){
   let gx=overview?rx:Math.max(0,Math.min(9,center.x-2))+rx,gy=overview?ry:Math.max(0,Math.min(4,center.y-2))+ry,id=E.gridId(gx,gy);if(id<0)continue;
   let tile=g.board[id],x=originX+rx*dx,y=originY+ry*dy;
-  let active=selected.has(id),current=id===focus,top=y-th*.36,bottom=y+th*.35,depth=th*.26;
+  let active=selected.has(id),current=id===(CITY.preview??focus),top=y-th*.36,bottom=y+th*.35,depth=th*.26;
   c.save();c.shadowColor='#080513';c.shadowBlur=10;c.shadowOffsetY=8;
   fillPoly(c,[[x-tw*.48,bottom],[x+tw*.48,bottom],[x+tw*.48,bottom+depth],[x-tw*.48,bottom+depth]],'#665063','#1e1528',2);
   c.restore();
   royalTileBevel(c,x,top,bottom,tw,depth,active,current);
   const face=c.createLinearGradient(x-tw*.5,top,x+tw*.5,bottom);face.addColorStop(0,'#fff1cb');face.addColorStop(.13,TILE_COLORS[tile.type]);face.addColorStop(.75,TILE_COLORS[tile.type]);face.addColorStop(1,'#463050');
-  c.shadowColor=active?'#fff2a1':current?'#6ef2ff':'#f8a64a';c.shadowBlur=active?34:current?28:9;
-  paintRouteSpace(c,x,top,bottom,tw,face,active?'#fff4aa':current?'#7ae8ff':'#c4a36e',active?5:current?4:2);
+  c.shadowColor=active?'#ff485b':current?'#6ef2ff':'#f8a64a';c.shadowBlur=active?34:current?28:9;
+  paintRouteSpace(c,x,top,bottom,tw,face,active?'#ff394f':current?'#7ae8ff':'#c4a36e',active?5:current?4:2);
   c.shadowBlur=0;
   v10TileDetails(c,x,top,bottom,tw,th,id,active);
-  if(active||current){c.save();c.strokeStyle=active?'#fff6c4':'#94efff';c.lineWidth=3;c.shadowColor=active?'#ffe38c':'#5be2ff';c.shadowBlur=18;roundedTrack(c,x-tw*.43,top+th*.05,tw*.86,th*.58,th*.23);c.stroke();c.restore()}
+  if(active){c.save();c.fillStyle='#ff264b44';roundedTrack(c,x-tw*.48,top,tw*.96,th*.75,th*.24);c.fill();c.restore()}if(active||current){c.save();c.strokeStyle=active?'#ff576c':'#94efff';c.lineWidth=3;c.shadowColor=active?'#ff304b':'#5be2ff';c.shadowBlur=18;roundedTrack(c,x-tw*.43,top+th*.05,tw*.86,th*.58,th*.23);c.stroke();c.restore()}
   c.strokeStyle='#ffffff65';c.lineWidth=1.4;roundedTrack(c,x-tw*.41,top+th*.08,tw*.82,th*.48,th*.22);c.stroke();
   c.textAlign='center';c.textBaseline='middle';c.font=`bold ${Math.max(10,Math.floor(th*.49))}px sans-serif`;c.fillStyle='#111a2f';c.shadowColor='#ffffff';c.shadowBlur=2;c.fillText(TILE_ICONS[tile.type]||'·',x,y-th*.015);c.shadowBlur=0;
   c.font=`bold ${Math.max(10,Math.floor(th*.21))}px sans-serif`;c.fillStyle='#fff6dd';c.fillText(id+1,x,bottom+depth*.60);
-  g.players.forEach((p,i)=>{if(p.pos===id){royalPawnHighlights(c,x+(i-1.5)*tw*.19,y-th*.15,overview?.31:small?.36:.85,PAWN_COLORS[i]);v10PawnJewel(c,x+(i-1.5)*tw*.19,y-th*.15,overview?.31:small?.36:.85,PAWN_COLORS[i],i+1)}});
+  g.players.forEach((p,i)=>{if((!p.bot&&p.id===E.current(g).id&&CITY.preview!==null?CITY.preview:p.pos)===id){royalPawnHighlights(c,x+(i-1.5)*tw*.19,y-th*.15,overview?.31:small?.36:.85,PAWN_COLORS[i]);v10PawnJewel(c,x+(i-1.5)*tw*.19,y-th*.15,overview?.31:small?.36:.85,PAWN_COLORS[i],i+1)}});
   if(canvas.id==='cityCanvas')gridHit.push({id,x0:x-tw*.5,y0:top,x1:x+tw*.5,y1:bottom+depth});
  }
  c.fillStyle='#080d23ec';c.fillRect(0,0,W,H*.105);c.fillStyle='#ffd999';c.font=`bold ${Math.max(13,H*.038)}px serif`;c.textAlign='left';c.fillText((overview?'✦ 全体マップ 15×10':'✦ '+zone+' / 近景6×6')+'　マス '+(focus+1)+'/150',W*.025,H*.069);
- if(!overview){c.fillStyle='#ffdf9c';c.font=`bold ${Math.max(12,H*.026)}px serif`;c.fillText('✦ 道路に沿って1マスずつ移動　|　交差点で方向選択',W*.025,H*.962)}
+ if(!overview){c.fillStyle='#ffdf9c';c.font=`bold ${Math.max(12,H*.026)}px serif`;c.fillText('✦ 赤いマスをタップして一気に移動　|　道路は毎ゲーム変化',W*.025,H*.962)}
 }
 function overviewPoint(i,W,H){let x,y,t;
  // Four contiguous zones: top residential, right shopping, bottom downtown, left mountain.
@@ -525,8 +531,8 @@ function renderOverview(canvas,focus){renderGrid(canvas,focus,true)}
 function mapPointer(ev,click){if(!g)return;let canvas=$('cityCanvas'),r=canvas.getBoundingClientRect(),x=(ev.clientX-r.left)*canvas.width/r.width,y=(ev.clientY-r.top)*canvas.height/r.height;
  let hit=gridHit.slice().reverse().find(a=>x>=a.x0&&x<=a.x1&&y>=a.y0&&y<=a.y1);if(!hit){if(!click)$('gridHover').textContent='マスにカーソルを合わせると詳細を表示';return}
  let t=g.board[hit.id],names={normal:'通常',evidence:'証拠品ショップ',event:'イベント',scene:'現場検証',interview:'聞き込み',coin:'コイン',card:'探偵カードショップ'};
- $('gridHover').textContent=`${hit.id+1}番マス｜${names[t.type]}｜${gridZone(hit.id)}${['choice','route'].includes(g.phase)&&E.neighbors(E.current(g).pos).includes(hit.id)?'｜クリックで移動':''}`;
- if(click){if(fxBusy||!['choice','route'].includes(g.phase)||E.current(g).bot||!gateUnlocked)return;if(!E.neighbors(E.current(g).pos).includes(hit.id)){showToast('道路でつながっていないマスです');return}moveAnimated(hit.id)}
+ $('gridHover').textContent=`${hit.id+1}番マス｜${names[t.type]}｜${gridZone(hit.id)}${g.phase==='choice'&&E.reachable(g,E.current(g).pos,g.roll).includes(hit.id)?'｜クリックで移動':''}`;
+ if(click){if(fxBusy||g.phase!=='choice'||E.current(g).bot||!gateUnlocked)return;if(!E.reachable(g,E.current(g).pos,g.roll).includes(hit.id)){showToast('出目の歩数で到達できません');return}moveAnimated(hit.id)}
 }
 window.addEventListener('DOMContentLoaded',()=>{$('cityCanvas').addEventListener('mousemove',e=>mapPointer(e,false));$('cityCanvas').addEventListener('click',e=>mapPointer(e,true));$('cityCanvas').addEventListener('mouseleave',()=>{$('gridHover').textContent='マスにカーソルを合わせると詳細を表示'})});
 window.addEventListener('resize',()=>{if(g)drawCity()});
