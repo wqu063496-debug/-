@@ -86,6 +86,13 @@ header h1{font-size:clamp(26px,3vw,46px);letter-spacing:.04em}
 .titleContent{width:min(1120px,96vw);padding:60px 20px;text-shadow:0 5px 12px #000}.eyebrow{color:#ffd38b;letter-spacing:5px;font-size:14px}.titleLogo{font-family:Georgia,'Yu Mincho',serif;font-size:clamp(40px,6vw,82px);color:#fce0a0;text-shadow:0 3px 0 #a05b1f,0 0 30px #ffac49}.titleSub{color:#fff1d3;font-size:clamp(15px,2vw,25px);margin-bottom:48px}.titleButtons{display:grid;gap:14px;width:min(380px,90vw)}.titleButtons button,.settingsFooter button,.settingsPanel>.goldButton{font-size:19px;padding:15px;border:1px solid #d8a860;border-radius:12px;background:linear-gradient(#20314b,#0c182c);color:#fff2d3;box-shadow:0 4px 0 #060c19,0 0 15px #dfa14c55}.titleButtons .goldButton,.goldButton{background:linear-gradient(#ffe6a7,#d88b32)!important;color:#2b1720!important;font-weight:900!important}.titleNote{margin-top:25px;color:#d9bd8d;font-size:14px}
 .settingsPanel{position:relative;width:min(740px,96vw);max-height:92vh;overflow:auto;padding:30px;background:linear-gradient(140deg,#172a45,#0c152a);border:3px solid #b8894c;border-radius:20px;box-shadow:0 0 70px #d6a65d55;color:#f6ead2}.settingsPanel h2{font-size:28px;text-align:center;color:#fce3a8;margin:4px 0 12px}.settingsIntro{text-align:center;color:#b6c2d6}.closeSettings{position:absolute;right:16px;top:14px;font-size:20px;background:#293a56}.settingTabs{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0}.settingTabs button{flex:1;background:#26334c;border:1px solid #6d7890;color:#e9e9e9;white-space:nowrap}.settingTabs button.selected{background:#ab7037;color:#fff5d9;border-color:#ffd089}.settingPage{display:grid;gap:15px;padding:16px;background:#101b30;border:1px solid #465575;border-radius:12px}.settingPage label{display:flex;justify-content:space-between;align-items:center;gap:12px;font-weight:600}.settingPage select,.settingPage input:not([type=checkbox]){max-width:65%;min-width:155px;border-radius:8px;padding:10px;background:#eaf0f4;color:#14233b}.settingPage input[type=checkbox]{width:24px;height:24px;accent-color:#eab15a}.settingHelp{font-size:13px;color:#b5c7d8}.settingsFooter{display:flex;justify-content:space-between;gap:15px;margin-top:20px}.rulesBody{font-size:16px;line-height:1.9}.uiLarge main{font-size:115%}.uiLarge button{font-size:110%}
 @media(max-width:640px){.titleContent{padding:25px 0}.settingsPanel{padding:18px}.settingPage label{align-items:flex-start;flex-direction:column}.settingPage select,.settingPage input:not([type=checkbox]){max-width:100%;width:100%}.settingPage label.toggleSetting{flex-direction:row}.titleLogo{font-size:38px}}
+</style><style>
+.mapShell{position:relative;min-height:380px;background:#091a2b;overflow:hidden;border:3px solid #d4a45c;border-radius:18px;box-shadow:0 10px 30px #0009}
+#cityCanvas{display:block;width:100%;height:auto;aspect-ratio:1320/850}
+#mapSwap{position:absolute;right:14px;top:14px;width:31%;min-width:170px;padding:5px;border:2px solid #f1c679;border-radius:13px;background:#0a1d35e8;color:#ffe8b3;z-index:5;box-shadow:0 8px 25px #0009;cursor:pointer}
+#miniCanvas{display:block;width:100%;height:auto;border-radius:8px}#miniCaption{font-size:12px;display:block;margin:4px}
+.mapLegend{position:absolute;bottom:8px;left:8px;right:8px;text-align:center;background:#07182ad9;border:1px solid #b78e51;border-radius:10px;padding:6px;color:#ffe4a4;font-size:12px;pointer-events:none}
+@media(max-width:650px){#mapSwap{min-width:120px;right:5px;top:5px}#miniCaption{font-size:9px}.mapLegend{font-size:10px}}
 </style></head><body><div id="titleScreen" class="screenLayer"><div class="titleBack"></div><div class="titleContent"><div class="eyebrow">MYSTERY BOARD GAME</div><h1 class="titleLogo">🔎 ミステリー・タウン</h1><p class="titleSub">— 事件の真相を、君の推理で暴け —</p><div class="titleButtons"><button class="goldButton" onclick="beginFromTitle()">▶ ゲームスタート</button><button onclick="openSettings()">⚙ ゲーム設定</button><button onclick="openRules()">📖 ルール・遊び方</button></div><div class="titleNote">4人対戦・BOT最大3人・150マスの推理すごろく</div></div></div>
 <div id="settingsScreen" class="screenLayer hidden"><div class="settingsPanel"><button class="closeSettings" onclick="closeSettings()">✕</button><h2>⚙ ゲーム詳細設定</h2><p class="settingsIntro">新しい事件の開始前に変更できます。</p><div class="settingTabs"><button data-tab="basic" onclick="settingsTab('basic')">基本設定</button><button data-tab="player" onclick="settingsTab('player')">プレイヤー</button><button data-tab="effects" onclick="settingsTab('effects')">演出設定</button></div>
 <div class="settingPage" data-page="basic"><label>対戦する人数 <select id="cfgHumans"><option value="1">1人 + BOT3人</option><option value="2">2人 + BOT2人</option><option value="3">3人 + BOT1人</option><option value="4">4人（BOTなし）</option></select></label><div class="settingHelp">プレイヤーは合計4人。複数人の場合は同じPCで順番に操作します。</div><label>BOTの思考速度 <select id="cfgBotSpeed"><option value="1000">ゆっくり</option><option value="420" selected>ふつう</option><option value="80">はやい</option></select></label><div class="settingHelp">事件の抽選や150マスの構成は固定ルールです。</div></div>
@@ -94,7 +101,7 @@ header h1{font-size:clamp(26px,3vw,46px);letter-spacing:.04em}
 <div class="settingsFooter"><button onclick="resetSettings()">初期設定に戻す</button><button class="goldButton" onclick="saveSettings()">設定を保存</button></div></div></div>
 <div id="rulesScreen" class="screenLayer hidden"><div class="settingsPanel"><button class="closeSettings" onclick="closeRules()">✕</button><h2>📖 遊び方</h2><div class="rulesBody"><p>🎲 <b>1. サイコロ</b>：自分の番で振り、出目の数だけ進むか、出目以下のコストの探偵カードを使います。</p><p>🔍 <b>2. 街を調査</b>：証拠品の購入、現場検証、聞き込み、イベントで情報を集めます。</p><p>📒 <b>3. 探偵メモ</b>：自分だけの調査記録・過去の不正解を確認できます。容疑者の特徴は共通公開です。</p><p>🧠 <b>4. 推理タイム</b>：各プレイヤーが5行動するごとに発生。5項目を回答します。</p><p>🏆 <b>5. 勝利</b>：正しい現場エリアにいて、正しい証拠品を持ち、5項目すべて正解すると勝利です。</p></div><button class="goldButton" onclick="closeRules()">閉じる</button></div></div><header><div><div class="muted">4人対戦・推理すごろく</div><h1>🔎 ミステリー・タウン</h1></div><div class="headerActions"><button onclick="openSettings()">⚙ 設定</button><button onclick="returnToTitle()">⌂ タイトルへ</button><button onclick="beginFromTitle()">新しい事件</button></div></header><div id="privacyGate"><div class="gateCard"><div style="font-size:58px">🕵️‍♀️</div><h2 id="gateTitle">探偵を交代してください</h2><p>前の探偵のメモは非公開です。次の探偵だけが画面を見てください。</p><button onclick="unlockTurn()">自分の番を開始する</button></div></div><div id="fxOverlay" aria-hidden="true"><div class="fx-card" id="fxCard"></div></div><div id="toast" role="status"></div><main>
 <aside class="left"><div class="panel sticky notes"><h2>📒 探偵メモ</h2><div class="muted">捜査メモは本人専用。容疑者の特徴だけ全員共通で公開されます。</div><div id="viewer"></div><div id="notes"></div><h2 style="margin-top:20px">👥 容疑者の特徴</h2><div id="suspects"></div></div></aside>
-<section class="center"><div class="panel"><h2>🏰 事件の街・立体ミニチュアマップ</h2><div class="muted">豪華な街を巡って証拠を集めよう！ 光るマスが探偵の現在地です。</div><div class="guide"><span>① 🎲 サイコロ</span><span>② 👣 移動またはカード</span><span>③ 🔎 マスを調査</span><span>④ 🧠 5行動ごとに推理</span></div><div class="mapShell"><canvas id="cityCanvas" width="1320" height="990" aria-label="立体的な街のすごろく盤面"></canvas><div class="mapLegend">🟡コイン　🟣イベント　🟢証拠品　🔴現場検証　🔵聞き込み　⭐カード｜駒の番号＝プレイヤー</div></div><div class="muted" style="margin-top:9px">🔍証拠品　❓イベント　👣現場検証　💬聞き込み　🪙コイン　🃏カード　・通常</div></div><div class="panel" style="margin-top:12px"><h2>🎲 行動エリア</h2><div class="dice-scene"><div id="diceCube" class="dice-cube">⚄</div><div><div class="dice-caption" id="diceCaption">事件の街へ出発！</div><div class="muted">サイコロを振って街を調査</div></div></div><div id="turnArea"></div></div></section>
+<section class="center"><div class="panel"><h2>🏰 事件の街・立体ミニチュアマップ</h2><div class="muted">現在地を中心に前後3マスを表示。右上の全体マップを押すと大小を交換できます。</div><div class="guide"><span>① 🎲 サイコロ</span><span>② 👣 移動またはカード</span><span>③ 🔎 マスを調査</span><span>④ 🧠 5行動ごとに推理</span></div><div class="mapShell"><canvas id="cityCanvas" width="1320" height="850" aria-label="現在地の前後3マスを映す立体風フィールド"></canvas><button id="mapSwap" type="button" onclick="swapMap()" aria-label="近景と全体マップを切り替え"><canvas id="miniCanvas" width="440" height="310"></canvas><span id="miniCaption">全体マップを拡大 ⇄</span></button><div class="mapLegend">左右3マス＋現在地｜右上のマップをクリックで切替</div></div><div class="muted" style="margin-top:9px">🔍証拠品　❓イベント　👣現場検証　💬聞き込み　🪙コイン　🃏カード　・通常</div></div><div class="panel" style="margin-top:12px"><h2>🎲 行動エリア</h2><div class="dice-scene"><div id="diceCube" class="dice-cube">⚄</div><div><div class="dice-caption" id="diceCaption">事件の街へ出発！</div><div class="muted">サイコロを振って街を調査</div></div></div><div id="turnArea"></div></div></section>
 <aside class="right"><div class="panel"><h2>🏅 プレイヤー</h2><div id="players"></div></div><div class="panel" style="margin-top:12px"><h2>📜 捜査ログ</h2><div id="log" class="log"></div></div><div class="panel" style="margin-top:12px"><h2>ℹ️ 遊び方</h2><div class="muted">サイコロを振り、移動するか出目以下のコストのカードを1枚使います。各プレイヤーが5行動するごとに全員推理タイム。事件の5項目を当て、正しい証拠品を持って正しい現場エリアにいれば勝利です。</div></div></aside></main><footer>ローカル対戦・BOT対戦プロトタイプ｜オンライン通信は未接続</footer><script src="engine.js"></script><script>
 const E=window.MysteryEngine;let g=null,botTimer=null,lastHumanKey=null,gateUnlocked=false,fxBusy=false,fxTimer=null,previousState=null;let gameSettings={humans:1,botSpeed:420,dice:true,card:true,move:true,fxSpeed:1,size:"normal",names:["探偵1","探偵2","探偵3","探偵4"]};const $=id=>document.getElementById(id),safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const icon={normal:'·',evidence:'🔍',event:'❓',scene:'👣',interview:'💬',coin:'🪙',card:'🃏'};function start(){try{if(fxBusy)return;if(!E)throw Error('engine.jsが読み込まれていません。index.htmlと同じ場所に配置してください。');g=E.newGame({botCount:4-gameSettings.humans,names:gameSettings.names});lastHumanKey=null;gateUnlocked=false;render();tickBots()}catch(err){console.error(err);alert('ゲーム開始エラー: '+err.message)}}
 function tickBots(){clearTimeout(botTimer);if(fxBusy)return;if(!g||g.phase==='finished')return;let p=g.phase==='inference'?g.players[g.inference.queue[g.inference.index]]:E.current(g);if(p.bot){botTimer=setTimeout(()=>{try{E.botAction(g)}catch(e){alert(e.message)}render();tickBots()},gameSettings.botSpeed)}}
@@ -123,39 +130,95 @@ else if(g.phase==='shop'){let t=g.board[p.pos];html+=`<h2>${t.type==='evidence'?
 else if(g.phase==='interview-choice')html+='<h2>💬 聞き上手</h2><div class="actions"><button onclick="act(()=>E.interviewChoice(g,\'trait\'))">犯人の特徴を調べる</button><button onclick="act(()=>E.interviewChoice(g,\'motive\'))">動機を調べる</button></div>';
 $('turnArea').innerHTML=html}
 
-const CITY={canvas:null,ctx:null,positions:[],trees:[],houses:[],seed:91};
-function cityRand(n){let x=Math.sin(n*128.417+8.23)*43758.5453;return x-Math.floor(x)}
-function isoPoint(x,y){return {x:660+(x-y)*37.2,y:125+(x+y)*19.2}}
-function polygon(c,pts,fill,stroke='#17212b',line=1){c.beginPath();c.moveTo(pts[0].x,pts[0].y);pts.slice(1).forEach(p=>c.lineTo(p.x,p.y));c.closePath();c.fillStyle=fill;c.fill();if(stroke){c.lineWidth=line;c.strokeStyle=stroke;c.stroke()}}
-function block3d(c,x,y,w,d,h,wall,side,roof){let a=isoPoint(x,y),b=isoPoint(x+w,y),cc=isoPoint(x+w,y+d),dd=isoPoint(x,y+d);let top=[a,b,cc,dd].map(p=>({x:p.x,y:p.y-h}));polygon(c,[a,dd,top[3],top[0]],side);polygon(c,[dd,cc,top[2],top[3]],wall);polygon(c,[a,b,top[1],top[0]],wall);polygon(c,top,roof,'#f9df9c',1.2);return top}
-function cityLabel(c,text,x,y){c.save();c.font='bold 23px sans-serif';c.textAlign='center';c.shadowColor='#000';c.shadowBlur=7;c.fillStyle='#fff5ce';c.fillText(text,x,y);c.restore()}
+// Live board renderer: every space comes from g.board; no painted background image.
+const CITY={overviewMain:false};
+const TILE_COLORS={normal:'#f2dcae',evidence:'#70dbc6',event:'#d49cff',scene:'#fa947e',interview:'#91baff',coin:'#ffd46b',card:'#8fdf87'};
+const TILE_ICONS={normal:'',evidence:'◆',event:'?',scene:'!',interview:'●',coin:'$',card:'★'};
+const PAWN_COLORS=['#4bbaff','#ff5f6b','#61df9a','#ffcf58'];
+function swapMap(){CITY.overviewMain=!CITY.overviewMain;drawCity()}
 function drawCity(spot=null){
  if(!g)return;
- let canvas=$('cityCanvas');if(!canvas)return;
- let c=canvas.getContext('2d');if(!c)return;
- c.clearRect(0,0,1320,990);
- let bg=c.createLinearGradient(0,0,0,990);bg.addColorStop(0,'#0c2139');bg.addColorStop(.55,'#19394a');bg.addColorStop(1,'#102e31');c.fillStyle=bg;c.fillRect(0,0,1320,990);
- // Illustrated miniature mansion backdrop with a live, independently drawn board on top
- if(!CITY.art){CITY.art=new Image();CITY.art.src='assets/mansion-board.jpg';CITY.art.onload=()=>{if(g)drawCity()}}
- if(CITY.art.complete&&CITY.art.naturalWidth){c.drawImage(CITY.art,0,0,1320,990)}
- c.fillStyle='rgba(5,14,29,.10)';c.fillRect(0,0,1320,990);
- c.save();c.font='bold 26px Georgia,serif';c.textAlign='center';c.shadowColor='#000';c.shadowBlur=14;
- c.fillStyle='#ffe2a0';c.fillText('🏘️ 住宅街',320,135);c.fillText('🛍️ 商店街',1010,135);
- c.fillText('🌲 裏山',330,790);c.fillText('🏙️ 中心街',1010,790);c.restore();
- // 150 clickable-looking miniature spaces follow the illustrated mansion courtyard paths.
- const knots=[{x:205,y:315},{x:390,y:325},{x:470,y:235},{x:820,y:235},{x:910,y:322},{x:1090,y:330},{x:1120,y:555},{x:1010,y:645},{x:850,y:655},{x:710,y:670},{x:490,y:655},{x:300,y:590},{x:170,y:575},{x:205,y:315}];
- let lengths=[],total=0;for(let i=0;i<knots.length-1;i++){let d=Math.hypot(knots[i+1].x-knots[i].x,knots[i+1].y-knots[i].y);lengths.push(d);total+=d}
- const points=[];for(let i=0;i<150;i++){let distance=i*total/150,k=0;while(k<lengths.length-1&&distance>lengths[k]){distance-=lengths[k];k++}let t=distance/lengths[k];points.push({x:knots[k].x+(knots[k+1].x-knots[k].x)*t,y:knots[k].y+(knots[k+1].y-knots[k].y)*t})}
- c.lineJoin='round';c.lineCap='round';c.beginPath();points.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));c.closePath();c.strokeStyle='#140e20c9';c.lineWidth=25;c.stroke();c.strokeStyle='#f3d8a8b5';c.lineWidth=18;c.stroke();
- const colors={normal:'#eee1bd',coin:'#ffd568',evidence:'#5ed3bf',event:'#b98af3',scene:'#f58d76',interview:'#87b4f5',card:'#8bce81'};
- for(let i=0;i<150;i++){let p=points[i],tile=g.board[i],active=spot===i||g.players.some(q=>q.pos===i);
-   c.save();c.translate(p.x,p.y);c.fillStyle='#302a2d';c.fillRect(-6,-7,13,15);c.fillStyle=colors[tile.type]||'#eee1bd';c.fillRect(-6,-9,12,12);c.strokeStyle=active?'#fff7b1':'#55432f';c.lineWidth=active?3:1;c.strokeRect(-6,-9,12,12);
-   if(active){c.shadowColor='#fff2a0';c.shadowBlur=18;c.strokeStyle='#fff6b4';c.strokeRect(-8,-11,16,16)}
-   if(tile.type!=='normal'){c.font='bold 9px sans-serif';c.textAlign='center';c.fillStyle='#1d2b38';c.fillText(({coin:'$',evidence:'◆',event:'?',scene:'!',interview:'●',card:'★'})[tile.type],0,2)}
-   c.restore()}
- const pawnColors=['#52b6ff','#ff6868','#5ee1a4','#ffcc50'];
- g.players.forEach((q,i)=>{let p=points[q.pos],offset=i*12-18;c.save();c.shadowColor=pawnColors[i];c.shadowBlur=14;c.fillStyle=pawnColors[i];c.strokeStyle='#fff8dc';c.lineWidth=3;c.beginPath();c.arc(p.x+offset,p.y-24,11,0,7);c.fill();c.stroke();c.fillStyle='#152331';c.font='bold 13px sans-serif';c.textAlign='center';c.fillText(String(i+1),p.x+offset,p.y-20);c.restore()});
- c.font='bold 27px Georgia,serif';c.textAlign='center';c.shadowColor='#000';c.shadowBlur=12;c.fillStyle='#ffe5b5';c.fillText('MYSTERY TOWN  •  150マスの立体すごろく',660,55);
+ const focus=spot===null?(g.phase==='inference'?g.players[g.inference.queue[g.inference.index]].pos:E.current(g).pos):spot;
+ let main=$('cityCanvas'),mini=$('miniCanvas');if(!main||!mini)return;
+ if(CITY.overviewMain){renderOverview(main,focus);renderClose(mini,focus,true)}
+ else{renderClose(main,focus,false);renderOverview(mini,focus)}
+ $('miniCaption').textContent=CITY.overviewMain?'近くのマスを拡大 ⇄':'全体マップを拡大 ⇄';
+}
+function fillPoly(c,pts,color,stroke='#172336',width=2){c.beginPath();c.moveTo(pts[0][0],pts[0][1]);pts.slice(1).forEach(p=>c.lineTo(p[0],p[1]));c.closePath();c.fillStyle=color;c.fill();if(stroke){c.lineWidth=width;c.strokeStyle=stroke;c.stroke()}}
+function rect(c,x,y,w,h,color){c.fillStyle=color;c.fillRect(x,y,w,h)}
+function seeded(n){let r=Math.sin(n*97.13+13.19)*12345.678;return r-Math.floor(r)}
+function building(c,x,y,w,h,style,n){
+ let wall=style==='住宅街'?'#d2ad90':style==='商店街'?'#c49b70':style==='中心街'?'#7e9fba':'#9b886f';
+ let roof=style==='住宅街'?'#ab5966':style==='商店街'?'#a95044':style==='中心街'?'#4a608e':'#506f50';
+ fillPoly(c,[[x,y],[x+w,y],[x+w,y-h],[x,y-h]],wall,'#2d3545',2);
+ fillPoly(c,[[x+w,y],[x+w+23,y-15],[x+w+23,y-h-15],[x+w,y-h]],'#6a6170');
+ fillPoly(c,[[x-6,y-h],[x+w,y-h],[x+w+27,y-h-18],[x+18,y-h-18]],roof,'#d5b981',2);
+ for(let j=0;j<Math.max(1,Math.floor(h/33));j++)for(let i=0;i<Math.max(1,Math.floor(w/32));i++){
+  let xx=x+11+i*31,yy=y-h+14+j*29;rect(c,xx,yy,12,16,'#493d4c');rect(c,xx+2,yy+2,8,11,seeded(n+i+j*11)>.4?'#ffe6a0':'#91c4d7')
+ }
+}
+function tree(c,x,y,s,n){rect(c,x-4*s,y-5*s,8*s,25*s,'#685444');c.fillStyle=n%2?'#3f996b':'#447e61';c.beginPath();c.arc(x,y-19*s,19*s,0,7);c.fill();c.fillStyle='#77b78a';c.beginPath();c.arc(x-6*s,y-25*s,10*s,0,7);c.fill()}
+function pawn(c,x,y,color,scale,num){
+ c.save();c.translate(x,y);c.scale(scale,scale);c.shadowColor=color;c.shadowBlur=13;
+ c.fillStyle='#0007';c.beginPath();c.ellipse(0,3,22,8,0,0,7);c.fill();
+ fillPoly(c,[[-17,-9],[17,-9],[10,-32],[-10,-32]],color,'#f6e8cc',2);
+ c.beginPath();c.arc(0,-43,13,0,7);c.fillStyle=color;c.fill();c.lineWidth=3;c.strokeStyle='#fff4d5';c.stroke();c.shadowBlur=0;
+ c.font='bold 17px sans-serif';c.fillStyle='#152132';c.textAlign='center';c.fillText(String(num),0,-37);c.restore();
+}
+function sceneBackdrop(c,W,H,zone,focus){
+ const palettes={'住宅街':['#152e50','#3e6677','#2e6157'],'商店街':['#34243e','#805447','#624840'],'中心街':['#172c54','#45608c','#2a4e6c'],'裏山':['#112c39','#285d55','#244b43']};
+ let pal=palettes[zone]||palettes['住宅街'];let grad=c.createLinearGradient(0,0,0,H);grad.addColorStop(0,pal[0]);grad.addColorStop(.57,pal[1]);grad.addColorStop(1,pal[2]);rect(c,0,0,W,H,grad);
+ // Stars and moon, deterministic.
+ c.fillStyle='#fff0bb';c.beginPath();c.arc(W*.83,H*.13,H*.055,0,7);c.fill();
+ for(let i=0;i<65;i++){let x=seeded(i+focus*.1)*W,y=seeded(i+66)*H*.42;rect(c,x,y,2,2,'#f9e9bb88')}
+ rect(c,0,H*.58,W,H*.42,zone==='裏山'?'#345947':'#475a55');
+ for(let i=0;i<13;i++){let x=(i+.2)*W/13,y=H*.59+seeded(i+44)*H*.07;let n=i+Math.floor(focus/38)*40;
+  if(zone==='裏山'){tree(c,x,y,1.2+seeded(n)*1.1,n);continue}
+  let bw=W/17+seeded(n)*W/40,bh=H*(zone==='中心街'?.25:.13)+seeded(n+8)*H*(zone==='中心街'?.28:.16);
+  building(c,x,y,bw,bh,zone,n);
+  if(zone==='商店街'){rect(c,x,y-16,bw,12,'#e3a65b');rect(c,x+5,y-13,bw-10,4,'#ffe8ac')}
+ }
+ if(zone==='裏山'){for(let i=0;i<18;i++)tree(c,(i+.3)*W/18,H*.71+seeded(i+78)*H*.12,.8+seeded(i+18)*.9,i)}
+ // Golden street lights
+ for(let i=0;i<5;i++){let x=(i+.5)*W/5,y=H*.67;rect(c,x-3,y-65,6,65,'#2e3038');c.shadowColor='#ffd37b';c.shadowBlur=22;c.fillStyle='#ffe2a0';c.beginPath();c.arc(x,y-68,10,0,7);c.fill();c.shadowBlur=0}
+}
+function renderClose(canvas,focus,small){let c=canvas.getContext('2d'),W=canvas.width,H=canvas.height;
+ c.clearRect(0,0,W,H);let zone=g.board[focus].zone;sceneBackdrop(c,W,H,zone,focus);
+ let centerY=H*.72,step=W*.132,scale=small?.42:1;
+ c.lineJoin='round';c.lineCap='round';
+ // seven real game spaces, arranged as a continuous perspective boardwalk
+ for(let offset=-3;offset<=3;offset++){
+  let idx=(focus+offset+150)%150,tile=g.board[idx],x=W*.5+offset*step,y=centerY+Math.abs(offset)*H*.022;
+  let w=W*.105,h=H*.082,depth=H*.028;
+  fillPoly(c,[[x-w/2,y],[x+w/2,y],[x+w/2,y+depth],[x-w/2,y+depth]],'#5e4c4c');
+  fillPoly(c,[[x-w/2,y-h],[x+w/2,y-h],[x+w/2,y],[x-w/2,y]],TILE_COLORS[tile.type]||TILE_COLORS.normal,offset===0?'#fff8c0':'#3b2e32',offset===0?5:2);
+  if(offset===0){c.shadowColor='#ffe2a2';c.shadowBlur=22;c.strokeStyle='#fff5c7';c.lineWidth=5;c.strokeRect(x-w/2,y-h,w,h);c.shadowBlur=0}
+  c.textAlign='center';c.fillStyle='#1e2940';c.font=`bold ${Math.max(11,Math.floor(H*.037))}px sans-serif`;c.fillText(TILE_ICONS[tile.type]||'',x,y-h*.42);
+  c.font=`bold ${Math.max(9,Math.floor(H*.022))}px sans-serif`;c.fillStyle='#fff4da';c.fillText(String(idx+1),x,y+depth+H*.026);
+  g.players.forEach((p,i)=>{if(p.pos===idx)pawn(c,x+(i-1.5)*w*.17,y-h-6,PAWN_COLORS[i],Math.max(.32,H/850*.95),i+1)});
+ }
+ c.fillStyle='#07182ad9';c.fillRect(0,0,W,H*.09);c.textAlign='left';c.fillStyle='#ffe1a0';c.font=`bold ${Math.max(12,Math.floor(H*.044))}px sans-serif`;
+ c.fillText(zone+'  •  '+(focus+1)+'/150 マス',W*.035,H*.064);
+ if(!small){c.font='bold 22px sans-serif';c.fillStyle='#fff2d4';c.fillText('← 前3マス',W*.055,H*.90);c.textAlign='right';c.fillText('次3マス →',W*.95,H*.90)}
+}
+function overviewPoint(i,W,H){let x,y,t;
+ // Four contiguous zones: top residential, right shopping, bottom downtown, left mountain.
+ let margin=W*.11,top=H*.18,right=W*.89,bottom=H*.83;
+ if(i<38){t=i/37;x=margin+(right-margin)*t;y=top}
+ else if(i<76){t=(i-38)/37;x=right;y=top+(bottom-top)*t}
+ else if(i<113){t=(i-76)/36;x=right-(right-margin)*t;y=bottom}
+ else{t=(i-113)/37;x=margin;y=bottom-(bottom-top)*t}
+ return {x,y};
+}
+function renderOverview(canvas,focus){let c=canvas.getContext('2d'),W=canvas.width,H=canvas.height;c.clearRect(0,0,W,H);
+ let grad=c.createLinearGradient(0,0,W,H);grad.addColorStop(0,'#183d47');grad.addColorStop(1,'#13233f');rect(c,0,0,W,H,grad);
+ const zones=[['住宅街',W*.28,H*.33,'#4a746d'],['商店街',W*.73,H*.33,'#906449'],['裏山',W*.27,H*.67,'#3a694b'],['中心街',W*.73,H*.67,'#4a6287']];
+ zones.forEach(([name,x,y,col],i)=>{c.fillStyle=col;c.beginPath();c.arc(x,y,Math.min(W,H)*.17,0,7);c.fill();c.textAlign='center';c.fillStyle='#fff0ce';c.font=`bold ${Math.max(10,H*.046)}px sans-serif`;c.fillText(name,x,y)});
+ c.beginPath();for(let i=0;i<150;i++){let p=overviewPoint(i,W,H);i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y)}c.closePath();c.strokeStyle='#e8c88b';c.lineWidth=Math.max(5,W*.017);c.stroke();
+ for(let i=0;i<150;i++){let p=overviewPoint(i,W,H),r=Math.max(1.8,W*.005);c.fillStyle=TILE_COLORS[g.board[i].type];c.fillRect(p.x-r,p.y-r,2*r,2*r)}
+ g.players.forEach((p,i)=>{let pt=overviewPoint(p.pos,W,H);c.fillStyle=PAWN_COLORS[i];c.beginPath();c.arc(pt.x,pt.y,Math.max(5,W*.013),0,7);c.fill();c.strokeStyle='#fff';c.lineWidth=2;c.stroke()});
+ let current=overviewPoint(focus,W,H);c.strokeStyle='#fff3af';c.lineWidth=Math.max(2,W*.006);c.beginPath();c.arc(current.x,current.y,Math.max(9,W*.022),0,7);c.stroke();
+ c.fillStyle='#f7e2a7';c.font=`bold ${Math.max(11,H*.045)}px sans-serif`;c.textAlign='left';c.fillText('全体マップ / 150マス',W*.045,H*.09);
 }
 window.addEventListener('resize',()=>{if(g)drawCity()});
 
