@@ -147,7 +147,7 @@ button:not(.secondary){background:linear-gradient(180deg,#fff0b6,#df9e45 62%,#a5
 <div class="settingsFooter"><button onclick="resetSettings()">初期設定に戻す</button><button class="goldButton" onclick="saveSettings()">設定を保存</button></div></div></div>
 <div id="rulesScreen" class="screenLayer hidden"><div class="settingsPanel"><button class="closeSettings" onclick="closeRules()">✕</button><h2>📖 遊び方</h2><div class="rulesBody"><p>🎲 <b>1. サイコロ</b>：自分の番で振り、出目の数だけ進むか、出目以下のコストの探偵カードを使います。</p><p>🔍 <b>2. 街を調査</b>：証拠品の購入、現場検証、聞き込み、イベントで情報を集めます。</p><p>📒 <b>3. 探偵メモ</b>：自分だけの調査記録・過去の不正解を確認できます。容疑者の特徴は共通公開です。</p><p>🧠 <b>4. 推理タイム</b>：各プレイヤーが5行動するごとに発生。5項目を回答します。</p><p>🏆 <b>5. 勝利</b>：正しい現場エリアにいて、正しい証拠品を持ち、5項目すべて正解すると勝利です。</p></div><button class="goldButton" onclick="closeRules()">閉じる</button></div></div><header><div><div class="muted">4人対戦・立体風推理ボードゲーム</div><h1>🔎 ミステリー・タウン</h1></div><div class="headerActions"><button onclick="openSettings()">⚙ 設定</button><button onclick="returnToTitle()">⌂ タイトルへ</button><button onclick="beginFromTitle()">新しい事件</button></div></header><div id="privacyGate"><div class="gateCard"><div style="font-size:58px">🕵️‍♀️</div><h2 id="gateTitle">探偵を交代してください</h2><p>前の探偵のメモは非公開です。次の探偵だけが画面を見てください。</p><button onclick="unlockTurn()">自分の番を開始する</button></div></div><div id="fxOverlay" aria-hidden="true"><div class="fx-card" id="fxCard"></div></div><div id="toast" role="status"></div><main>
 <aside class="left"><div class="panel sticky notes"><h2>📒 探偵メモ</h2><div class="muted">捜査メモは本人専用。容疑者の特徴だけ全員共通で公開されます。</div><div id="viewer"></div><div id="notes"></div><h2 style="margin-top:20px">👥 容疑者の特徴</h2><div id="suspects"></div></div></aside>
-<section class="center"><div class="panel"><h2>🏰 事件の街・立体ミニチュアマップ</h2><div class="muted">近景は6×6マス。毎回ランダムに生成される道路で150マスを接続。サイコロ後に赤い終点を選ぶと一気に移動します。</div><div class="guide"><span>① 🎲 サイコロ</span><span>② 👣 移動またはカード</span><span>③ 🔎 マスを調査</span><span>④ 🧠 5行動ごとに推理</span></div><div class="mapShell"><div id="gridHover">マスにカーソルを合わせると詳細を表示</div><canvas id="cityCanvas" width="1320" height="850" aria-label="現在地周辺6×6マスを映す立体風フィールド"></canvas><button id="mapSwap" type="button" onclick="swapMap()" aria-label="近景と全体マップを切り替え"><canvas id="miniCanvas" width="440" height="310"></canvas><span id="miniCaption">全体マップを拡大 ⇄</span></button><div class="mapLegend">近景6×6マス｜全体15×10マス｜右上で切替</div></div><div id="fieldMove" class="field-move"></div><div class="muted" style="margin-top:9px">🔍証拠品　❓イベント　👣現場検証　💬聞き込み　🪙コイン　🃏カード　・通常</div></div><div class="panel" style="margin-top:12px"><h2>🎲 行動エリア</h2><div class="dice-scene"><div id="diceCube" class="dice-cube">⚄</div><div><div class="dice-caption" id="diceCaption">事件の街へ出発！</div><div class="muted">サイコロを振って街を調査</div></div></div><div id="turnArea"></div></div></section>
+<section class="center"><div class="panel"><h2>🏰 事件の街・夜景鉄道マップ</h2><div class="muted">近景は6×6マス。毎回ランダムに生成される分岐線路で150駅を接続。サイコロ後に赤く光る駅を選ぶと一気に移動します。</div><div class="guide"><span>① 🎲 サイコロ</span><span>② 👣 移動またはカード</span><span>③ 🔎 マスを調査</span><span>④ 🧠 5行動ごとに推理</span></div><div class="mapShell"><div id="gridHover">マスにカーソルを合わせると詳細を表示</div><canvas id="cityCanvas" width="1320" height="850" aria-label="現在地周辺6×6マスを映す立体風フィールド"></canvas><button id="mapSwap" type="button" onclick="swapMap()" aria-label="近景と全体マップを切り替え"><canvas id="miniCanvas" width="440" height="310"></canvas><span id="miniCaption">全体マップを拡大 ⇄</span></button><div class="mapLegend">近景6×6駅｜150駅の分岐線路｜右上で全体図</div></div><div id="fieldMove" class="field-move"></div><div class="muted" style="margin-top:9px">🔍証拠品　❓イベント　👣現場検証　💬聞き込み　🪙コイン　🃏カード　・通常</div></div><div class="panel" style="margin-top:12px"><h2>🎲 行動エリア</h2><div class="dice-scene"><div id="diceCube" class="dice-cube">⚄</div><div><div class="dice-caption" id="diceCaption">事件の街へ出発！</div><div class="muted">サイコロを振って街を調査</div></div></div><div id="turnArea"></div></div></section>
 <aside class="right"><div class="panel"><h2>🏅 プレイヤー</h2><div id="players"></div></div><div class="panel" style="margin-top:12px"><h2>📜 捜査ログ</h2><div id="log" class="log"></div></div><div class="panel" style="margin-top:12px"><h2>ℹ️ 遊び方</h2><div class="muted">サイコロを振り、移動するか出目以下のコストのカードを1枚使います。各プレイヤーが5行動するごとに全員推理タイム。事件の5項目を当て、正しい証拠品を持って正しい現場エリアにいれば勝利です。</div></div></aside></main><footer>ローカル対戦・BOT対戦｜3D風描画（Canvas）・オンライン通信は未接続</footer><script src="engine.js"></script><script>
 const E=window.MysteryEngine;let g=null,botTimer=null,lastHumanKey=null,gateUnlocked=false,fxBusy=false,fxTimer=null,previousState=null;let gameSettings={humans:1,botSpeed:420,dice:true,card:true,move:true,fxSpeed:1,size:"normal",names:["探偵1","探偵2","探偵3","探偵4"]};const $=id=>document.getElementById(id),safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const icon={normal:'·',evidence:'🔍',event:'❓',scene:'👣',interview:'💬',coin:'🪙',card:'🃏'};function start(){try{if(fxBusy)return;if(!E)throw Error('engine.jsが読み込まれていません。index.htmlと同じ場所に配置してください。');g=E.newGame({botCount:4-gameSettings.humans,names:gameSettings.names});lastHumanKey=null;gateUnlocked=false;lastEventSerial=0;render();tickBots()}catch(err){console.error(err);alert('ゲーム開始エラー: '+err.message)}}
 function tickBots(){clearTimeout(botTimer);if(fxBusy)return;if(!g||g.phase==='finished')return;let p=g.phase==='inference'?g.players[g.inference.queue[g.inference.index]]:E.current(g);if(p.bot){botTimer=setTimeout(()=>{try{E.botAction(g)}catch(e){alert(e.message)}render();if(!eventFxIfNew())tickBots()},gameSettings.botSpeed)}}
@@ -461,6 +461,16 @@ function v10PawnJewel(c,x,y,scale,color,num){
 
 function roundedTrack(c,x,y,w,h,r){r=Math.min(r,w/2,h/2);c.beginPath();c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.quadraticCurveTo(x+w,y,x+w,y+r);c.lineTo(x+w,y+h-r);c.quadraticCurveTo(x+w,y+h,x+w-r,y+h);c.lineTo(x+r,y+h);c.quadraticCurveTo(x,y+h,x,y+h-r);c.lineTo(x,y+r);c.quadraticCurveTo(x,y,x+r,y);c.closePath()}
 function paintRouteSpace(c,x,top,bottom,tw,fill,edge,width){const h=bottom-top;roundedTrack(c,x-tw*.48,top,tw*.96,h,h*.45);c.fillStyle=fill;c.fill();c.lineWidth=width;c.strokeStyle=edge;c.stroke();c.save();c.globalAlpha=.26;roundedTrack(c,x-tw*.37,top+h*.13,tw*.74,h*.13,h*.065);c.fillStyle='#fff';c.fill();c.restore()}
+function paintRailStation(c,x,top,bottom,tw,face,active,current,overview){
+ const h=bottom-top;
+ c.save();c.shadowColor=active?'#ff234c':current?'#50ddff':'#110d25';c.shadowBlur=active?32:current?24:9;
+ roundedTrack(c,x-tw*.52,top-h*.055,tw*1.04,h*1.1,h*.23);
+ c.fillStyle='#fff9e9';c.fill();c.lineWidth=overview?2:5;c.strokeStyle=active?'#ff3e57':current?'#61dfff':'#3a2b4b';c.stroke();
+ c.shadowBlur=0;roundedTrack(c,x-tw*.43,top+h*.08,tw*.86,h*.77,h*.16);c.fillStyle=face;c.fill();
+ c.lineWidth=overview?1:2;c.strokeStyle='#fff7e9';c.stroke();
+ if(active){c.shadowColor='#ff003a';c.shadowBlur=25;c.lineWidth=overview?3:6;c.strokeStyle='#ff2648';roundedTrack(c,x-tw*.50,top-h*.04,tw,h*1.06,h*.23);c.stroke();}
+ c.restore();
+}
 function renderGrid(canvas,focus,overview,small=false){
  const c=canvas.getContext('2d'),W=canvas.width,H=canvas.height;c.clearRect(0,0,W,H);
  const zone=gridZone(focus);
@@ -476,22 +486,40 @@ function renderGrid(canvas,focus,overview,small=false){
    paintFlowers(c,W*.13,H*.82,focus);paintFlowers(c,W*.85,H*.84,focus+11);
  }
  const center=E.gridCoord(focus),cols=overview?15:6,rows=overview?10:6;
- const tw=overview?W*.050:W*.139,th=overview?H*.060:H*.105,dx=tw*.99,dy=th*.87;
- const originX=W*.5-(cols-1)*dx*.5,originY=overview?H*.18:H*.21;
+ const tw=overview?W*.050:W*.113,th=overview?H*.060:H*.105,dx=overview?tw*1.08:W*.155,dy=overview?th*1.12:H*.117;
+ const originX=W*.5-(cols-1)*dx*.5,originY=overview?H*.19:H*.205;
  const selected=(g.phase==='choice'&&!E.current(g).bot)?new Set(E.reachable(g,E.current(g).pos,g.roll)):new Set();
  if(canvas.id==='cityCanvas')gridHit=[];
- // The road lines show actual edges from the engine graph (including intersections).
- c.save();c.lineCap='round';c.lineJoin='round';
+ // Draw a true connected rail network beneath all stations. Each link is an actual edge in g.roads.
  const left=overview?0:Math.max(0,Math.min(9,center.x-2)),up=overview?0:Math.max(0,Math.min(4,center.y-2));
+ const stationPoint=(rx,ry)=>({x:originX+rx*dx,y:originY+ry*dy});
+ c.save();c.lineCap='round';c.lineJoin='round';
+ const railWidth=overview?13:35;
+ const links=[];
  for(let ry=0;ry<rows;ry++)for(let rx=0;rx<cols;rx++){
   let id=E.gridId(left+rx,up+ry);if(id<0)continue;
   for(let other of E.neighbors(g,id)){
    let q=E.gridCoord(other),tx=q.x-left,ty=q.y-up;
    if(tx<0||ty<0||tx>=cols||ty>=rows||other<id)continue;
-   let ax=originX+rx*dx,ay=originY+ry*dy,bx=originX+tx*dx,by=originY+ty*dy;
-   c.beginPath();c.moveTo(ax,ay);c.lineTo(bx,by);c.strokeStyle='#101526';c.lineWidth=overview?16:45;c.stroke();
-   c.strokeStyle='#c5a16b';c.lineWidth=overview?12:34;c.stroke();
-   c.setLineDash([overview?2:8,overview?3:10]);c.strokeStyle='#f9e4b3';c.lineWidth=overview?1.5:3;c.stroke();c.setLineDash([]);
+   links.push([stationPoint(rx,ry),stationPoint(tx,ty)]);
+  }
+ }
+ for(const [a,b] of links){
+  let vx=b.x-a.x,vy=b.y-a.y,len=Math.hypot(vx,vy)||1,nx=-vy/len,ny=vx/len;
+  c.save();c.shadowColor='#070718';c.shadowBlur=overview?5:16;c.shadowOffsetY=overview?2:8;
+  c.strokeStyle='#202334';c.lineWidth=railWidth+12;c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x,b.y);c.stroke();c.restore();
+  c.strokeStyle='#e9e3dc';c.lineWidth=railWidth+5;c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x,b.y);c.stroke();
+  c.strokeStyle='#565063';c.lineWidth=railWidth;c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x,b.y);c.stroke();
+  // Sleepers (ties) are perpendicular to the track, making the connections unambiguous.
+  const count=Math.max(2,Math.ceil(len/(overview?9:18)));
+  for(let i=0;i<=count;i++){
+   const t=i/count,px=a.x+vx*t,py=a.y+vy*t;
+   c.strokeStyle='#29263a';c.lineWidth=overview?2:5;c.beginPath();c.moveTo(px-nx*railWidth*.56,py-ny*railWidth*.56);c.lineTo(px+nx*railWidth*.56,py+ny*railWidth*.56);c.stroke();
+   c.strokeStyle='#e6d5b8';c.lineWidth=overview?1:2;c.beginPath();c.moveTo(px-nx*railWidth*.49,py-ny*railWidth*.49);c.lineTo(px+nx*railWidth*.49,py+ny*railWidth*.49);c.stroke();
+  }
+  for(const side of [-.35,.35]){
+   c.strokeStyle='#f8f6e7';c.lineWidth=overview?2.5:6;c.beginPath();c.moveTo(a.x+nx*railWidth*side,a.y+ny*railWidth*side);c.lineTo(b.x+nx*railWidth*side,b.y+ny*railWidth*side);c.stroke();
+   c.strokeStyle='#b0b9c5';c.lineWidth=overview?1:2;c.beginPath();c.moveTo(a.x+nx*railWidth*side,a.y+ny*railWidth*side);c.lineTo(b.x+nx*railWidth*side,b.y+ny*railWidth*side);c.stroke();
   }
  }
  c.restore();
@@ -500,12 +528,12 @@ function renderGrid(canvas,focus,overview,small=false){
   let tile=g.board[id],x=originX+rx*dx,y=originY+ry*dy;
   let active=selected.has(id),current=id===(CITY.preview??focus),top=y-th*.36,bottom=y+th*.35,depth=th*.26;
   c.save();c.shadowColor='#080513';c.shadowBlur=10;c.shadowOffsetY=8;
-  fillPoly(c,[[x-tw*.48,bottom],[x+tw*.48,bottom],[x+tw*.48,bottom+depth],[x-tw*.48,bottom+depth]],'#665063','#1e1528',2);
+  fillPoly(c,[[x-tw*.48,bottom],[x+tw*.48,bottom],[x+tw*.48,bottom+depth],[x-tw*.48,bottom+depth]],'#d1cad5','#1e1528',2);
   c.restore();
-  royalTileBevel(c,x,top,bottom,tw,depth,active,current);
+  // Raised station platform, attached to the connected rails.
   const face=c.createLinearGradient(x-tw*.5,top,x+tw*.5,bottom);face.addColorStop(0,'#fff1cb');face.addColorStop(.13,TILE_COLORS[tile.type]);face.addColorStop(.75,TILE_COLORS[tile.type]);face.addColorStop(1,'#463050');
   c.shadowColor=active?'#ff485b':current?'#6ef2ff':'#f8a64a';c.shadowBlur=active?34:current?28:9;
-  paintRouteSpace(c,x,top,bottom,tw,face,active?'#ff394f':current?'#7ae8ff':'#c4a36e',active?5:current?4:2);
+  paintRailStation(c,x,top,bottom,tw,face,active,current,overview);
   c.shadowBlur=0;
   v10TileDetails(c,x,top,bottom,tw,th,id,active);
   if(active){c.save();c.fillStyle='#ff264b44';roundedTrack(c,x-tw*.48,top,tw*.96,th*.75,th*.24);c.fill();c.restore()}if(active||current){c.save();c.strokeStyle=active?'#ff576c':'#94efff';c.lineWidth=3;c.shadowColor=active?'#ff304b':'#5be2ff';c.shadowBlur=18;roundedTrack(c,x-tw*.43,top+th*.05,tw*.86,th*.58,th*.23);c.stroke();c.restore()}
@@ -516,7 +544,7 @@ function renderGrid(canvas,focus,overview,small=false){
   if(canvas.id==='cityCanvas')gridHit.push({id,x0:x-tw*.5,y0:top,x1:x+tw*.5,y1:bottom+depth});
  }
  c.fillStyle='#080d23ec';c.fillRect(0,0,W,H*.105);c.fillStyle='#ffd999';c.font=`bold ${Math.max(13,H*.038)}px serif`;c.textAlign='left';c.fillText((overview?'✦ 全体マップ 15×10':'✦ '+zone+' / 近景6×6')+'　マス '+(focus+1)+'/150',W*.025,H*.069);
- if(!overview){c.fillStyle='#ffdf9c';c.font=`bold ${Math.max(12,H*.026)}px serif`;c.fillText('✦ 赤いマスをタップして一気に移動　|　道路は毎ゲーム変化',W*.025,H*.962)}
+ if(!overview){c.fillStyle='#ffdf9c';c.font=`bold ${Math.max(12,H*.026)}px serif`;c.fillText('✦ 赤く光る駅が移動先　|　線路はゲームごとに変化',W*.025,H*.962)}
 }
 function overviewPoint(i,W,H){let x,y,t;
  // Four contiguous zones: top residential, right shopping, bottom downtown, left mountain.
