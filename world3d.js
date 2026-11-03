@@ -4,10 +4,10 @@
 'use strict';
 if(!window.THREE){console.warn('Three.js CDN unavailable: using 2D fallback');return;}
 const $3=id=>document.getElementById(id);
-let scene,camera,renderer,world,raycaster,mouse,canvas,liveGame=null,oldBoard=null,oldRoads=null,positions=[],stations=[],pawnMeshes=[],pickables=[],reachRings=[],reachCache="",destinationMarker=null,angle=.72,elevation=.78,distance=46,drag=null,ready=false,frame=0;
+let scene,camera,renderer,world,raycaster,mouse,canvas,liveGame=null,oldBoard=null,oldRoads=null,positions=[],stations=[],pawnMeshes=[],pickables=[],reachRings=[],reachCache="",destinationMarker=null,thiefPawn=null,angle=.72,elevation=.78,distance=46,drag=null,ready=false,frame=0;
 const TILE_NAMES={normal:'通常マス',evidence:'証拠品ショップ',event:'イベントマス',scene:'現場検証マス',interview:'聞き込みマス',coin:'コインマス',card:'探偵カードショップ',buzzer:'ブザーマス',informant:'情報屋マス'};
-const ICONS={normal:'·',evidence:'🔍',event:'!',scene:'⌖',interview:'☏',coin:'¥',card:'♠',buzzer:'!',informant:'?'};
-const C={normal:0xe9d9b6,evidence:0x55cdb7,event:0xb96cf4,scene:0xff9478,interview:0x70a6ff,coin:0xffc654,card:0x80d46f,buzzer:0xff375a,informant:0x30e4ee};
+const ICONS={normal:'•',evidence:'🔎',event:'❗',scene:'🔬',interview:'💬',coin:'🪙',card:'🃏',buzzer:'🚨',informant:'🕵'};
+const C={normal:0xc9b99c,evidence:0x22c7b6,event:0xa75aff,scene:0xff754c,interview:0x438dff,coin:0xffc329,card:0x54c64b,buzzer:0xff244e,informant:0x19d7ed};
 const mat=(color,extra={})=>new THREE.MeshStandardMaterial({color,roughness:.55,metalness:.12,...extra});
 const material={grass:mat(0x204b40),road:mat(0xc7b5a1),roadSide:mat(0x4c3b54),river:mat(0x0a6594,{metalness:.65,roughness:.18}),gold:mat(0xf3c46d,{metalness:.8,roughness:.18}),window:new THREE.MeshBasicMaterial({color:0xffd985}),roof:mat(0x303c7a),stone:mat(0x5b6674),pink:mat(0xf5a4d5),green:mat(0x286a56),trunk:mat(0x6c4a37)};
 function mesh(geometry,m,x=0,y=0,z=0,parent=world){const o=new THREE.Mesh(geometry,m);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;parent.add(o);return o}
@@ -27,8 +27,8 @@ function init(){if(!window.THREE)return false;const shell=$3('cityCanvas')?.pare
  dom.addEventListener('pointermove',e=>{if(drag){const dx=e.clientX-drag.px,dy=e.clientY-drag.py;drag.px=e.clientX;drag.py=e.clientY;if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>6)drag.moved=true;if(drag.moved){angle-=dx*.009;elevation=Math.max(.25,Math.min(1.47,elevation+dy*.006));updateCamera();}}else{const id=pick(e);if(id!==null&&liveGame){const t=liveGame.board[id];{const can=reachableIds().has(id);$3('gridHover').textContent=`${id+1}番マス｜${TILE_NAMES[t.type]||t.type}｜${t.zone}${can?'｜🔴 移動可能':''}`;dom.style.cursor=can?'pointer':'grab'}}}});
  dom.addEventListener('pointerleave',()=>{if(!drag){$3('gridHover').textContent='マスにカーソルを合わせると詳細を表示';dom.style.cursor='grab'}});
  dom.addEventListener('pointerup',e=>{if(drag&&!drag.moved){const id=pick(e);if(id!==null&&liveGame){if(typeof g!=='undefined'&&g.phase==='choice'&&!E.current(g).bot&&!fxBusy&&gateUnlocked){if(E.reachable(g,E.current(g).pos,g.roll).includes(id))moveAnimated(id);else showToast('出目の歩数で到達できません')}}}drag=null});
- dom.addEventListener('wheel',e=>{e.preventDefault();distance=Math.max(12,Math.min(72,distance+Math.sign(e.deltaY)*2));updateCamera()},{passive:false});
- window.addEventListener('resize',resize);resize();updateCamera();ready=true;if(typeof applyMapMode==='function')applyMapMode();requestAnimationFrame(animate);return true;
+ dom.addEventListener('wheel',e=>{e.preventDefault();distance=Math.max(7,Math.min(90,distance+Math.sign(e.deltaY)*2));updateCamera()},{passive:false});
+ window.addEventListener('resize',resize);window.MysteryTown3DZoom=function(delta){distance=Math.max(7,Math.min(90,distance+delta));updateCamera();};resize();updateCamera();ready=true;if(typeof applyMapMode==='function')applyMapMode();requestAnimationFrame(animate);return true;
 }
 function resize(){if(!renderer||!canvas)return;const w=canvas.clientWidth||900,h=canvas.clientHeight||550;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
 function updateCamera(){if(!camera)return;const flat=Math.cos(elevation)*distance;camera.position.set(Math.sin(angle)*flat,Math.sin(elevation)*distance+1,Math.cos(angle)*flat);camera.lookAt(0,0,0);if(typeof ORBIT!=='undefined'){$3('orbitStatus').textContent=`3D 回転 ${Math.round(angle*180/Math.PI)}° / 高さ ${Math.round(elevation*180/Math.PI)}°`}}
@@ -171,21 +171,21 @@ function tileIcon(type){
  if(iconTextures.has(type))return iconTextures.get(type);
  const cv=document.createElement('canvas');cv.width=cv.height=128;const c=cv.getContext('2d');
  c.clearRect(0,0,128,128);
- c.fillStyle='rgba(13,19,45,.78)';c.beginPath();c.roundRect(13,13,102,102,22);c.fill();
- c.strokeStyle='#ffe3a0';c.lineWidth=5;c.stroke();
+ c.fillStyle='rgba(10,15,35,.94)';c.beginPath();c.roundRect(4,4,120,120,19);c.fill();
+ c.strokeStyle='#ffe3a0';c.lineWidth=6;c.stroke();
  c.fillStyle='#fff5d5';c.textAlign='center';c.textBaseline='middle';
- const icon=ICONS[type]||'·';c.font=icon==='🔍'?'bold 67px sans-serif':'bold 83px Arial,sans-serif';c.fillText(icon,64,65);
+ const icon=ICONS[type]||'•';c.font='bold 87px "Apple Color Emoji","Segoe UI Emoji",Arial,sans-serif';c.fillText(icon,64,66,110);
  const tex=new THREE.CanvasTexture(cv);tex.colorSpace=THREE.SRGBColorSpace;iconTextures.set(type,tex);return tex;
 }
 function iconSurface(type,x,z){
- const icon=mesh(new THREE.PlaneGeometry(.67,.67),new THREE.MeshBasicMaterial({map:tileIcon(type),transparent:true,depthWrite:false,side:THREE.DoubleSide}),x,.862,z);
+ const icon=mesh(new THREE.PlaneGeometry(.91,.91),new THREE.MeshBasicMaterial({map:tileIcon(type),transparent:true,depthWrite:false,side:THREE.DoubleSide}),x,.875,z);
  icon.rotation.x=-Math.PI/2;icon.renderOrder=4;return icon;
 }
 
-function build(game){if(!ready||!game)return; if(world){scene.remove(world);world.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material&&!Object.values(material).includes(o.material))o.material.dispose()})}world=new THREE.Group();scene.add(world);pickables=[];stations=[];reachRings=[];reachCache="";destinationMarker=null;pawnMeshes=[];positions=[];makeTerrain(game);
+function build(game){if(!ready||!game)return; if(world){scene.remove(world);world.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material&&!Object.values(material).includes(o.material))o.material.dispose()})}world=new THREE.Group();scene.add(world);pickables=[];stations=[];reachRings=[];reachCache="";destinationMarker=null;thiefPawn=null;pawnMeshes=[];positions=[];makeTerrain(game);
  for(let id=0;id<150;id++){const q=E.gridCoord(id);positions[id]={x:(q.x-7)*1.66,z:(q.y-4.5)*1.87}}
  for(let i=0;i<150;i++)for(const j of E.neighbors(game,i))if(j>i)roadBetween(positions[i],positions[j]);
- for(let id=0;id<150;id++){const p=positions[id],tile=game.board[id];const type=tile.type||'normal';const color=C[type]||C.normal;const tileMat=mat(color,{emissive:color,emissiveIntensity:type==='buzzer'||type==='informant'?.32:.09,metalness:.35,roughness:.25});
+ for(let id=0;id<150;id++){const p=positions[id],tile=game.board[id];const type=tile.type||'normal';const color=C[type]||C.normal;const tileMat=mat(color,{emissive:color,emissiveIntensity:type==='buzzer'||type==='informant'?.48:.25,metalness:.35,roughness:.22});
  const base=box(1.1,.31,1.1,material.roadSide,p.x,.52,p.z);const top=box(.96,.17,.96,tileMat,p.x,.76,p.z);top.userData.tileId=id;pickables.push(top);stations[id]=top;top.userData.lastType=type;top.userData.icon=iconSurface(type,p.x,p.z);
  // A separate translucent marker remains visible even at steep camera angles.
  const ring=mesh(new THREE.RingGeometry(.51,.68,28),new THREE.MeshBasicMaterial({color:0xff193f,transparent:true,opacity:.0,side:THREE.DoubleSide,depthWrite:false}),p.x,.87,p.z);
@@ -195,14 +195,14 @@ function build(game){if(!ready||!game)return; if(world){scene.remove(world);worl
  for(let i=0;i<4;i++){const group=new THREE.Group();const color=[0x4bbaff,0xff5f6b,0x61df9a,0xffcf58][i];cylinder(.3,.39,.22,material.gold,0,.08,0,group);cone(.22,.48,mat(color,{metalness:.5}),0,.42,0,group);sphere(.2,material.gold,0,.78,0,group);world.add(group);pawnMeshes.push(group)}// Yellow destination beacon: independent of reachable-space highlighting.
  destinationMarker=mesh(new THREE.RingGeometry(.57,.79,32),new THREE.MeshBasicMaterial({color:0xffe332,transparent:true,opacity:.95,side:THREE.DoubleSide,depthWrite:false}),0,.98,0);
  destinationMarker.rotation.x=-Math.PI/2;destinationMarker.visible=false;
- updatePawns(game);syncReachable()
+ thiefPawn=new THREE.Group();cylinder(.32,.4,.18,mat(0x151515),0,.08,0,thiefPawn);cone(.24,.56,mat(0x030303,{metalness:.4}),0,.46,0,thiefPawn);sphere(.2,mat(0x111111),0,.84,0,thiefPawn);world.add(thiefPawn);updatePawns(game);syncReachable()
 }
-function updatePawns(game){if(!game||!pawnMeshes.length)return;for(let i=0;i<game.players.length;i++){const p=game.players[i],pos=positions[p.pos];if(!pos)continue;const offset=(i-1.5)*.17;pawnMeshes[i].position.set(pos.x+offset,.9,pos.z+offset)}}
+function updatePawns(game){if(!game||!pawnMeshes.length)return;if(thiefPawn){const t=game.thiefEvent;thiefPawn.visible=!!t&&!!positions[t.pos];if(thiefPawn.visible)thiefPawn.position.set(positions[t.pos].x,1.1,positions[t.pos].z)}for(let i=0;i<game.players.length;i++){const p=game.players[i],pos=positions[p.pos];if(!pos)continue;const offset=(i-1.5)*.17;pawnMeshes[i].position.set(pos.x+offset,.9,pos.z+offset)}}
 function syncReachable(){
  if(!stations.length||!liveGame)return;
  const active=reachableIds();
  const ranks=typeof destinationRanks==='function'?destinationRanks():new Map();
- const target=typeof resolveDestination==='function'?resolveDestination():null;
+ const target=liveGame.destinationChallenge?.tileId??(typeof resolveDestination==='function'?resolveDestination():null);
  const key=[liveGame.phase,liveGame.roll,E.current(liveGame)?.pos,gateUnlocked,fxBusy,[...active].join(','),target,[...ranks].map(x=>x.join(':')).join(',')].join('|');
  if(key===reachCache)return;reachCache=key;
  for(let id=0;id<stations.length;id++){
@@ -218,7 +218,7 @@ function syncReachable(){
  if(destinationMarker){destinationMarker.visible=target!==null&&!!positions[target];if(destinationMarker.visible){destinationMarker.position.x=positions[target].x;destinationMarker.position.z=positions[target].z;}}
 }
 function sync(){if(!ready||typeof g==='undefined'||!g)return;if(g!==liveGame||g.board!==oldBoard||g.roads!==oldRoads){liveGame=g;oldBoard=g.board;oldRoads=g.roads;build(g)}else{ // Informant relocation and other live tile mutations.
- for(let i=0;i<150;i++){const t=g.board[i],o=stations[i];if(!o)continue;const col=C[t.type]||C.normal;if(o.userData.lastType!==t.type){if(o.userData.icon){o.userData.icon.material.map=tileIcon(t.type);o.userData.icon.material.needsUpdate=true;}o.material.color.setHex(col);o.material.emissive.setHex(col);o.material.emissiveIntensity=t.type==='informant'||t.type==='buzzer'?.32:.09;o.userData.lastType=t.type}}
+ for(let i=0;i<150;i++){const t=g.board[i],o=stations[i];if(!o)continue;const col=C[t.type]||C.normal;if(o.userData.lastType!==t.type){if(o.userData.icon){o.userData.icon.material.map=tileIcon(t.type);o.userData.icon.material.needsUpdate=true;}o.material.color.setHex(col);o.material.emissive.setHex(col);o.material.emissiveIntensity=t.type==='informant'||t.type==='buzzer'?.48:.25;o.userData.lastType=t.type}}
  updatePawns(g)}
  syncReachable();
 }
