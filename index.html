@@ -1,4 +1,4 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ミステリー・タウン｜Royal Grid v10</title><style>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ミステリー・タウン｜Royal 3D Stage v26</title><style>
 :root{--ink:#e9e6dc;--gold:#e7bc67;--panel:#172238;--bg:#091220}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#243e55,#091220 65%);font-family:system-ui,'Yu Gothic',sans-serif;color:var(--ink)}header{padding:18px 24px;background:#111c2be8;border-bottom:2px solid #b88a4b;display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}h1{font-family:Georgia,serif;font-size:clamp(24px,4vw,40px);margin:0;color:var(--gold)}h2{font-size:19px;color:var(--gold);margin:0 0 10px}button,select{font:inherit}button{background:#dfb65d;border:0;border-radius:10px;padding:10px 14px;color:#171c2b;font-weight:800;cursor:pointer}button:disabled{opacity:.35;cursor:default}button.secondary{background:#354961;color:white}button:hover:not(:disabled){filter:brightness(1.12)}main{max-width:1560px;margin:auto;display:grid;grid-template-columns:minmax(250px,320px) minmax(400px,1fr) minmax(240px,290px);gap:12px;padding:14px}.panel{background:#142238e8;border:1px solid #567083;border-radius:16px;padding:15px;box-shadow:0 12px 24px #0004}.sticky{position:sticky;top:10px}.notes table{width:100%;font-size:13px;border-collapse:collapse}.notes td{padding:7px;border-bottom:1px solid #435165}.notes td:first-child{color:#c7c2a6}.suspect{display:flex;gap:9px;align-items:center;background:#24364d;border-radius:9px;margin:6px 0;padding:8px}.face{background:#354f69;border-radius:50%;width:35px;height:35px;display:grid;place-items:center}.suspect small{display:block;color:#d7d7d7}.board{display:grid;grid-template-columns:1fr 1fr;gap:8px}.zone{border:2px solid #ffffff33;border-radius:12px;padding:10px;min-width:0;background-size:cover;position:relative}.zone h3{margin:0 0 8px;font-size:18px;text-shadow:0 2px 4px #0009}.residential{background:linear-gradient(#204936b8,#163e38f5),url('assets/residential.svg') center/cover}.shopping{background:linear-gradient(#654a23b8,#3e2c29ed),url('assets/shopping.svg') center/cover}.downtown{background:linear-gradient(#243e6eb8,#192c4eed),url('assets/downtown.svg') center/cover}.mountain{background:linear-gradient(#16432fba,#183d33ef),url('assets/mountain.svg') center/cover}.tiles{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:3px}.tile{aspect-ratio:1;background:#f2e8cc;color:#253044;border-radius:5px;font-size:clamp(10px,1vw,15px);display:grid;place-items:center;position:relative;border:1px solid #c5ad86}.tile.event{background:#d7b4ef}.tile.evidence{background:#b3e7df}.tile.scene{background:#ffc6a7}.tile.interview{background:#c8d8ff}.tile.coin{background:#f9df83}.tile.card{background:#a5e4ac}.pawn{position:absolute;bottom:-5px;right:-4px;background:#172238;color:white;border:1px solid white;border-radius:50%;font-size:10px;padding:1px 3px;z-index:2}.turn{background:#263c56;border:1px solid #e7bc67;border-radius:12px;padding:13px;margin-bottom:12px}.muted{color:#a9b8c6;font-size:13px}.actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.shop-item{display:flex;justify-content:space-between;align-items:center;background:#293b50;padding:8px;border-radius:9px;margin:7px 0}.log{max-height:320px;overflow:auto;font-size:12px;line-height:1.65}.log div{border-bottom:1px solid #3b4c60;padding:4px 0}.pill{display:inline-block;padding:4px 8px;background:#32475c;border-radius:20px;margin:3px;font-size:12px}select{background:#25384f;color:white;border:1px solid #70889b;padding:9px;border-radius:7px;max-width:100%}.field{display:grid;gap:5px;margin:7px 0}.field label{font-size:12px;color:#d9c6a5}.inference{border:2px solid #e7bc67;border-radius:13px;padding:12px;margin-top:12px;background:#332d2b}footer{padding:12px;text-align:center;color:#a8b7c7;font-size:12px}@media(max-width:1100px){main{grid-template-columns:1fr 1fr}.center{grid-column:1/-1;grid-row:1}.left,.right{min-width:0}.sticky{position:static}}@media(max-width:650px){main{grid-template-columns:1fr;padding:7px}.center{grid-column:auto;grid-row:auto}.board{gap:4px}.zone{padding:5px}.tiles{gap:1px}.tile{font-size:10px}.zone h3{font-size:14px}.left{order:2}.right{order:3}}
 /* 人生ゲーム風の明るい盤面 */
 :root{--ink:#263e52;--gold:#f47b49;--panel:#fff;--bg:#f5f8ef}
@@ -86,10 +86,46 @@ button:not(:disabled):hover{filter:brightness(1.17);box-shadow:0 0 18px #f9bd737
 .panel{border-color:#d4a76c!important;box-shadow:0 10px 35px #0009,inset 0 1px #ffe5b025!important}
 header{border-bottom:3px double #e7bf81!important}
 #cityCanvas{filter:saturate(1.14) contrast(1.07)}
+
+/* Cinematic theme: keep gameplay controls legible above the illustrated environment. */
+.mapShell{box-shadow:0 0 36px #efb75a66,inset 0 0 25px #f9d89033!important}
+#mapSwap{backdrop-filter:blur(6px)}
+#fieldMove button{transition:transform .15s,box-shadow .15s}#fieldMove button:hover{transform:translateY(-3px);box-shadow:0 0 20px #ff687f}
+
+/* V18: richly lit miniature-town stage, golden framed road map */
+.mapShell{background:radial-gradient(ellipse at 50% 40%,#3b2959 0%,#12152e 70%)!important;box-shadow:0 0 0 2px #f5d48b,0 0 26px #d58e54a0, inset 0 0 35px #161038!important;overflow:hidden}
+#cityCanvas{filter:saturate(1.2) contrast(1.06) drop-shadow(0 0 3px #f6d89a44)}
+#eventCurtain.mistake{background:radial-gradient(circle,#501a37ee,#0a0817f5)}
+#eventCurtain.mistake .eventPanel{border-color:#ff7d99;background:linear-gradient(145deg,#602037,#1b1631 68%,#2d1737);box-shadow:0 0 100px #f44b7799,0 0 0 8px #f7777726}
+#eventCurtain.mistake .eventSymbol{animation:wrongPulse .5s ease-in-out 2;filter:drop-shadow(0 0 24px #ff5a80)}
+#eventCurtain.mistake .eventProgress{background:#ff738d}
+@keyframes wrongPulse{0%,100%{transform:scale(1)}30%{transform:scale(1.28) rotate(-8deg)}60%{transform:scale(.9) rotate(8deg)}}
+#activityFeed{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:155;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;max-width:92vw}
+.activityToast{background:linear-gradient(110deg,#0d1b35f5,#302043f5);border:1px solid #f4cb81;color:#fff0d2;border-radius:14px;padding:10px 22px;box-shadow:0 4px 22px #000b,0 0 15px #f5c56b55;font-weight:800;animation:activityIn .25s ease-out}
+@keyframes activityIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.orbit-controls{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:10px 0 5px}.orbit-controls button{background:linear-gradient(#3a315c,#12152f);color:#ffe3a6;border:1px solid #d5a45c;border-radius:9px;padding:9px 12px;cursor:pointer;font-weight:bold}.orbit-controls button:active{transform:scale(.97)}#orbitStatus{font-size:12px;color:#ffe4b3}.orbit-hint{font-size:12px;color:#d4d7e8;margin-bottom:8px}#cityCanvas{touch-action:none;cursor:grab}#cityCanvas.orbit-dragging{cursor:grabbing}
+
+/* v29: WebGL viewport sits above the old Canvas, retaining the original 2D fallback. */
+#world3d{position:absolute;inset:0;width:100%;height:100%;z-index:2;touch-action:none;border-radius:16px;cursor:grab}
+#world3d:active{cursor:grabbing}
+.mapShell{position:relative}
+#gridHover{z-index:5;pointer-events:none}
+#mapSwap{z-index:6}
+.mapLegend{z-index:5;pointer-events:none}
+.orbit-hint{font-size:12px}
 </style><style>
 .mapShell{position:relative;border:3px solid #b78c4b;border-radius:18px;overflow:hidden;background:#132b34;box-shadow:0 18px 30px #0009,inset 0 0 25px #f3c96b44}
 #cityCanvas{display:block;width:100%;height:auto;aspect-ratio:4/3}
 .mapLegend{position:absolute;bottom:9px;left:10px;right:10px;text-align:center;background:#091626c9;border:1px solid #d7b576;border-radius:9px;padding:7px;color:#ffe3ad;font-size:12px;pointer-events:none}
+
+/* v29: WebGL viewport sits above the old Canvas, retaining the original 2D fallback. */
+#world3d{position:absolute;inset:0;width:100%;height:100%;z-index:2;touch-action:none;border-radius:16px;cursor:grab}
+#world3d:active{cursor:grabbing}
+.mapShell{position:relative}
+#gridHover{z-index:5;pointer-events:none}
+#mapSwap{z-index:6}
+.mapLegend{z-index:5;pointer-events:none}
+.orbit-hint{font-size:12px}
 </style><style>
 header{position:relative;background:linear-gradient(90deg,#0d182bd9,#1a3151f0),url('assets/mansion-board.jpg') center 27%/cover}
 header h1{font-size:clamp(26px,3vw,46px);letter-spacing:.04em}
@@ -102,12 +138,30 @@ header h1{font-size:clamp(26px,3vw,46px);letter-spacing:.04em}
 .suspect{border-radius:12px;box-shadow:inset 0 1px #ffffff16}
 .fx-card{border:7px double #ffe2a0;box-shadow:0 0 50px #ffc564,0 20px 70px #000}
 @media(max-width:800px){.mapLegend{position:static;border-radius:0}.mapShell{border-width:3px}}
+
+/* v29: WebGL viewport sits above the old Canvas, retaining the original 2D fallback. */
+#world3d{position:absolute;inset:0;width:100%;height:100%;z-index:2;touch-action:none;border-radius:16px;cursor:grab}
+#world3d:active{cursor:grabbing}
+.mapShell{position:relative}
+#gridHover{z-index:5;pointer-events:none}
+#mapSwap{z-index:6}
+.mapLegend{z-index:5;pointer-events:none}
+.orbit-hint{font-size:12px}
 </style><style>
 .screenLayer{position:fixed;inset:0;z-index:150;display:flex;align-items:center;justify-content:center;background:#071020ed;padding:22px;overflow:auto}.screenLayer.hidden,.hidden{display:none!important}
 #titleScreen{isolation:isolate}.titleBack{position:absolute;inset:0;background:linear-gradient(90deg,#071020ef 0%,#071020c2 35%,#0916287a 100%),url('assets/title-mansion.jpg') center/cover;z-index:-1;filter:saturate(1.15)}
 .titleContent{width:min(1120px,96vw);padding:60px 20px;text-shadow:0 5px 12px #000}.eyebrow{color:#ffd38b;letter-spacing:5px;font-size:14px}.titleLogo{font-family:Georgia,'Yu Mincho',serif;font-size:clamp(40px,6vw,82px);color:#fce0a0;text-shadow:0 3px 0 #a05b1f,0 0 30px #ffac49}.titleSub{color:#fff1d3;font-size:clamp(15px,2vw,25px);margin-bottom:48px}.titleButtons{display:grid;gap:14px;width:min(380px,90vw)}.titleButtons button,.settingsFooter button,.settingsPanel>.goldButton{font-size:19px;padding:15px;border:1px solid #d8a860;border-radius:12px;background:linear-gradient(#20314b,#0c182c);color:#fff2d3;box-shadow:0 4px 0 #060c19,0 0 15px #dfa14c55}.titleButtons .goldButton,.goldButton{background:linear-gradient(#ffe6a7,#d88b32)!important;color:#2b1720!important;font-weight:900!important}.titleNote{margin-top:25px;color:#d9bd8d;font-size:14px}
 .settingsPanel{position:relative;width:min(740px,96vw);max-height:92vh;overflow:auto;padding:30px;background:linear-gradient(140deg,#172a45,#0c152a);border:3px solid #b8894c;border-radius:20px;box-shadow:0 0 70px #d6a65d55;color:#f6ead2}.settingsPanel h2{font-size:28px;text-align:center;color:#fce3a8;margin:4px 0 12px}.settingsIntro{text-align:center;color:#b6c2d6}.closeSettings{position:absolute;right:16px;top:14px;font-size:20px;background:#293a56}.settingTabs{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0}.settingTabs button{flex:1;background:#26334c;border:1px solid #6d7890;color:#e9e9e9;white-space:nowrap}.settingTabs button.selected{background:#ab7037;color:#fff5d9;border-color:#ffd089}.settingPage{display:grid;gap:15px;padding:16px;background:#101b30;border:1px solid #465575;border-radius:12px}.settingPage label{display:flex;justify-content:space-between;align-items:center;gap:12px;font-weight:600}.settingPage select,.settingPage input:not([type=checkbox]){max-width:65%;min-width:155px;border-radius:8px;padding:10px;background:#eaf0f4;color:#14233b}.settingPage input[type=checkbox]{width:24px;height:24px;accent-color:#eab15a}.settingHelp{font-size:13px;color:#b5c7d8}.settingsFooter{display:flex;justify-content:space-between;gap:15px;margin-top:20px}.rulesBody{font-size:16px;line-height:1.9}.uiLarge main{font-size:115%}.uiLarge button{font-size:110%}
 @media(max-width:640px){.titleContent{padding:25px 0}.settingsPanel{padding:18px}.settingPage label{align-items:flex-start;flex-direction:column}.settingPage select,.settingPage input:not([type=checkbox]){max-width:100%;width:100%}.settingPage label.toggleSetting{flex-direction:row}.titleLogo{font-size:38px}}
+
+/* v29: WebGL viewport sits above the old Canvas, retaining the original 2D fallback. */
+#world3d{position:absolute;inset:0;width:100%;height:100%;z-index:2;touch-action:none;border-radius:16px;cursor:grab}
+#world3d:active{cursor:grabbing}
+.mapShell{position:relative}
+#gridHover{z-index:5;pointer-events:none}
+#mapSwap{z-index:6}
+.mapLegend{z-index:5;pointer-events:none}
+.orbit-hint{font-size:12px}
 </style><style>
 .mapShell{position:relative;min-height:380px;background:#091a2b;overflow:hidden;border:3px solid #d4a45c;border-radius:18px;box-shadow:0 10px 30px #0009}
 #cityCanvas{display:block;width:100%;height:auto;aspect-ratio:1320/850}
@@ -115,8 +169,26 @@ header h1{font-size:clamp(26px,3vw,46px);letter-spacing:.04em}
 #miniCanvas{display:block;width:100%;height:auto;border-radius:8px}#miniCaption{font-size:12px;display:block;margin:4px}
 .mapLegend{position:absolute;bottom:8px;left:8px;right:8px;text-align:center;background:#07182ad9;border:1px solid #b78e51;border-radius:10px;padding:6px;color:#ffe4a4;font-size:12px;pointer-events:none}
 @media(max-width:650px){#mapSwap{min-width:120px;right:5px;top:5px}#miniCaption{font-size:9px}.mapLegend{font-size:10px}}
+
+/* v29: WebGL viewport sits above the old Canvas, retaining the original 2D fallback. */
+#world3d{position:absolute;inset:0;width:100%;height:100%;z-index:2;touch-action:none;border-radius:16px;cursor:grab}
+#world3d:active{cursor:grabbing}
+.mapShell{position:relative}
+#gridHover{z-index:5;pointer-events:none}
+#mapSwap{z-index:6}
+.mapLegend{z-index:5;pointer-events:none}
+.orbit-hint{font-size:12px}
 </style><style id="gridPatchStyle">
 body{background:radial-gradient(circle at 50% 0,#49305d,#0b1025 67%)}header,.panel{border-color:#d8a752!important;box-shadow:0 0 15px #c67b3d30,inset 0 0 18px #a77b3720}h1,h2{color:#ffd78b!important;text-shadow:0 0 10px #a65829}.mapShell{border:3px ridge #d8ac62!important;box-shadow:0 0 24px #b66b46aa!important}#cityCanvas{cursor:crosshair}#gridHover{position:absolute;bottom:9px;left:12px;z-index:5;background:#0b1128ed;border:1px solid #ffd080;color:#fff0d1;border-radius:8px;padding:8px 12px;font-size:13px;pointer-events:none;max-width:64%}#fxOverlay{pointer-events:auto!important}#gridHelp{font-size:13px;color:#ffe6aa;margin:8px 0}button:focus-visible{outline:3px solid #fff}#mapSwap{border:2px solid #f2c674!important}
+
+/* v29: WebGL viewport sits above the old Canvas, retaining the original 2D fallback. */
+#world3d{position:absolute;inset:0;width:100%;height:100%;z-index:2;touch-action:none;border-radius:16px;cursor:grab}
+#world3d:active{cursor:grabbing}
+.mapShell{position:relative}
+#gridHover{z-index:5;pointer-events:none}
+#mapSwap{z-index:6}
+.mapLegend{z-index:5;pointer-events:none}
+.orbit-hint{font-size:12px}
 </style><style>
 /* v7: theatrical gold and sapphire board-game presentation */
 header{border-bottom:3px solid #ffca70!important;background:linear-gradient(95deg,#090e25ed,#251e49ed),url('assets/title-mansion.jpg') center/cover!important}
@@ -127,6 +199,15 @@ header{border-bottom:3px solid #ffca70!important;background:linear-gradient(95de
 button:not(.secondary){background:linear-gradient(180deg,#fff0b6,#df9e45 62%,#a5672c)!important;border:2px solid #ffdf91!important;box-shadow:0 4px 0 #70441f,0 0 12px #c18a4344!important}
 .dice-scene{border:3px ridge #ffcb79!important;box-shadow:inset 0 0 35px #3a6eb3,0 0 18px #f0b65c44!important}
 #cityCanvas{display:block;width:100%;height:auto}
+
+/* v29: WebGL viewport sits above the old Canvas, retaining the original 2D fallback. */
+#world3d{position:absolute;inset:0;width:100%;height:100%;z-index:2;touch-action:none;border-radius:16px;cursor:grab}
+#world3d:active{cursor:grabbing}
+.mapShell{position:relative}
+#gridHover{z-index:5;pointer-events:none}
+#mapSwap{z-index:6}
+.mapLegend{z-index:5;pointer-events:none}
+.orbit-hint{font-size:12px}
 </style><style>
 /* Railway-board-inspired road spaces: soft pill shapes, not square grid tiles. */
 #eventCurtain{position:fixed;inset:0;z-index:140;display:none;align-items:center;justify-content:center;background:radial-gradient(circle at center,#3c245cdb,#030818f5);backdrop-filter:blur(7px);pointer-events:auto}
@@ -134,45 +215,214 @@ button:not(.secondary){background:linear-gradient(180deg,#fff0b6,#df9e45 62%,#a5
 .eventPanel{width:min(590px,92vw);padding:36px 28px 32px;border:3px solid #eac477;border-radius:28px;text-align:center;background:linear-gradient(145deg,#273c63,#17192f 64%,#4a2859);box-shadow:0 0 0 8px #cfa65a2b,0 0 95px #ad7dff91,0 28px 80px #000d;animation:eventPop .65s cubic-bezier(.18,1.3,.33,1)}
 .eventKicker{letter-spacing:.22em;color:#f8d998;font-size:clamp(11px,1.3vw,15px);font-weight:900}.eventSymbol{font-size:clamp(84px,13vw,140px);filter:drop-shadow(0 0 25px #f6ce79);animation:eventFloat 1.3s ease-in-out infinite alternate}.eventPanel h2{font-size:clamp(29px,5vw,48px)!important;color:#ffe4a2!important;margin:8px 0 12px;text-shadow:0 0 22px #f3b64a}.eventPanel p{font-size:clamp(17px,2vw,24px);font-weight:800;color:white}.eventBy{color:#c6d8f6;font-size:14px;margin-top:20px}.eventProgress{height:5px;border-radius:8px;background:#ffdc8a;margin:28px auto 0;box-shadow:0 0 16px #ffcd6e;transform-origin:left;animation:eventCount 2.45s linear forwards}
 @keyframes eventPop{from{opacity:0;transform:scale(.3) rotate(-6deg)}to{opacity:1;transform:scale(1) rotate(0)}}@keyframes eventFade{from{opacity:0}to{opacity:1}}@keyframes eventFloat{from{transform:translateY(10px)}to{transform:translateY(-10px)}}@keyframes eventCount{to{transform:scaleX(0)}}
+
+/* v29: WebGL viewport sits above the old Canvas, retaining the original 2D fallback. */
+#world3d{position:absolute;inset:0;width:100%;height:100%;z-index:2;touch-action:none;border-radius:16px;cursor:grab}
+#world3d:active{cursor:grabbing}
+.mapShell{position:relative}
+#gridHover{z-index:5;pointer-events:none}
+#mapSwap{z-index:6}
+.mapLegend{z-index:5;pointer-events:none}
+.orbit-hint{font-size:12px}
 </style><style>
 .field-move{margin:10px 0 2px;padding:12px;border:2px solid #e8ad69;border-radius:13px;background:linear-gradient(120deg,#131c38,#392a4d);color:#ffe9ba;box-shadow:0 0 18px #d98e5d35}
 .field-move:empty{display:none}.field-move button{margin:4px;padding:9px 13px;border:2px solid #ff9a80;background:#702e49;color:white;border-radius:25px;cursor:pointer}.field-move button:hover{background:#b53c50;box-shadow:0 0 14px #ff6666}
 #cityCanvas{touch-action:manipulation}
+
+/* v29: WebGL viewport sits above the old Canvas, retaining the original 2D fallback. */
+#world3d{position:absolute;inset:0;width:100%;height:100%;z-index:2;touch-action:none;border-radius:16px;cursor:grab}
+#world3d:active{cursor:grabbing}
+.mapShell{position:relative}
+#gridHover{z-index:5;pointer-events:none}
+#mapSwap{z-index:6}
+.mapLegend{z-index:5;pointer-events:none}
+.orbit-hint{font-size:12px}
 </style>
-</head><body><div id="titleScreen" class="screenLayer"><div class="titleBack"></div><div class="titleContent"><div class="eyebrow">MYSTERY BOARD GAME</div><h1 class="titleLogo">🔎 ミステリー・タウン</h1><p class="titleSub">— 事件の真相を、君の推理で暴け —</p><div class="titleButtons"><button class="goldButton" onclick="beginFromTitle()">▶ ゲームスタート</button><button onclick="openSettings()">⚙ ゲーム設定</button><button onclick="openRules()">📖 ルール・遊び方</button></div><div class="titleNote">4人対戦・BOT最大3人・150マスの立体風グリッド推理ゲーム</div></div></div>
+<style>
+/* v22: three-act cinematic case opening, before first playable turn */
+.murderOpening{position:fixed;inset:0;z-index:220;display:none;align-items:center;justify-content:center;overflow:hidden;background:#030814f7;color:#fff4e5;pointer-events:auto}
+.murderOpening.visible{display:flex;animation:openingFade .45s ease-out}
+.openingNight{position:absolute;inset:0;background:linear-gradient(0deg,#050716ec,#080b1f80 60%,#080916c9),url('assets/royal-city-art.png') center 47%/cover;filter:saturate(.9) contrast(1.2);animation:openingZoom 7s ease-out both}
+.openingNight:after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 12%,#030510dd 95%)}
+.openingFrame{position:relative;width:min(850px,93vw);padding:clamp(30px,6vw,75px) 24px;text-align:center;border:2px solid #d9ae70;border-radius:20px;background:linear-gradient(150deg,#111d35e8,#22172de0);box-shadow:0 0 0 7px #e9bc5c22,0 0 90px #080511, inset 0 0 45px #d1a36425;animation:openingFrameIn .65s ease-out}
+.openingFrame:before,.openingFrame:after{content:'✦';position:absolute;color:#f8d48b;font-size:30px;top:8px;left:14px}.openingFrame:after{left:auto;right:14px}
+.openingEyebrow{font-size:clamp(11px,1.5vw,16px);letter-spacing:.3em;color:#ffcc88;font-weight:900}
+.openingEmblem{font-size:clamp(65px,12vw,115px);line-height:1.4;color:#ffb3a2;filter:drop-shadow(0 0 24px #ff4b68);animation:openingPulse 1.3s ease-in-out infinite alternate}
+.murderOpening h2{font-family:Georgia,'Yu Mincho',serif!important;color:#ffe6bd!important;font-size:clamp(32px,6.5vw,66px)!important;line-height:1.35;margin:5px 0 15px;text-shadow:0 0 24px #ff315f,0 3px 4px #000}
+.murderOpening p{font-size:clamp(17px,2.5vw,25px);line-height:1.7;margin:8px auto;color:#fff0d9}
+.openingRule{width:60%;height:2px;margin:22px auto;background:linear-gradient(90deg,transparent,#f3d18a,transparent)}
+.openingNames{font-size:clamp(13px,2vw,19px);color:#ffe1a4;line-height:1.9;min-height:30px}.openingFoot{margin-top:25px;letter-spacing:.18em;color:#b5abc3;font-size:11px}
+.murderOpening.act-detectives .openingEmblem{filter:drop-shadow(0 0 22px #82b7ff)}.murderOpening.act-turn .openingEmblem{filter:drop-shadow(0 0 22px #ffdf86)}
+@keyframes openingFade{from{opacity:0}to{opacity:1}}@keyframes openingZoom{from{transform:scale(1.12)}to{transform:scale(1)}}@keyframes openingFrameIn{from{opacity:0;transform:translateY(40px) scale(.92)}to{opacity:1;transform:translateY(0) scale(1)}}@keyframes openingPulse{from{transform:scale(.94)}to{transform:scale(1.08)}}
+/* stronger raised stage and a clear, gilded district label */
+.mapShell{border-width:5px!important;border-radius:24px!important;box-shadow:0 0 0 3px #4b2e49,0 12px 45px #050515,0 0 35px #e4b16a70!important}
+#cityCanvas{filter:saturate(1.28) contrast(1.08)}
+@media(prefers-reduced-motion:reduce){.openingNight,.openingFrame,.openingEmblem{animation:none}}
+
+/* v24: reference-accurate playable Royal Grid stage */
+body{background:radial-gradient(ellipse at 50% 10%,#3c245d,#090c22 72%);color:#fceacb}
+header{min-height:83px;padding:12px 22px!important;background:linear-gradient(90deg,#090e29f0,#1e1740e8),url('assets/royal-reference-stage.jpg') center 24%/cover!important;border-bottom:4px ridge #efbd64!important}
+header h1{font-family:Georgia,'Yu Mincho',serif;font-size:clamp(22px,2.6vw,38px)!important;letter-spacing:1px}
+#royalHud{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+#royalHud span{padding:9px 14px;border:2px solid #cfa65c;border-radius:11px;background:linear-gradient(#1c2850,#0c1330);box-shadow:inset 0 1px #fff4,0 4px 12px #0008;color:#ffe4a5;white-space:nowrap;font-size:clamp(12px,1.2vw,17px)}
+main{max-width:1800px!important;grid-template-columns:minmax(190px,240px) minmax(0,1fr)!important;gap:10px!important;padding:10px!important}
+main>.right{display:none!important}
+main>.center{grid-column:2!important;grid-row:1!important;min-width:0}
+main>.left{grid-column:1!important;grid-row:1!important;min-width:0}
+.panel{border:3px ridge #e5b66b!important;border-radius:14px!important;background:linear-gradient(140deg,#192142f5,#0c1231f5)!important}
+.center>.panel:first-child{padding:9px!important}
+.center>.panel:first-child>h2{font-size:20px!important;margin:0 0 4px}
+.center>.panel:first-child>.muted{font-size:12px}
+.center .guide{margin:5px 0!important}
+.center .guide span{padding:4px 8px!important}
+.mapShell{border:4px ridge #ffcd73!important;border-radius:13px!important;box-shadow:0 0 0 3px #6b442d,0 0 25px #f5a64b99!important}
+#cityCanvas{aspect-ratio:1320/850;filter:saturate(1.15) contrast(1.06)!important}
+#mapSwap{width:27%!important;min-width:128px!important;background:#07132df0!important;border:3px ridge #ffdb89!important}
+#miniCaption{font-size:12px}
+.royalRoster{padding:10px!important;margin-bottom:9px}.royalRoster h2{font-size:17px!important}
+.royalRoster .suspect{padding:7px 5px!important;margin:5px 0!important;border:2px solid #b18d59;border-radius:9px;background:linear-gradient(#fff1df,#d9d4db)!important;color:#24213b!important}
+.royalRoster .suspect b{color:#24213b!important}.royalRoster .suspect small{color:#493c57!important;font-size:11px}.royalRoster .face{background:#354577;color:white}
+.left .notes{max-height:65vh;overflow:auto;position:static!important;padding:11px!important}.left .notes h2{font-size:17px!important}
+.center>.panel:nth-child(2){background:linear-gradient(90deg,#0f1b40,#241941)!important;margin-top:8px!important}
+.dice-scene{min-height:85px!important;margin:6px 0!important}
+#turnArea{font-size:15px}.actions button{padding:10px 14px}
+#royalTicker{position:sticky;bottom:0;z-index:20;margin:6px 12px;padding:9px 17px;border:3px ridge #e9ba67;border-radius:12px;background:#09142ef2;color:#ffe4ac;font-weight:800;box-shadow:0 0 20px #efbd5b55}
+footer{padding:7px}
+@media(max-width:820px){main{grid-template-columns:minmax(0,1fr)!important}main>.center{grid-column:1!important;grid-row:1!important}main>.left{grid-column:1!important;grid-row:2!important;display:grid;grid-template-columns:1fr 1fr;gap:7px}.left .notes{max-height:none}.royalRoster{margin-bottom:0}#royalHud{gap:5px}#royalHud span{padding:5px 7px;font-size:11px}header{padding:9px!important}#mapSwap{min-width:95px!important}#miniCaption{font-size:9px}}
+@media(max-width:530px){main>.left{grid-template-columns:1fr}#cityCanvas{min-height:270px}.mapLegend{font-size:10px!important}.center>.panel:first-child>.muted{display:none}.center .guide{display:none}#gridHover{font-size:10px!important;max-width:65%!important}}
+
+/* v29: WebGL viewport sits above the old Canvas, retaining the original 2D fallback. */
+#world3d{position:absolute;inset:0;width:100%;height:100%;z-index:2;touch-action:none;border-radius:16px;cursor:grab}
+#world3d:active{cursor:grabbing}
+.mapShell{position:relative}
+#gridHover{z-index:5;pointer-events:none}
+#mapSwap{z-index:6}
+.mapLegend{z-index:5;pointer-events:none}
+.orbit-hint{font-size:12px}
+</style><style id="v25-royal-stage">
+/* V25: a unified cinematic playfield with all controls connected to the live engine */
+:root{--gold:#f3cf7b;--panel:#101634}
+body{background:radial-gradient(ellipse at 48% 0%,#40316c,#0b1031 62%,#07091d)!important}
+header{box-shadow:0 5px 24px #000b,inset 0 -2px #fff3!important}
+header h1{color:#ffe3a5!important;text-shadow:0 2px 2px #000,0 0 18px #f8ae6c99}
+header .muted{color:#f5d7a0!important;letter-spacing:.16em}
+main{max-width:1900px!important;grid-template-columns:minmax(185px,225px) minmax(0,1fr)!important;gap:9px!important;padding:9px!important}
+main .center{display:flex;flex-direction:column;gap:8px}
+main .center>.panel:first-child{border:3px solid #dfac56!important;box-shadow:0 0 0 2px #342149,0 12px 28px #0009!important;background:#10172e!important}
+.center>.panel:first-child>h2{display:none!important}
+.center>.panel:first-child>.muted{display:none!important}
+.center .guide{display:none!important}
+.mapShell{position:relative;border:3px ridge #f7c96f!important;border-radius:15px!important;overflow:hidden;box-shadow:0 0 0 3px #382045,0 9px 30px #000b,0 0 28px #f8c46944!important}
+#cityCanvas{display:block;width:100%;height:auto;filter:saturate(1.22) contrast(1.06) brightness(1.05)!important}
+#mapSwap{top:10px!important;right:10px!important;box-shadow:0 4px 20px #000c,0 0 12px #e6bc7955!important}
+#gridHover{background:#10142cdb!important;color:#ffebb7!important;border:1px solid #e8bb70!important}
+.mapLegend{background:#10142de8!important;color:#fce4b2!important;border-top:2px solid #d7a75c!important;padding:9px!important;font-size:13px!important}
+.royalRoster{box-shadow:0 7px 25px #0009!important}
+.royalRoster h2{color:#ffe6a6!important}
+.royalRoster .suspect{box-shadow:inset 0 2px #fff,0 3px 8px #0008!important}
+.center>.panel:nth-child(2){padding:10px 14px!important;border:3px solid #dbab65!important;background:linear-gradient(100deg,#101630,#24154a,#111633)!important}
+.center>.panel:nth-child(2)>h2{font-size:16px!important;margin-bottom:4px!important}
+.dice-scene{background:radial-gradient(ellipse,#503b87,#151331 76%)!important;border:1px solid #ad7cda!important}
+#turnArea button:not(.secondary){background:linear-gradient(150deg,#ffe2a0,#d68b2b)!important;box-shadow:inset 0 2px #fff8,0 3px 9px #0007!important;border:1px solid #f9e0a7!important}
+#fieldMove{border:1px solid #b98555!important;border-radius:10px!important;background:#141937c9!important;padding:7px!important}
+#fieldMove:empty{display:none!important}
+#royalTicker{border:3px ridge #f2ca78!important;box-shadow:0 0 20px #ffc96c55!important}
+@media(min-width:1100px){.center>.panel:nth-child(2){display:grid;grid-template-columns:minmax(200px,300px) minmax(0,1fr);gap:8px 15px;align-items:center}.center>.panel:nth-child(2)>h2{grid-column:1/-1}.center>.panel:nth-child(2) .dice-scene{margin:0!important}.center>.panel:nth-child(2) #turnArea{align-self:center}}
+@media(max-width:820px){main{grid-template-columns:1fr!important}main>.center{grid-column:1!important}main>.left{grid-column:1!important}.center>.panel:nth-child(2){display:block}}
+
+/* v29: WebGL viewport sits above the old Canvas, retaining the original 2D fallback. */
+#world3d{position:absolute;inset:0;width:100%;height:100%;z-index:2;touch-action:none;border-radius:16px;cursor:grab}
+#world3d:active{cursor:grabbing}
+.mapShell{position:relative}
+#gridHover{z-index:5;pointer-events:none}
+#mapSwap{z-index:6}
+.mapLegend{z-index:5;pointer-events:none}
+.orbit-hint{font-size:12px}
+</style><style id="v26-3d-city">
+/* Actual gameplay elements remain interactive; this artwork is only a scenic layer. */
+.mapShell{box-shadow:0 0 0 3px #4d2d58,0 20px 50px #000c,inset 0 0 36px #e8aa55a8!important;border:4px ridge #f6d88b!important}
+#cityCanvas{filter:saturate(1.28) contrast(1.09)!important}
+#mapSwap{background:linear-gradient(145deg,#111c43f4,#080c24f7)!important;border:3px ridge #f6c77e!important}
+#royalTicker{background:linear-gradient(100deg,#111333,#1b1538,#0b1635)!important}
+.center>.panel:nth-child(2){box-shadow:inset 0 0 25px #b87d4540,0 7px 25px #000a!important}
+#turnArea button:not(.secondary){font-size:clamp(17px,2vw,23px)!important;padding:13px 24px!important;border-radius:18px!important;box-shadow:0 5px 0 #7a451f,0 0 22px #d888dc88!important}
+
+/* v29: WebGL viewport sits above the old Canvas, retaining the original 2D fallback. */
+#world3d{position:absolute;inset:0;width:100%;height:100%;z-index:2;touch-action:none;border-radius:16px;cursor:grab}
+#world3d:active{cursor:grabbing}
+.mapShell{position:relative}
+#gridHover{z-index:5;pointer-events:none}
+#mapSwap{z-index:6}
+.mapLegend{z-index:5;pointer-events:none}
+.orbit-hint{font-size:12px}
+</style></head><body><div id="titleScreen" class="screenLayer"><div class="titleBack"></div><div class="titleContent"><div class="eyebrow">MYSTERY BOARD GAME</div><h1 class="titleLogo">🔎 ミステリー・タウン</h1><p class="titleSub">— 事件の真相を、君の推理で暴け —</p><div class="titleButtons"><button class="goldButton" onclick="beginFromTitle()">▶ ゲームスタート</button><button onclick="openSettings()">⚙ ゲーム設定</button><button onclick="openRules()">📖 ルール・遊び方</button></div><div class="titleNote">4人対戦・BOT最大3人・150マスの立体風グリッド推理ゲーム</div></div></div>
 <div id="settingsScreen" class="screenLayer hidden"><div class="settingsPanel"><button class="closeSettings" onclick="closeSettings()">✕</button><h2>⚙ ゲーム詳細設定</h2><p class="settingsIntro">新しい事件の開始前に変更できます。</p><div class="settingTabs"><button data-tab="basic" onclick="settingsTab('basic')">基本設定</button><button data-tab="player" onclick="settingsTab('player')">プレイヤー</button><button data-tab="effects" onclick="settingsTab('effects')">演出設定</button></div>
 <div class="settingPage" data-page="basic"><label>対戦する人数 <select id="cfgHumans"><option value="1">1人 + BOT3人</option><option value="2">2人 + BOT2人</option><option value="3">3人 + BOT1人</option><option value="4">4人（BOTなし）</option></select></label><div class="settingHelp">プレイヤーは合計4人。複数人の場合は同じPCで順番に操作します。</div><label>BOTの思考速度 <select id="cfgBotSpeed"><option value="1000">ゆっくり</option><option value="420" selected>ふつう</option><option value="80">はやい</option></select></label><div class="settingHelp">事件の抽選や150マスの構成は固定ルールです。</div></div>
 <div class="settingPage hidden" data-page="player"><label>プレイヤー1の名前 <input id="cfgName1" maxlength="18" value="探偵1"></label><label>プレイヤー2の名前 <input id="cfgName2" maxlength="18" value="探偵2"></label><label>プレイヤー3の名前 <input id="cfgName3" maxlength="18" value="探偵3"></label><label>プレイヤー4の名前 <input id="cfgName4" maxlength="18" value="探偵4"></label><div class="settingHelp">BOT枠は名前に関係なく自動操作になります。</div></div>
 <div class="settingPage hidden" data-page="effects"><label class="toggleSetting">サイコロ演出 <input type="checkbox" id="cfgDice" checked></label><label class="toggleSetting">カード演出 <input type="checkbox" id="cfgCard" checked></label><label class="toggleSetting">駒の移動演出 <input type="checkbox" id="cfgMove" checked></label><label>演出の速度 <select id="cfgFxSpeed"><option value="0.65">速い</option><option value="1" selected>標準</option><option value="1.5">ゆっくり</option></select></label><label>画面サイズ <select id="cfgSize"><option value="normal">標準</option><option value="large">大きめ</option></select></label></div>
 <div class="settingsFooter"><button onclick="resetSettings()">初期設定に戻す</button><button class="goldButton" onclick="saveSettings()">設定を保存</button></div></div></div>
-<div id="rulesScreen" class="screenLayer hidden"><div class="settingsPanel"><button class="closeSettings" onclick="closeRules()">✕</button><h2>📖 遊び方</h2><div class="rulesBody"><p>🎲 <b>1. サイコロ</b>：自分の番で振り、出目の数だけ進むか、出目以下のコストの探偵カードを使います。</p><p>🔍 <b>2. 街を調査</b>：証拠品の購入、現場検証、聞き込み、イベントで情報を集めます。</p><p>📒 <b>3. 探偵メモ</b>：自分だけの調査記録・過去の不正解を確認できます。容疑者の特徴は共通公開です。</p><p>🧠 <b>4. 推理タイム</b>：各プレイヤーが5行動するごとに発生。5項目を回答します。</p><p>🏆 <b>5. 勝利</b>：正しい現場エリアにいて、正しい証拠品を持ち、5項目すべて正解すると勝利です。</p></div><button class="goldButton" onclick="closeRules()">閉じる</button></div></div><header><div><div class="muted">4人対戦・立体風推理ボードゲーム</div><h1>🔎 ミステリー・タウン</h1></div><div class="headerActions"><button onclick="openSettings()">⚙ 設定</button><button onclick="returnToTitle()">⌂ タイトルへ</button><button onclick="beginFromTitle()">新しい事件</button></div></header><div id="privacyGate"><div class="gateCard"><div style="font-size:58px">🕵️‍♀️</div><h2 id="gateTitle">探偵を交代してください</h2><p>前の探偵のメモは非公開です。次の探偵だけが画面を見てください。</p><button onclick="unlockTurn()">自分の番を開始する</button></div></div><div id="fxOverlay" aria-hidden="true"><div class="fx-card" id="fxCard"></div></div><div id="toast" role="status"></div><main>
-<aside class="left"><div class="panel sticky notes"><h2>📒 探偵メモ</h2><div class="muted">捜査メモは本人専用。容疑者の特徴だけ全員共通で公開されます。</div><div id="viewer"></div><div id="notes"></div><h2 style="margin-top:20px">👥 容疑者の特徴</h2><div id="suspects"></div></div></aside>
-<section class="center"><div class="panel"><h2>🏰 事件の街・夜景鉄道マップ</h2><div class="muted">近景は6×6マス。毎回ランダムに生成される分岐線路で150駅を接続。サイコロ後に赤く光る駅を選ぶと一気に移動します。</div><div class="guide"><span>① 🎲 サイコロ</span><span>② 👣 移動またはカード</span><span>③ 🔎 マスを調査</span><span>④ 🧠 5行動ごとに推理</span></div><div class="mapShell"><div id="gridHover">マスにカーソルを合わせると詳細を表示</div><canvas id="cityCanvas" width="1320" height="850" aria-label="現在地周辺6×6マスを映す立体風フィールド"></canvas><button id="mapSwap" type="button" onclick="swapMap()" aria-label="近景と全体マップを切り替え"><canvas id="miniCanvas" width="440" height="310"></canvas><span id="miniCaption">全体マップを拡大 ⇄</span></button><div class="mapLegend">近景6×6駅｜150駅の分岐線路｜右上で全体図</div></div><div id="fieldMove" class="field-move"></div><div class="muted" style="margin-top:9px">🔍証拠品　❓イベント　👣現場検証　💬聞き込み　🪙コイン　🃏カード　・通常</div></div><div class="panel" style="margin-top:12px"><h2>🎲 行動エリア</h2><div class="dice-scene"><div id="diceCube" class="dice-cube">⚄</div><div><div class="dice-caption" id="diceCaption">事件の街へ出発！</div><div class="muted">サイコロを振って街を調査</div></div></div><div id="turnArea"></div></div></section>
-<aside class="right"><div class="panel"><h2>🏅 プレイヤー</h2><div id="players"></div></div><div class="panel" style="margin-top:12px"><h2>📜 捜査ログ</h2><div id="log" class="log"></div></div><div class="panel" style="margin-top:12px"><h2>ℹ️ 遊び方</h2><div class="muted">サイコロを振り、移動するか出目以下のコストのカードを1枚使います。各プレイヤーが5行動するごとに全員推理タイム。事件の5項目を当て、正しい証拠品を持って正しい現場エリアにいれば勝利です。</div></div></aside></main><footer>ローカル対戦・BOT対戦｜3D風描画（Canvas）・オンライン通信は未接続</footer><script src="engine.js"></script><script>
-const E=window.MysteryEngine;let g=null,botTimer=null,lastHumanKey=null,gateUnlocked=false,fxBusy=false,fxTimer=null,previousState=null;let gameSettings={humans:1,botSpeed:420,dice:true,card:true,move:true,fxSpeed:1,size:"normal",names:["探偵1","探偵2","探偵3","探偵4"]};const $=id=>document.getElementById(id),safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const icon={normal:'·',evidence:'🔍',event:'❓',scene:'👣',interview:'💬',coin:'🪙',card:'🃏'};function start(){try{if(fxBusy)return;if(!E)throw Error('engine.jsが読み込まれていません。index.htmlと同じ場所に配置してください。');g=E.newGame({botCount:4-gameSettings.humans,names:gameSettings.names});lastHumanKey=null;gateUnlocked=false;lastEventSerial=0;render();tickBots()}catch(err){console.error(err);alert('ゲーム開始エラー: '+err.message)}}
-function tickBots(){clearTimeout(botTimer);if(fxBusy)return;if(!g||g.phase==='finished')return;let p=g.phase==='inference'?g.players[g.inference.queue[g.inference.index]]:E.current(g);if(p.bot){botTimer=setTimeout(()=>{try{E.botAction(g)}catch(e){alert(e.message)}render();if(!eventFxIfNew())tickBots()},gameSettings.botSpeed)}}
+<div id="rulesScreen" class="screenLayer hidden"><div class="settingsPanel"><button class="closeSettings" onclick="closeRules()">✕</button><h2>📖 遊び方</h2><div class="rulesBody"><p>🎲 <b>1. サイコロ</b>：自分の番で振り、出目の数だけ進むか、出目以下のコストの探偵カードを使います。</p><p>🔍 <b>2. 街を調査</b>：証拠品の購入、現場検証、聞き込み、イベントで情報を集めます。</p><p>📒 <b>3. 探偵メモ</b>：自分だけの調査記録・過去の不正解を確認できます。容疑者の特徴は共通公開です。</p><p>🧠 <b>4. 推理タイム</b>：各プレイヤーが5行動するごとに発生。5項目を回答します。</p><p>🏆 <b>5. 勝利</b>：正しい現場エリアにいて、正しい証拠品を持ち、5項目すべて正解すると勝利です。</p></div><button class="goldButton" onclick="closeRules()">閉じる</button></div></div><header><div><div class="muted">ROYAL GRID · DETECTIVE BOARD GAME</div><h1>🕵️ ミステリー・タウン</h1></div><div id="royalHud" aria-live="polite">事件捜査中</div><div class="headerActions"><button onclick="openSettings()">⚙ 設定</button><button onclick="returnToTitle()">⌂ タイトルへ</button><button onclick="beginFromTitle()">新しい事件</button></div></header><div id="privacyGate"><div class="gateCard"><div style="font-size:58px">🕵️‍♀️</div><h2 id="gateTitle">探偵を交代してください</h2><p>前の探偵のメモは非公開です。次の探偵だけが画面を見てください。</p><button onclick="unlockTurn()">自分の番を開始する</button></div></div><div id="murderOpening" class="murderOpening" role="dialog" aria-modal="true" aria-label="事件発生・ゲーム開始演出" aria-hidden="true"><div class="openingNight"></div><div class="openingFrame"><div class="openingEyebrow" id="openingEyebrow">BREAKING NEWS · MYSTERY TOWN</div><div class="openingEmblem" id="openingEmblem">⚠</div><h2 id="openingHeadline">この町で殺人が起きた！！</h2><p id="openingSubtitle">静かな夜を切り裂く、ひとつの事件。</p><div class="openingRule"></div><div class="openingNames" id="openingNames"></div><div class="openingFoot">MYSTERY TOWN · THE CASE BEGINS</div></div></div><div id="fxOverlay" aria-hidden="true"><div class="fx-card" id="fxCard"></div></div><div id="toast" role="status"></div><main>
+<aside class="left"><div class="panel royalRoster"><h2>🏅 4人の探偵</h2><div id="royalPlayers"></div></div><div class="panel sticky notes"><h2>📒 探偵メモ</h2><div class="muted">捜査メモは本人専用。容疑者の特徴だけ全員共通で公開されます。</div><div id="viewer"></div><div id="notes"></div><h2 style="margin-top:20px">👥 容疑者の特徴</h2><div id="suspects"></div></div></aside>
+<section class="center"><div class="panel"><h2>🌙 夜のミステリー・タウン</h2><div class="muted">夜の街を探索！ サイコロを振り、赤く光るマスを選んで移動しよう。</div><div class="guide"><span>① 🎲 サイコロ</span><span>② 👣 移動またはカード</span><span>③ 🔎 マスを調査</span><span>④ 🧠 5行動ごとに推理</span></div><div class="mapShell"><div id="gridHover">マスにカーソルを合わせると詳細を表示</div><canvas id="cityCanvas" width="1320" height="850" aria-label="現在地周辺6×6マスを映す立体風フィールド"></canvas><button id="mapSwap" type="button" onclick="swapMap()" aria-label="近景と全体マップを切り替え"><canvas id="miniCanvas" width="440" height="310"></canvas><span id="miniCaption">全体マップを拡大 ⇄</span></button><div class="mapLegend">🌉 光る石畳の道を移動　🚨 ブザー8か所　🕵️ 情報屋1か所　｜　右上で全体図</div></div><div class="orbit-controls"><button type="button" onclick="orbitCamera(-20,0)">↶ 左回転</button><button type="button" onclick="orbitCamera(20,0)">右回転 ↷</button><button type="button" onclick="orbitCamera(0,12)">視点を上げる</button><button type="button" onclick="orbitCamera(0,-12)">視点を下げる</button><button type="button" onclick="resetOrbit()">視点リセット</button><span id="orbitStatus">角度 0° / 高さ 55°</span></div><div class="orbit-hint">フィールドをドラッグして視点を回転できます。マスをタップすると移動先を選べます。</div><div id="fieldMove" class="field-move"></div><div class="muted" style="margin-top:9px">🔍証拠品　❓イベント　👣現場検証　💬聞き込み　🪙コイン　🃏カード　・通常</div></div><div class="panel" style="margin-top:12px"><h2>🎲 サイコロを振って移動先を選ぼう！</h2><div class="dice-scene"><div id="diceCube" class="dice-cube">⚄</div><div><div class="dice-caption" id="diceCaption">事件の街へ出発！</div><div class="muted">サイコロを振って街を調査</div></div></div><div id="turnArea"></div></div></section>
+<aside class="right"><div class="panel" style="display:none"><h2>🏅 プレイヤー</h2><div id="players"></div></div><div class="panel" style="margin-top:12px"><h2>📜 捜査ログ</h2><div id="log" class="log"></div></div><div class="panel" style="margin-top:12px"><h2>ℹ️ 遊び方</h2><div class="muted">サイコロを振り、移動するか出目以下のコストのカードを1枚使います。各プレイヤーが5行動するごとに全員推理タイム。事件の5項目を当て、正しい証拠品を持って正しい現場エリアにいれば勝利です。</div></div></aside></main><div id="royalTicker" role="status">✦ 現在のイベント：事件の捜査が始まります</div><footer>ローカル対戦・BOT対戦｜3D風描画（Canvas）・オンライン通信は未接続</footer><script src="engine.js"></script><script>
+const E=window.MysteryEngine;let g=null,botTimer=null,lastHumanKey=null,gateUnlocked=false,fxBusy=false,fxTimer=null,previousState=null;let memoViewerId=0;let gameSettings={humans:1,botSpeed:420,dice:true,card:true,move:true,fxSpeed:1,size:"normal",names:["探偵1","探偵2","探偵3","探偵4"]};const $=id=>document.getElementById(id),safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const icon={normal:'·',evidence:'🔍',event:'❓',scene:'👣',interview:'💬',coin:'🪙',card:'🃏'};function start(){try{if(fxBusy)return;if(!E)throw Error('engine.jsが読み込まれていません。index.htmlと同じ場所に配置してください。');g=E.newGame({botCount:4-gameSettings.humans,names:gameSettings.names});lastHumanKey=null;gateUnlocked=false;memoViewerId=g.players.find(q=>!q.bot)?.id??0;lastEventSerial=0;render();tickBots()}catch(err){console.error(err);alert('ゲーム開始エラー: '+err.message)}}
+function tickBots(){clearTimeout(botTimer);if(fxBusy)return;if(!g||g.phase==='finished')return;let p=g.phase==='inference'?g.players[g.inference.queue[g.inference.index]]:E.current(g);if(p.bot){botTimer=setTimeout(()=>{const before=g.players.map(q=>q.cards.slice());const wasInference=g.phase==='inference';const infPlayer=wasInference?g.inference.queue[g.inference.index]:-1;const wrongBefore=wasInference?g.players[infPlayer].notes.wrongAnswers.length:0;try{E.botAction(g)}catch(e){alert(e.message)}for(let i=0;i<g.players.length;i++){const previous=before[i];const current=g.players[i].cards.slice();for(const name of current){const idx=previous.indexOf(name);if(idx>=0)previous.splice(idx,1);else notifyCardAcquired(g.players[i],name)}}render();if(wasInference&&g.players[infPlayer].notes.wrongAnswers.length>wrongBefore){showInferenceFailure(g.players[infPlayer].name,true);return}if(!eventFxIfNew())tickBots()},gameSettings.botSpeed)}}
+function notifyCardAcquired(player,name){
+ const box=$('activityFeed');if(!box)return;
+ const el=document.createElement('div');el.className='activityToast';el.textContent=`🃏 ${player.name}が「${name}」を取得`;
+ box.appendChild(el);if($('royalTicker'))$('royalTicker').textContent=el.textContent;setTimeout(()=>{el.remove()},Math.max(2400,3300*gameSettings.fxSpeed));
+}
+function showInferenceFailure(name,isBot=false){
+ fxBusy=true;clearTimeout(botTimer);clearTimeout(eventFxTimer);
+ const overlay=$('eventCurtain');overlay.classList.add('mistake');
+ overlay.innerHTML=`<div class="eventPanel"><div class="eventKicker">MYSTERY TOWN · DEDUCTION FAILED</div><div class="eventSymbol">✖</div><h2>推理失敗！</h2><p>${safe(name)}の推理は真相に届かなかった……</p><div class="eventBy">${isBot?'次の探偵へ':'間違えた推理は探偵メモに記録されました'}</div><div class="eventProgress"></div></div>`;
+ overlay.classList.add('visible');eventFxTimer=setTimeout(()=>{overlay.classList.remove('visible','mistake');fxBusy=false;render();tickBots()},Math.max(1600,2600*gameSettings.fxSpeed));
+}
+function inferenceKnowledge(player){
+ const n=E.updateDeductions(g,player);
+ const confirmedZone=E.ZONES.find(z=>n.zones[z]===true)||null;
+ const confirmedTime=E.TIMES.find(t=>n.times[t]==='確定')||null;
+ return {zone:confirmedZone,motive:n.motive||null,time:confirmedTime,suspect:n.knownSuspect||null};
+}
+function inferenceField(player,key,label,items){
+ const known=inferenceKnowledge(player),locked=known[key]&&items.includes(known[key])?known[key]:null;
+ const n=player.notes;
+ const choices=items.filter(v=>key==='zone'?n.zones[v]!==false:key==='suspect'?!(n.excludedSuspects||[]).includes(v)&&(!n.suspectCandidates||n.suspectCandidates.includes(v)):key==='time'?n.times[v]!=='除外':true);
+ const options=(locked?[locked]:(choices.length?choices:items)).map(v=>`<option value="${safe(v)}">${safe(v)}</option>`).join('');
+ return `<div class="field"><label>${safe(label)} ${locked?'🔒 確定済み':''}</label><select id="ans_${key}" ${locked?'disabled':''}>${options}</select>${locked?`<input type="hidden" id="locked_${key}" value="${safe(locked)}"><div class="muted">探偵メモで確定したため変更できません。</div>`:''}</div>`;
+}
+function submitInference(){
+ if(fxBusy||!g||g.phase!=='inference')return;
+ const p=g.players[g.inference.queue[g.inference.index]];
+ if(p.bot)return;
+ const answer=Object.fromEntries(['evidence','zone','motive','time','suspect'].map(k=>[k,$('ans_'+k).value]));
+ let success;try{success=E.infer(g,answer)}catch(e){alert(e.message);return}
+ render();if(!success)showInferenceFailure(p.name);else tickBots();
+}
 function showToast(msg){let t=$('toast');t.textContent=msg;t.style.display='block';clearTimeout(t._timer);t._timer=setTimeout(()=>t.style.display='none',2200)}
-function showCardFx(name){if(!gameSettings.card)return;let symbols={'鑑識':'🔬','聞き上手':'💬','タクシーチケット':'🚕','閃く':'💡','足止め':'🛑','監視カメラ確認':'📷','辻褄':'🕰️','宝くじ':'🎟️','情報提供':'📜'};let c=$('fxCard');c.innerHTML=`<div class="muted">DETECTIVE CARD</div><div class="art">${symbols[name]||'🃏'}</div><h2>${safe(name)}</h2><p>探偵カード発動！</p>`;$('fxOverlay').classList.add('show');clearTimeout(fxTimer);fxTimer=setTimeout(()=>$('fxOverlay').classList.remove('show'),1250)}
+function showCardFx(name){if(!gameSettings.card)return;fxBusy=true;clearTimeout(botTimer);let symbols={'鑑識':'🔬','聞き上手':'💬','タクシーチケット':'🚕','閃く':'💡','足止め':'🛑','監視カメラ確認':'📷','辻褄':'🕰️','宝くじ':'🎟️','情報提供':'📜','証拠品情報':'🗺️','情報屋':'🕵️'};let c=$('fxCard');c.innerHTML=`<div class="muted">DETECTIVE CARD</div><div class="art">${symbols[name]||'🃏'}</div><h2>${safe(name)}</h2><p>探偵カード発動！</p>`;$('fxOverlay').classList.add('show');clearTimeout(fxTimer);fxTimer=setTimeout(()=>{$('fxOverlay').classList.remove('show');fxBusy=false;render();tickBots()},Math.max(1250,1600*gameSettings.fxSpeed))}
 function rollAnimated(){if(fxBusy)return;if(!gameSettings.dice){act(()=>E.roll(g));$('diceCaption').textContent='出目 '+g.roll+'！';return}fxBusy=true;let d=$('diceCube');d.classList.add('rolling');$('diceCaption').textContent='運命のサイコロ…';let ticks=0;let timer=setInterval(()=>{d.textContent=['⚀','⚁','⚂','⚃','⚄','⚅'][Math.floor(Math.random()*6)];ticks++;if(ticks>=Math.round(13*gameSettings.fxSpeed)){clearInterval(timer);try{E.roll(g);d.textContent=['⚀','⚁','⚂','⚃','⚄','⚅'][g.roll-1];$('diceCaption').textContent='出目 '+g.roll+'！';showToast('🎲 '+g.roll+' マス進める！')}catch(e){alert(e.message)}d.classList.remove('rolling');fxBusy=false;render();tickBots()}},75)}
 function moveAnimated(target){if(fxBusy||!g||g.phase!=='choice')return;let p=E.current(g);if(p.bot)return;const path=E.pathTo(g,p.pos,target,g.roll);if(!path){showToast('そのマスには到達できません');return}fxBusy=true;let frame=1;const step=()=>{if(frame<path.length){CITY.preview=path[frame++];drawCity();setTimeout(step,gameSettings.move?Math.max(65,135*gameSettings.fxSpeed):20);return}CITY.preview=null;try{E.move(g,target)}catch(e){alert(e.message)}fxBusy=false;render();if(!eventFxIfNew())tickBots()};step()}
 function act(fn){if(fxBusy)return;try{fn()}catch(e){alert(e.message)}render();tickBots()}
-function unlockTurn(){gateUnlocked=true;$('privacyGate').style.display='none';render()}
-function render(){if(!g)return;let p=E.current(g),inferenceP=g.phase==='inference'?g.players[g.inference.queue[g.inference.index]]:null,viewer=inferenceP||p;
+function unlockTurn(){const turnOwner=g.phase==='inference'?g.players[g.inference.queue[g.inference.index]]:E.current(g);if(turnOwner&&!turnOwner.bot)memoViewerId=turnOwner.id;gateUnlocked=true;$('privacyGate').style.display='none';render()}
+let shownBuzzerSerial=0;function buzzerNotice(){if(!g?.lastBuzzer||g.lastBuzzer.serial===shownBuzzerSerial)return;shownBuzzerSerial=g.lastBuzzer.serial;const b=g.lastBuzzer;showToast('🚨 ブザー反応！ '+b.playerName+'が正解の証拠品を持って通過！');if($('royalTicker'))$('royalTicker').textContent='🚨 '+b.playerName+'が正解の証拠品を持ってブザーマスを通過！';}
+function render(){if(!g)return;buzzerNotice();let p=E.current(g),inferenceP=g.phase==='inference'?g.players[g.inference.queue[g.inference.index]]:null,viewer=inferenceP||p;
 let humanKey=viewer&&!viewer.bot&&g.phase!=='finished'?viewer.id+':'+(g.phase==='inference'?'infer'+g.inference.index:g.round+'-'+viewer.actions):null;
 if(humanKey!==lastHumanKey){lastHumanKey=humanKey;gateUnlocked=false}
 let gate=!!humanKey&&!gateUnlocked;$('privacyGate').style.display=gate?'flex':'none';
 $('gateTitle').textContent=viewer?viewer.name+' の番です':'探偵を交代してください';if(g.phase==='choice'&&g.roll){$('diceCube').textContent=['⚀','⚁','⚂','⚃','⚄','⚅'][g.roll-1];$('diceCaption').textContent='出目 '+g.roll+'！'}
 drawCity();
-$('viewer').innerHTML=`<div class="step">🔒 ${safe(viewer.name)} 専用メモ</div>`;renderNotes();
+const memoOwner=g.players[memoViewerId]||g.players.find(q=>!q.bot);$('viewer').innerHTML=`<div class="step">🔒 ${safe(memoOwner.name)} の探偵メモ ${p.bot?'（BOTのターン中も固定）':''}</div>`;renderNotes();
 $('suspects').innerHTML=g.traitSets.map((tr,i)=>`<div class="suspect"><span class="face">🕵️</span><div><b>${E.SUSPECTS[i]}</b><small>${tr.join('・')}</small></div></div>`).join('');
-$('players').innerHTML=g.players.map(q=>`<div class="suspect"><span class="face">${q.bot?'🤖':'🕵️'}</span><div><b>${safe(q.name)}</b> ${q.id===p.id?'◀':''}<small>🪙${q.coins}　📦${q.evidence.length}　🃏${q.cards.length}　${q.actions%5}/5行動</small></div></div>`).join('');$('log').innerHTML='<div>🔒 捜査の詳細は各自の探偵メモで確認してください。</div>';
+$('players').innerHTML=g.players.map(q=>`<div class="suspect"><span class="face">${q.bot?'🤖':'🕵️'}</span><div><b>${safe(q.name)}</b> ${q.id===p.id?'◀':''}<small>🪙${q.coins}　📦${q.evidence.length}　🃏${q.cards.length}　${q.actions%5}/5行動</small></div></div>`).join('');$('royalPlayers').innerHTML=$('players').innerHTML; $('royalHud').innerHTML=`<span>ターン <b>${g.round+1}</b></span><span>🔎 捜査 <b>${g.allInferenceCount||0}</b></span><span>🪙 コイン <b>${(g.players[memoViewerId]||p).coins}</b></span>`;$('log').innerHTML='<div>🔒 捜査の詳細は各自の探偵メモで確認してください。</div>';
 let html=`<div class="turn"><b>${safe(p.name)}のターン</b>　<span class="muted">第${g.round+1}周目　${g.phase==='choice'?'出目 '+g.roll:''}</span></div>`;
 if(g.phase==='finished')html=`<div class="inference"><h2>🏆 ${safe(g.players[g.winner].name)} の勝利！</h2>事件を解決しました。<div class="muted">証拠品：${g.solution.evidence}／現場：${g.solution.zone}／動機：${g.solution.motive}／死亡時刻：${g.solution.time}／犯人：${g.solution.suspect}</div></div>`;
-else if(g.phase==='inference'){let q=inferenceP;html=`<div class="inference"><h2>🧠 ${safe(q.name)}の推理タイム</h2>${q.bot?'<p>BOTが推理中…</p>':`<div class="muted">5項目を選択。正解の証拠品を所持し、正解の現場にいる必要があります。</div>${[['evidence','証拠品',E.EVIDENCE],['zone','殺人現場',E.ZONES],['motive','動機',E.MOTIVES],['time','死亡時刻',E.TIMES],['suspect','犯人',E.SUSPECTS]].map(([key,label,items])=>`<div class="field"><label>${label}</label><select id="ans_${key}">${items.map(v=>`<option>${v}</option>`).join('')}</select></div>`).join('')}<button onclick="act(()=>E.infer(g,Object.fromEntries(['evidence','zone','motive','time','suspect'].map(k=>[k,$('ans_'+k).value]))))">この推理で回答</button>`}</div>`}
+else if(g.phase==='inference'){let q=inferenceP;html=`<div class="inference"><h2>🧠 ${safe(q.name)}の推理タイム</h2>${q.bot?'<p>BOTが推理中…</p>':`<div class="muted">5項目を選択。正解の証拠品を所持し、正解の現場にいる必要があります。</div>${[['evidence','証拠品',E.EVIDENCE],['zone','殺人現場',E.ZONES],['motive','動機',E.MOTIVES],['time','死亡時刻',E.TIMES],['suspect','犯人',E.SUSPECTS]].map(([key,label,items])=>inferenceField(q,key,label,items)).join('')}<button onclick="submitInference()">この推理で回答</button>`}</div>`}
 else if(p.bot)html+='<p>🤖 BOTが考えています…</p>';
 else if(g.phase==='roll')html+='<button onclick="rollAnimated()">🎲 サイコロを振る</button>';
 else if(g.phase==='choice'){html+=`<div>🎲 出目：<strong>${g.roll}</strong>　赤く光るマスを選んで一気に移動できます。</div><h2 style="margin-top:15px">探偵カードを使用</h2>`;let usable=p.cards.filter(n=>E.CARDS.find(c=>c.name===n)?.type==='use'&&E.CARDS.find(c=>c.name===n).cost<=g.roll);html+=usable.length?usable.map(n=>`<div class="shop-item"><span>${n}（コスト${E.CARDS.find(c=>c.name===n).cost}）</span><button class="secondary" onclick="cardAction('${n}')">使用</button></div>`).join(''):'<p class="muted">この出目で使用できるカードはありません。</p>'}
 else if(g.phase==='shop'){let t=g.board[p.pos];html+=`<h2>${t.type==='evidence'?'🔍 証拠品散策':'🃏 探偵カード販売'}</h2>`+t.stock.map(n=>{let price=E.CARDS.find(c=>c.name===n)?.price??g.prices[n];return `<div class="shop-item"><span>${n}　🪙${price}</span><button ${p.coins<price?'disabled':''} onclick="purchaseItem('${n}')">購入</button></div>`}).join('')+'<button class="secondary" onclick="act(()=>E.skipShop(g))">買わずに終了</button>'}
+else if(g.phase==='informant'){html+=`<h2>🕵️ 情報屋</h2><p>300コインで事件の正解情報を1項目だけ入手できます。現在の所持金：${p.coins}コイン</p><div class="actions">${[['evidence','証拠品'],['zone','殺人現場'],['motive','動機'],['time','死亡時刻'],['suspect','犯人']].map(([k,v])=>`<button ${p.coins<300?'disabled':''} onclick="buyInformant('${k}')">${v}を調べる（300）</button>`).join('')}</div><button class="secondary" onclick="act(()=>E.skipInformant(g))">利用せず終了</button>`}
 else if(g.phase==='interview-choice')html+='<h2>💬 聞き上手</h2><div class="actions"><button onclick="act(()=>E.interviewChoice(g,\'trait\'))">犯人の特徴を調べる</button><button onclick="act(()=>E.interviewChoice(g,\'motive\'))">動機を調べる</button></div>';
 $('turnArea').innerHTML=html;
  const fm=$('fieldMove');if(fm){if(g.phase==='choice'&&!p.bot&&gateUnlocked){const ends=E.reachable(g,p.pos,g.roll);fm.innerHTML='<strong>🚩 移動先を選ぶ（赤いマス）</strong><div>出目 '+g.roll+'：到達可能 '+ends.length+' マス</div>'+ends.map(id=>`<button onclick="moveAnimated(${id})">${id+1}番 ${safe(g.board[id].zone)} ${icon[g.board[id].type]}</button>`).join('')}else fm.innerHTML='';}
@@ -180,8 +430,8 @@ $('turnArea').innerHTML=html;
 
 // Live board renderer: interactive spaces come from g.board; scenery uses a reference image and procedural drawing.
 const CITY={overviewMain:false,preview:null};
-const TILE_COLORS={normal:'#f2dcae',evidence:'#70dbc6',event:'#d49cff',scene:'#fa947e',interview:'#91baff',coin:'#ffd46b',card:'#8fdf87'};
-const TILE_ICONS={normal:'',evidence:'◆',event:'?',scene:'!',interview:'●',coin:'$',card:'★'};
+const TILE_COLORS={normal:'#f2dcae',evidence:'#70dbc6',event:'#d49cff',scene:'#fa947e',interview:'#91baff',coin:'#ffd46b',card:'#8fdf87',buzzer:'#ff5474',informant:'#56ddf6'};
+const TILE_ICONS={normal:'',evidence:'◆',event:'?',scene:'!',interview:'●',coin:'$',card:'★',buzzer:'🚨',informant:'ℹ'};
 const PAWN_COLORS=['#4bbaff','#ff5f6b','#61df9a','#ffcf58'];
 function swapMap(){CITY.overviewMain=!CITY.overviewMain;drawCity()}
 function drawCity(spot=null){
@@ -471,15 +721,58 @@ function paintRailStation(c,x,top,bottom,tw,face,active,current,overview){
  if(active){c.shadowColor='#ff003a';c.shadowBlur=25;c.lineWidth=overview?3:6;c.strokeStyle='#ff2648';roundedTrack(c,x-tw*.50,top-h*.04,tw,h*1.06,h*.23);c.stroke();}
  c.restore();
 }
+const CINEMATIC_CITY=new Image();
+CINEMATIC_CITY.onload=()=>{if(typeof g!=='undefined'&&g)drawCity()};
+CINEMATIC_CITY.src='assets/3d-night-city-stage.webp';
+// v28: orbit camera rotates the LIVE road graph, stations and pawns, not a screenshot.
+const ORBIT={yaw:0,pitch:55,drag:null,suppressClick:false};
+function orbitCamera(dyaw,dpitch){ORBIT.yaw=(ORBIT.yaw+dyaw+360)%360;ORBIT.pitch=Math.max(25,Math.min(80,ORBIT.pitch+dpitch));updateOrbitStatus();if(g)drawCity()}
+function resetOrbit(){ORBIT.yaw=0;ORBIT.pitch=55;updateOrbitStatus();if(g)drawCity()}
+function updateOrbitStatus(){const e=document.getElementById('orbitStatus');if(e)e.textContent=`角度 ${Math.round(ORBIT.yaw)}° / 高さ ${Math.round(ORBIT.pitch)}°`}
+function orbitProject(x,y,W,H,overview){if(overview)return {x,y};const cx=W*.5,cy=H*.51,a=ORBIT.yaw*Math.PI/180,p=ORBIT.pitch*Math.PI/180;const xx=x-cx,yy=y-cy;const rx=xx*Math.cos(a)+yy*Math.sin(a)*1.45;const ry=(-xx*Math.sin(a)*.60+yy*Math.cos(a))*Math.sin(p);return {x:cx+rx,y:cy+ry+(1-Math.sin(p))*H*.08}}
+function setupOrbitDrag(){const canvas=document.getElementById('cityCanvas');if(!canvas)return;
+ canvas.addEventListener('pointerdown',e=>{if(e.button!==0)return;ORBIT.drag={id:e.pointerId,x:e.clientX,y:e.clientY,px:e.clientX,py:e.clientY,moved:false};canvas.setPointerCapture(e.pointerId)});
+ canvas.addEventListener('pointermove',e=>{const d=ORBIT.drag;if(!d||d.id!==e.pointerId)return;const dx=e.clientX-d.px,dy=e.clientY-d.py;d.px=e.clientX;d.py=e.clientY;if(Math.hypot(e.clientX-d.x,e.clientY-d.y)>7)d.moved=true;if(d.moved){ORBIT.yaw=(ORBIT.yaw+dx*.48+360)%360;ORBIT.pitch=Math.max(25,Math.min(80,ORBIT.pitch-dy*.28));updateOrbitStatus();if(g)drawCity();e.preventDefault()}});
+ const finish=e=>{const d=ORBIT.drag;if(!d||d.id!==e.pointerId)return;if(d.moved){ORBIT.suppressClick=true;setTimeout(()=>{ORBIT.suppressClick=false},80)}ORBIT.drag=null;try{canvas.releasePointerCapture(e.pointerId)}catch(_){}};
+ canvas.addEventListener('pointerup',finish);canvas.addEventListener('pointercancel',finish);
+}
 function renderGrid(canvas,focus,overview,small=false){
  const c=canvas.getContext('2d'),W=canvas.width,H=canvas.height;c.clearRect(0,0,W,H);
  const zone=gridZone(focus);
- royalScene(c,W,H,zone,focus);
- royalForeground(c,W,H,zone,focus);
- royalPaving(c,W,H,focus);
- v10SceneDetails(c,W,H,zone,focus);
- if(zone!=='裏山')royalBalcony(c,W,H);
- // The reference artwork is intentionally not drawn: the live scene is composed of separate objects.
+ // The illustration supplies the rich city atmosphere; every playable road, station and pawn below is drawn from live game state.
+ if(CINEMATIC_CITY.complete&&CINEMATIC_CITY.naturalWidth){
+  const iw=CINEMATIC_CITY.naturalWidth,ih=CINEMATIC_CITY.naturalHeight;
+  const cropTop=0,cropHeight=ih;
+  c.drawImage(CINEMATIC_CITY,0,cropTop,iw,cropHeight,0,0,W,H);
+  c.fillStyle='rgba(4,9,31,.37)';c.fillRect(0,0,W,H);
+ }else{royalScene(c,W,H,zone,focus);royalForeground(c,W,H,zone,focus);}
+ // Districts remain color-coded in both camera modes.
+ const districtTint={'住宅街':'#5bce8650','商店街':'#f0a34544','裏山':'#4fb77448','中心街':'#b47dff44'};
+ if(!overview){c.fillStyle=districtTint[zone]||'#ffffff18';c.fillRect(0,0,W,H);}
+ else{
+  const bands=[['裏山','#32754b'],['中心街','#49366d'],['商店街','#8a532a'],['住宅街','#266a56']];
+  for(let yi=0;yi<2;yi++)for(let xi=0;xi<2;xi++){
+   const [label,color]=bands[yi*2+xi];c.fillStyle=color+'45';c.fillRect(xi*W/2,yi*H/2,W/2,H/2);
+   c.strokeStyle='#ffd99399';c.lineWidth=3;c.strokeRect(xi*W/2+2,yi*H/2+2,W/2-4,H/2-4);
+   c.font=`bold ${Math.max(12,H*.03)}px serif`;c.textAlign='center';c.fillStyle='#fff0c2';c.fillText(label,(xi+.5)*W/2,(yi+.25)*H);
+  }
+ }
+ // Atmospheric illustrated stage elements, separate from the interactive road network.
+ c.save();
+ if(!overview){
+  // Water reflections and distant silhouettes in the edges of the scene.
+  const river=c.createLinearGradient(0,H*.78,0,H);river.addColorStop(0,'#133a5b00');river.addColorStop(.5,'#267b9b55');river.addColorStop(1,'#091b4380');c.fillStyle=river;c.fillRect(0,H*.77,W,H*.23);
+  for(let i=0;i<17;i++){const px=W*(.025+i*.059),py=H*(.855+(i%4)*.026);c.strokeStyle=i%3===0?'#ffd28c66':'#8ddfff65';c.lineWidth=1.5+(i%3);c.beginPath();c.moveTo(px,py);c.lineTo(px+W*.025,py);c.stroke()}
+  // Ornate district plaque, lit as a sign on the town backdrop.
+  const px=W*.77,py=H*.118,pw=W*.205,ph=H*.062;c.fillStyle='#10192bdc';c.strokeStyle='#f2c887';c.lineWidth=3;roundedTrack(c,px,py,pw,ph,12);c.fill();c.stroke();c.font=`bold ${Math.floor(H*.026)}px serif`;c.textAlign='center';c.fillStyle='#ffe4ad';c.shadowColor='#ffc575';c.shadowBlur=9;c.fillText('✦ '+zone+' ✦',px+pw/2,py+ph*.66);c.shadowBlur=0;
+  // Distant warm lanterns and flowering trees frame the 3D-style streets.
+  for(const [lx,ly] of [[.035,.38],[.96,.43],[.045,.67],[.96,.72]]){const x=W*lx,y=H*ly;c.strokeStyle='#a28d77';c.lineWidth=5;c.beginPath();c.moveTo(x,y);c.lineTo(x,y-H*.065);c.stroke();c.fillStyle='#ffe6aa';c.shadowColor='#ffbf63';c.shadowBlur=25;c.beginPath();c.arc(x,y-H*.068,7,0,7);c.fill();c.shadowBlur=0}
+ }else{
+  // Waterway divides the miniature town and gives the overview a landmark.
+  c.strokeStyle='#74d3ec66';c.lineWidth=H*.017;c.beginPath();c.moveTo(W*.02,H*.83);c.bezierCurveTo(W*.23,H*.74,W*.30,H*.94,W*.51,H*.80);c.bezierCurveTo(W*.73,H*.67,W*.80,H*.94,W*.98,H*.79);c.stroke();
+ }
+ c.restore();
+ // Road nodes and pawn objects are fully interactive canvas elements, not baked into the illustration.
  const shade=c.createLinearGradient(0,0,0,H);shade.addColorStop(0,'#10102d80');shade.addColorStop(.35,'#111b2609');shade.addColorStop(1,'#050b21a6');c.fillStyle=shade;c.fillRect(0,0,W,H);
  if(!overview){
    paintLantern(c,W*.08,H*.75,1.4);paintLantern(c,W*.92,H*.75,1.4);
@@ -490,48 +783,51 @@ function renderGrid(canvas,focus,overview,small=false){
  const originX=W*.5-(cols-1)*dx*.5,originY=overview?H*.19:H*.205;
  const selected=(g.phase==='choice'&&!E.current(g).bot)?new Set(E.reachable(g,E.current(g).pos,g.roll)):new Set();
  if(canvas.id==='cityCanvas')gridHit=[];
- // Draw a true connected rail network beneath all stations. Each link is an actual edge in g.roads.
+ // Continuous, raised stone roads connect actual graph neighbors in all four directions.
  const left=overview?0:Math.max(0,Math.min(9,center.x-2)),up=overview?0:Math.max(0,Math.min(4,center.y-2));
- const stationPoint=(rx,ry)=>({x:originX+rx*dx,y:originY+ry*dy});
+ const stationPoint=(rx,ry)=>orbitProject(originX+rx*dx,originY+ry*dy,W,H,overview);
  c.save();c.lineCap='round';c.lineJoin='round';
- const railWidth=overview?13:35;
+ const roadWidth=overview?11:39;
  const links=[];
  for(let ry=0;ry<rows;ry++)for(let rx=0;rx<cols;rx++){
-  let id=E.gridId(left+rx,up+ry);if(id<0)continue;
-  for(let other of E.neighbors(g,id)){
-   let q=E.gridCoord(other),tx=q.x-left,ty=q.y-up;
+  const id=E.gridId(left+rx,up+ry);if(id<0)continue;
+  for(const other of E.neighbors(g,id)){
+   const q=E.gridCoord(other),tx=q.x-left,ty=q.y-up;
    if(tx<0||ty<0||tx>=cols||ty>=rows||other<id)continue;
    links.push([stationPoint(rx,ry),stationPoint(tx,ty)]);
   }
  }
  for(const [a,b] of links){
-  let vx=b.x-a.x,vy=b.y-a.y,len=Math.hypot(vx,vy)||1,nx=-vy/len,ny=vx/len;
-  c.save();c.shadowColor='#070718';c.shadowBlur=overview?5:16;c.shadowOffsetY=overview?2:8;
-  c.strokeStyle='#202334';c.lineWidth=railWidth+12;c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x,b.y);c.stroke();c.restore();
-  c.strokeStyle='#e9e3dc';c.lineWidth=railWidth+5;c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x,b.y);c.stroke();
-  c.strokeStyle='#565063';c.lineWidth=railWidth;c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x,b.y);c.stroke();
-  // Sleepers (ties) are perpendicular to the track, making the connections unambiguous.
-  const count=Math.max(2,Math.ceil(len/(overview?9:18)));
-  for(let i=0;i<=count;i++){
-   const t=i/count,px=a.x+vx*t,py=a.y+vy*t;
-   c.strokeStyle='#29263a';c.lineWidth=overview?2:5;c.beginPath();c.moveTo(px-nx*railWidth*.56,py-ny*railWidth*.56);c.lineTo(px+nx*railWidth*.56,py+ny*railWidth*.56);c.stroke();
-   c.strokeStyle='#e6d5b8';c.lineWidth=overview?1:2;c.beginPath();c.moveTo(px-nx*railWidth*.49,py-ny*railWidth*.49);c.lineTo(px+nx*railWidth*.49,py+ny*railWidth*.49);c.stroke();
+  const path=()=>{c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x,b.y)};
+  c.save();c.shadowColor='#000b';c.shadowBlur=overview?5:17;c.shadowOffsetY=overview?3:11;
+  c.strokeStyle='#100e23';c.lineWidth=roadWidth+22;path();c.stroke();c.restore();
+  c.save();c.translate(0,overview?3:14);c.strokeStyle='#302643';c.lineWidth=roadWidth+17;path();c.stroke();c.strokeStyle='#806c83';c.lineWidth=roadWidth+10;path();c.stroke();c.restore();
+  c.strokeStyle='#c7b6ad';c.lineWidth=roadWidth+8;path();c.stroke();
+  c.strokeStyle='#5b536b';c.lineWidth=roadWidth;path();c.stroke();
+  c.strokeStyle='#f3e8da';c.lineWidth=roadWidth*.82;path();c.stroke();c.strokeStyle='#4e4962';c.lineWidth=roadWidth*.63;path();c.stroke();
+  c.strokeStyle='#fff7e6';c.lineWidth=overview?1:2;c.globalAlpha=.6;path();c.stroke();c.globalAlpha=1;
+  for(const side of [-1,1]){
+   const vx=b.x-a.x,vy=b.y-a.y,l=Math.hypot(vx,vy)||1,off=roadWidth*.43*side,nx=-vy/l,ny=vx/l;
+   c.strokeStyle='#f8dba0';c.lineWidth=overview?1.3:3;c.shadowColor='#ffcb7d';c.shadowBlur=overview?2:8;
+   c.beginPath();c.moveTo(a.x+nx*off,a.y+ny*off);c.lineTo(b.x+nx*off,b.y+ny*off);c.stroke();c.shadowBlur=0;
   }
-  for(const side of [-.35,.35]){
-   c.strokeStyle='#f8f6e7';c.lineWidth=overview?2.5:6;c.beginPath();c.moveTo(a.x+nx*railWidth*side,a.y+ny*railWidth*side);c.lineTo(b.x+nx*railWidth*side,b.y+ny*railWidth*side);c.stroke();
-   c.strokeStyle='#b0b9c5';c.lineWidth=overview?1:2;c.beginPath();c.moveTo(a.x+nx*railWidth*side,a.y+ny*railWidth*side);c.lineTo(b.x+nx*railWidth*side,b.y+ny*railWidth*side);c.stroke();
+  // Small cobblestone seams visually communicate the width and direction of the road.
+  const vx=b.x-a.x,vy=b.y-a.y,l=Math.hypot(vx,vy)||1,nx=-vy/l,ny=vx/l;
+  for(let t=0;t<l;t+=overview?15:26){const px=a.x+vx*t/l,py=a.y+vy*t/l;
+   c.strokeStyle='#f5e5d2cc';c.lineWidth=overview?1.1:2.5;c.beginPath();c.moveTo(px-nx*roadWidth*.34,py-ny*roadWidth*.34);c.lineTo(px+nx*roadWidth*.34,py+ny*roadWidth*.34);c.stroke();
   }
  }
  c.restore();
  for(let ry=0;ry<rows;ry++)for(let rx=0;rx<cols;rx++){
   let gx=overview?rx:Math.max(0,Math.min(9,center.x-2))+rx,gy=overview?ry:Math.max(0,Math.min(4,center.y-2))+ry,id=E.gridId(gx,gy);if(id<0)continue;
-  let tile=g.board[id],x=originX+rx*dx,y=originY+ry*dy;
+  let tile=g.board[id],projected=stationPoint(rx,ry),x=projected.x,y=projected.y;
   let active=selected.has(id),current=id===(CITY.preview??focus),top=y-th*.36,bottom=y+th*.35,depth=th*.26;
   c.save();c.shadowColor='#080513';c.shadowBlur=10;c.shadowOffsetY=8;
   fillPoly(c,[[x-tw*.48,bottom],[x+tw*.48,bottom],[x+tw*.48,bottom+depth],[x-tw*.48,bottom+depth]],'#d1cad5','#1e1528',2);
   c.restore();
+  c.save();c.shadowColor='#050513';c.shadowBlur=overview?4:18;c.shadowOffsetY=overview?2:12;fillPoly(c,[[x-tw*.49,bottom+depth*.45],[x+tw*.49,bottom+depth*.45],[x+tw*.40,bottom+depth*1.65],[x-tw*.40,bottom+depth*1.65]],'#4b355a','#e2b67a',overview?1:3);c.restore();
   // Raised station platform, attached to the connected rails.
-  const face=c.createLinearGradient(x-tw*.5,top,x+tw*.5,bottom);face.addColorStop(0,'#fff1cb');face.addColorStop(.13,TILE_COLORS[tile.type]);face.addColorStop(.75,TILE_COLORS[tile.type]);face.addColorStop(1,'#463050');
+  if(tile.type==='buzzer'||tile.type==='informant'){c.shadowColor=tile.type==='buzzer'?'#ff335e':'#5ceeff';c.shadowBlur=overview?9:25;}const face=c.createLinearGradient(x-tw*.5,top,x+tw*.5,bottom);face.addColorStop(0,'#fff1cb');face.addColorStop(.13,TILE_COLORS[tile.type]);face.addColorStop(.75,TILE_COLORS[tile.type]);face.addColorStop(1,'#463050');
   c.shadowColor=active?'#ff485b':current?'#6ef2ff':'#f8a64a';c.shadowBlur=active?34:current?28:9;
   paintRailStation(c,x,top,bottom,tw,face,active,current,overview);
   c.shadowBlur=0;
@@ -543,8 +839,10 @@ function renderGrid(canvas,focus,overview,small=false){
   g.players.forEach((p,i)=>{if((!p.bot&&p.id===E.current(g).id&&CITY.preview!==null?CITY.preview:p.pos)===id){royalPawnHighlights(c,x+(i-1.5)*tw*.19,y-th*.15,overview?.31:small?.36:.85,PAWN_COLORS[i]);v10PawnJewel(c,x+(i-1.5)*tw*.19,y-th*.15,overview?.31:small?.36:.85,PAWN_COLORS[i],i+1)}});
   if(canvas.id==='cityCanvas')gridHit.push({id,x0:x-tw*.5,y0:top,x1:x+tw*.5,y1:bottom+depth});
  }
+ // Floating fireflies and warm lantern glints give the playable field depth without blocking clicks.
+ if(!overview){c.save();for(let k=0;k<38;k++){let x=(k*197+focus*23)%W,y=H*.16+((k*131+focus*7)%(H*.69));let r=(k%4===0?3:1.5);c.globalAlpha=.26+(k%5)*.1;c.fillStyle=k%3?'#ffcf82':'#8ce9ff';c.shadowColor=c.fillStyle;c.shadowBlur=14;c.beginPath();c.arc(x,y,r,0,Math.PI*2);c.fill()}c.restore();}
  c.fillStyle='#080d23ec';c.fillRect(0,0,W,H*.105);c.fillStyle='#ffd999';c.font=`bold ${Math.max(13,H*.038)}px serif`;c.textAlign='left';c.fillText((overview?'✦ 全体マップ 15×10':'✦ '+zone+' / 近景6×6')+'　マス '+(focus+1)+'/150',W*.025,H*.069);
- if(!overview){c.fillStyle='#ffdf9c';c.font=`bold ${Math.max(12,H*.026)}px serif`;c.fillText('✦ 赤く光る駅が移動先　|　線路はゲームごとに変化',W*.025,H*.962)}
+ if(!overview){c.fillStyle='#ffdf9c';c.font=`bold ${Math.max(12,H*.026)}px serif`;c.fillText('✦ 赤く光るマスが移動先　|　道路はゲームごとに変化',W*.025,H*.962)}
 }
 function overviewPoint(i,W,H){let x,y,t;
  // Four contiguous zones: top residential, right shopping, bottom downtown, left mountain.
@@ -556,13 +854,13 @@ function overviewPoint(i,W,H){let x,y,t;
  return {x,y};
 }
 function renderOverview(canvas,focus){renderGrid(canvas,focus,true)}
-function mapPointer(ev,click){if(!g)return;let canvas=$('cityCanvas'),r=canvas.getBoundingClientRect(),x=(ev.clientX-r.left)*canvas.width/r.width,y=(ev.clientY-r.top)*canvas.height/r.height;
+function mapPointer(ev,click){if(!g)return;if(click&&ORBIT.suppressClick)return;let canvas=$('cityCanvas'),r=canvas.getBoundingClientRect(),x=(ev.clientX-r.left)*canvas.width/r.width,y=(ev.clientY-r.top)*canvas.height/r.height;
  let hit=gridHit.slice().reverse().find(a=>x>=a.x0&&x<=a.x1&&y>=a.y0&&y<=a.y1);if(!hit){if(!click)$('gridHover').textContent='マスにカーソルを合わせると詳細を表示';return}
- let t=g.board[hit.id],names={normal:'通常',evidence:'証拠品ショップ',event:'イベント',scene:'現場検証',interview:'聞き込み',coin:'コイン',card:'探偵カードショップ'};
+ let t=g.board[hit.id],names={normal:'通常',evidence:'証拠品ショップ',event:'イベント',scene:'現場検証',interview:'聞き込み',coin:'コイン',card:'探偵カードショップ',buzzer:'ブザーマス',informant:'情報屋'};
  $('gridHover').textContent=`${hit.id+1}番マス｜${names[t.type]}｜${gridZone(hit.id)}${g.phase==='choice'&&E.reachable(g,E.current(g).pos,g.roll).includes(hit.id)?'｜クリックで移動':''}`;
  if(click){if(fxBusy||g.phase!=='choice'||E.current(g).bot||!gateUnlocked)return;if(!E.reachable(g,E.current(g).pos,g.roll).includes(hit.id)){showToast('出目の歩数で到達できません');return}moveAnimated(hit.id)}
 }
-window.addEventListener('DOMContentLoaded',()=>{$('cityCanvas').addEventListener('mousemove',e=>mapPointer(e,false));$('cityCanvas').addEventListener('click',e=>mapPointer(e,true));$('cityCanvas').addEventListener('mouseleave',()=>{$('gridHover').textContent='マスにカーソルを合わせると詳細を表示'})});
+window.addEventListener('DOMContentLoaded',()=>{setupOrbitDrag();$('cityCanvas').addEventListener('mousemove',e=>mapPointer(e,false));$('cityCanvas').addEventListener('click',e=>mapPointer(e,true));$('cityCanvas').addEventListener('mouseleave',()=>{$('gridHover').textContent='マスにカーソルを合わせると詳細を表示'})});
 window.addEventListener('resize',()=>{if(g)drawCity()});
 
 const EVENT_CATALOG=[
@@ -574,14 +872,42 @@ const EVENT_CATALOG=[
 ];
 let lastEventSerial=0,eventFxTimer=null;
 function eventFxIfNew(){if(!g||!g.lastEvent||g.lastEvent.serial===lastEventSerial)return false;
- const ev=g.lastEvent;lastEventSerial=ev.serial;const [symbol,title,detail]=EVENT_CATALOG[ev.id]||['❓','謎のイベント','何かが起きた！'];
+ const ev=g.lastEvent;lastEventSerial=ev.serial;if(g.players[ev.playerId]?.bot)return false;const [symbol,title,detail]=EVENT_CATALOG[ev.id]||['❓','謎のイベント','何かが起きた！'];
  fxBusy=true;clearTimeout(botTimer);clearTimeout(eventFxTimer);
  const overlay=$('eventCurtain');overlay.innerHTML=`<div class="eventPanel"><div class="eventKicker">MYSTERY TOWN · RANDOM EVENT #${ev.id+1}</div><div class="eventSymbol">${symbol}</div><h2>${safe(title)}</h2><p>${safe(detail)}</p><div class="eventBy">${safe(ev.playerName)} ／ ${ev.space+1}番マス</div><div class="eventProgress"></div></div>`;
  overlay.classList.add('visible');eventFxTimer=setTimeout(()=>{overlay.classList.remove('visible');fxBusy=false;render();tickBots()},Math.max(1400,2450*gameSettings.fxSpeed));return true;
 }
-function renderNotes(){let active=g.phase==='inference'?g.players[g.inference.queue[g.inference.index]]:E.current(g);if(!active||active.bot||!gateUnlocked){$('notes').innerHTML='<p class="muted">🔒 自分の番になったらメモを確認できます。</p>';return}let q=active,n=q.notes;let z=E.ZONES.find(z=>n.zones[z]===true),excluded=E.ZONES.filter(z=>n.zones[z]===false);let rows=[['証拠品',q.evidence.length?q.evidence.join('・')+'（所持品）':'未判明'],['殺人現場',z||'未判明'],['動機',n.motive||'未判明'],['死亡時刻',Object.entries(n.times).map(([k,v])=>k+'：'+v).join('／')||'未判明'],['犯人',n.knownSuspect||'未判明']];$('notes').innerHTML=`<table>${rows.map(([a,b])=>`<tr><td>${a}</td><td>${safe(b)}</td></tr>`).join('')}</table><p class="muted">現場ではない：${excluded.join('・')||'なし'}</p><p class="muted">犯人ではない：${n.excludedSuspects.join('・')||'なし'}</p><p class="muted">犯人の特徴：${n.traits.join('・')||'未判明'}</p><h2 style="margin-top:14px">❌ 過去に間違えた推理</h2><div>${(n.wrongAnswers||[]).length?(n.wrongAnswers||[]).map((a,i)=>`<div class="panel" style="padding:10px;margin:7px 0"><b>第${i+1}回の不正解</b><div style="font-size:13px">証拠品：${safe(a.evidence)} ／ 現場：${safe(a.zone)}<br>動機：${safe(a.motive)} ／ 死亡時刻：${safe(a.time)} ／ 犯人：${safe(a.suspect)}</div></div>`).join(''):'<p class="muted">まだ不正解の記録はありません。</p>'}</div><h2>🎒 所持品</h2><div>${q.evidence.map(x=>`<span class="pill">🔍${x}</span>`).join('')||'なし'}</div><h2 style="margin-top:12px">🃏 探偵カード</h2><div>${q.cards.map(x=>`<span class="pill">${x}</span>`).join('')||'なし'}</div>`}
-function purchaseItem(name){if(fxBusy)return;act(()=>E.shop(g,name));showToast('🎁 '+name+' を入手！');if(E.CARDS.some(c=>c.name===name))showCardFx(name)}
-function cardAction(name){let arg;if(name==='タクシーチケット'){let zones=E.ZONES.filter(z=>z!==g.board[E.current(g).pos].zone);arg=prompt('移動先のゾーンを入力：'+zones.join('／'),zones[0]);if(!zones.includes(arg))return}else if(name==='足止め'){let opts=g.players.filter(p=>p.id!==E.current(g).id);let id=prompt('足止めする相手の番号：'+opts.map(p=>`${p.id+1}:${p.name}`).join('／'),opts[0].id+1);if(!opts.some(p=>p.id+1===Number(id)))return;arg=Number(id)-1}showCardFx(name);act(()=>E.useCard(g,name,arg))}
+function renderNotes(){let turnOwner=g.phase==='inference'?g.players[g.inference.queue[g.inference.index]]:E.current(g);let q=g.players[memoViewerId];if(!q||q.bot||(turnOwner&&!turnOwner.bot&&!gateUnlocked)){$('notes').innerHTML='<p class="muted">🔒 探偵の交代確認後にメモを表示します。</p>';return}let n=E.updateDeductions(g,q);let z=E.ZONES.find(z=>n.zones[z]===true),excluded=E.ZONES.filter(z=>n.zones[z]===false);let rows=[['証拠品',n.knownEvidence?'正解：'+n.knownEvidence:(q.evidence.length?q.evidence.join('・')+'（所持品）':'未判明')],['殺人現場',z||'未判明'],['動機',n.motive||'未判明'],['死亡時刻',Object.entries(n.times).map(([k,v])=>k+'：'+v).join('／')||'未判明'],['犯人',n.knownSuspect||'未確定（候補：'+(n.suspectCandidates||E.SUSPECTS).join('・')+'）']];$('notes').innerHTML=`<table>${rows.map(([a,b])=>`<tr><td>${a}</td><td>${safe(b)}</td></tr>`).join('')}</table><p class="muted">現場ではない：${excluded.join('・')||'なし'} ／ 残る区域：${(n.zoneCandidates||E.ZONES).join('・')}</p><p class="muted">犯人ではない：${E.SUSPECTS.filter(x=>!(n.suspectCandidates||E.SUSPECTS).includes(x)).join('・')||'なし'}</p><p class="muted">犯人の特徴：${n.traits.join('・')||'未判明'}</p><h2 style="margin-top:14px">❌ 過去に間違えた推理</h2><div>${(n.wrongAnswers||[]).length?(n.wrongAnswers||[]).map((a,i)=>`<div class="panel" style="padding:10px;margin:7px 0"><b>第${i+1}回の不正解</b>${Number.isInteger(a.wrongCount)?`<div style="margin:6px 0;padding:8px;border:1px solid #c9a45e;border-radius:8px;color:#f9dca0">🔎 透徹：5項目中 <strong>${a.wrongCount}項目</strong> が間違っていた（該当項目は不明）</div>`:''}<div style="font-size:13px">証拠品：${safe(a.evidence)} ／ 現場：${safe(a.zone)}<br>動機：${safe(a.motive)} ／ 死亡時刻：${safe(a.time)} ／ 犯人：${safe(a.suspect)}</div></div>`).join(''):'<p class="muted">まだ不正解の記録はありません。</p>'}</div><h2>🗺️ 判明した証拠品ショップ</h2><p>${(n.evidenceShops||[]).map(id=>(id+1)+'番マス（'+g.board[id].zone+'）').join('・')||'未判明'}</p><h2>🎒 所持品</h2><div>${q.evidence.map(x=>`<span class="pill">🔍${x}</span>`).join('')||'なし'}</div><h2 style="margin-top:12px">🃏 探偵カード</h2><div>${q.cards.map(x=>`<span class="pill">${x}</span>`).join('')||'なし'}</div>`}
+function buyInformant(category){if(fxBusy)return;const owner=E.current(g);try{E.informant(g,category)}catch(e){alert(e.message);return}render();showCardDiscoveryFx('情報屋',[g.lastDiscovery.detail]);}
+function purchaseItem(name){if(fxBusy)return;let p=E.current(g),before=p.cards.length;try{E.shop(g,name)}catch(e){alert(e.message);return}render();if(p.cards.length>before)notifyCardAcquired(p,name);else showToast('🔍 '+name+' を入手！');tickBots()}
+function cardKnowledgeText(name,before,after){
+ const lines=[];
+ if(name==='監視カメラ確認'){
+  for(const suspect of after.excludedSuspects||[])if(!(before.excludedSuspects||[]).includes(suspect))lines.push('「'+suspect+'」は犯人ではないと分かった');
+ }else if(name==='辻褄'){
+  for(const [time,state] of Object.entries(after.times||{}))if(state==='除外'&&before.times?.[time]!=='除外')lines.push('死亡時刻は「'+time+'」ではないと分かった');
+ }else if(name==='証拠品情報'){for(const id of after.evidenceShops||[])if(!(before.evidenceShops||[]).includes(id))lines.push((id+1)+'番マス（'+g.board[id].zone+'）で証拠品が売られていると分かった');
+ }else if(name==='情報提供'){
+  for(const trait of after.traits||[])if(!(before.traits||[]).includes(trait))lines.push('犯人の特徴は「'+trait+'」だと分かった');
+ }
+ if(!lines.length&&['監視カメラ確認','辻褄','情報提供'].includes(name))lines.push('新しい情報は得られなかった');
+ return lines;
+}
+function showCardDiscoveryFx(name,lines){
+ if(!gameSettings.card){showToast(name+'：'+lines.join('／'));return;}
+ fxBusy=true;clearTimeout(botTimer);clearTimeout(fxTimer);
+ const symbols={'監視カメラ確認':'📷','辻褄':'🕰️','情報提供':'📜','証拠品情報':'🗺️','情報屋':'🕵️'};
+ const c=$('fxCard');
+ c.innerHTML=`<div class="muted">DETECTIVE CARD · DISCOVERY</div><div class="art">${symbols[name]||'🔎'}</div><h2>${safe(name)}</h2><p style="font-weight:800;color:#ffe4a3;font-size:19px;line-height:1.7">${lines.map(x=>safe('「'+name+'」によって、'+x)).join('<br>')}</p>`;
+ $('fxOverlay').classList.add('show');
+ fxTimer=setTimeout(()=>{$('fxOverlay').classList.remove('show');fxBusy=false;render();tickBots()},Math.max(1700,2700*gameSettings.fxSpeed));
+}
+function cardAction(name){let arg;if(name==='タクシーチケット'){let zones=E.ZONES.filter(z=>z!==g.board[E.current(g).pos].zone);arg=prompt('移動先のゾーンを入力：'+zones.join('／'),zones[0]);if(!zones.includes(arg))return}else if(name==='足止め'){let opts=g.players.filter(p=>p.id!==E.current(g).id);let id=prompt('足止めする相手の番号：'+opts.map(p=>`${p.id+1}:${p.name}`).join('／'),opts[0].id+1);if(!opts.some(p=>p.id+1===Number(id)))return;arg=Number(id)-1}const owner=E.current(g);const before=JSON.parse(JSON.stringify(owner.notes));
+ try{E.useCard(g,name,arg)}catch(e){alert(e.message);return}
+ const lines=cardKnowledgeText(name,before,owner.notes);
+ render();
+ if(lines.length){showCardDiscoveryFx(name,lines);return}
+ showCardFx(name);tickBots()}
 function settingsTab(tab){document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('selected',b.dataset.tab===tab));document.querySelectorAll('[data-page]').forEach(p=>p.classList.toggle('hidden',p.dataset.page!==tab))}
 function openSettings(){syncSettings();$('settingsScreen').classList.remove('hidden');settingsTab('basic')}
 function closeSettings(){$('settingsScreen').classList.add('hidden')}
@@ -590,8 +916,10 @@ function closeRules(){$('rulesScreen').classList.add('hidden')}
 function syncSettings(){$('cfgHumans').value=String(gameSettings.humans);$('cfgBotSpeed').value=String(gameSettings.botSpeed);$('cfgDice').checked=gameSettings.dice;$('cfgCard').checked=gameSettings.card;$('cfgMove').checked=gameSettings.move;$('cfgFxSpeed').value=String(gameSettings.fxSpeed);$('cfgSize').value=gameSettings.size;gameSettings.names.forEach((n,i)=>$('cfgName'+(i+1)).value=n)}
 function saveSettings(){gameSettings.humans=Number($('cfgHumans').value);gameSettings.botSpeed=Number($('cfgBotSpeed').value);gameSettings.dice=$('cfgDice').checked;gameSettings.card=$('cfgCard').checked;gameSettings.move=$('cfgMove').checked;gameSettings.fxSpeed=Number($('cfgFxSpeed').value);gameSettings.size=$('cfgSize').value;gameSettings.names=Array.from({length:4},(_,i)=>$('cfgName'+(i+1)).value.trim()||'探偵'+(i+1));document.body.classList.toggle('uiLarge',gameSettings.size==='large');closeSettings();showToast('設定を保存しました。人数と名前は次の事件から反映されます。')}
 function resetSettings(){gameSettings={humans:1,botSpeed:420,dice:true,card:true,move:true,fxSpeed:1,size:'normal',names:['探偵1','探偵2','探偵3','探偵4']};syncSettings()}
-function beginFromTitle(){if(g&&g.phase!=='finished'&&!$('titleScreen').classList.contains('hidden')&&!confirm('現在の事件を終了して、新しい事件を開始しますか？'))return;$('titleScreen').classList.add('hidden');closeSettings();start();if(!g)return;fxBusy=true;clearTimeout(botTimer);$('privacyGate').style.display='none';let c=$('fxCard');c.innerHTML='<div class="muted">MYSTERY TOWN</div><div class="art">⚔️</div><h2>DETECTIVES VS MYSTERY</h2><p>'+g.players.map(p=>safe(p.name)).join('　VS　')+'</p>';$('fxOverlay').classList.add('show');setTimeout(()=>{c.innerHTML='<div class="art">🔎</div><h2>GAME START!</h2><p>事件の真相を解き明かせ！</p>'},1350);setTimeout(()=>{$('fxOverlay').classList.remove('show');fxBusy=false;render();tickBots()},3000)}
-function returnToTitle(){clearTimeout(botTimer);if(g&&g.phase!=='finished'&&!confirm('タイトルに戻りますか？ 現在の事件の進行は保持されません。'))return;g=null;gateUnlocked=false;lastHumanKey=null;$('privacyGate').style.display='none';$('titleScreen').classList.remove('hidden')}
+let openingTimers=[];function cancelOpening(){openingTimers.forEach(clearTimeout);openingTimers=[];const el=$('murderOpening');if(el){el.classList.remove('visible','act-detectives','act-turn');el.setAttribute('aria-hidden','true')}}
+function openingStage(type,eyebrow,emblem,headline,subtitle,names){const el=$('murderOpening');el.className='murderOpening visible '+type;el.setAttribute('aria-hidden','false');$('openingEyebrow').textContent=eyebrow;$('openingEmblem').textContent=emblem;$('openingHeadline').textContent=headline;$('openingSubtitle').textContent=subtitle;$('openingNames').textContent=names}
+function beginFromTitle(){if(g&&g.phase!=='finished'&&!$('titleScreen').classList.contains('hidden')&&!confirm('現在の事件を終了して、新しい事件を開始しますか？'))return;cancelOpening();$('titleScreen').classList.add('hidden');closeSettings();start();if(!g)return;fxBusy=true;clearTimeout(botTimer);$('privacyGate').style.display='none';const players=g.players.map(p=>p.name);openingStage('act-murder','緊急速報 · MYSTERY TOWN','⚠','この町で殺人が起きた！！','平穏な夜の街に、恐ろしい事件が発生した……','');openingTimers.push(setTimeout(()=>openingStage('act-detectives','THE DETECTIVES ASSEMBLE','🕵️','4人の探偵が解決に挑む','手がかりを集め、5つの謎を解き明かせ！',players.join('　✦　')),2300));openingTimers.push(setTimeout(()=>openingStage('act-turn','THE INVESTIGATION BEGINS','🔎',players[0]+'のターン','最初の探偵の捜査が始まる！','GAME START'),4650));openingTimers.push(setTimeout(()=>{cancelOpening();fxBusy=false;render();tickBots()},6350))}
+function returnToTitle(){cancelOpening();fxBusy=false;clearTimeout(botTimer);if(g&&g.phase!=='finished'&&!confirm('タイトルに戻りますか？ 現在の事件の進行は保持されません。'))return;g=null;gateUnlocked=false;lastHumanKey=null;$('privacyGate').style.display='none';$('titleScreen').classList.remove('hidden')}
 function initTitle(){syncSettings();settingsTab('basic');$('titleScreen').classList.remove('hidden')}
 initTitle();
-</script><div id="eventCurtain" role="alert" aria-live="assertive"></div></body></html>
+</script><div id="eventCurtain" role="alert" aria-live="assertive"></div><div id="activityFeed" role="status" aria-live="polite"></div><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.1/three.min.js"></script><script src="world3d.js"></script></body></html>
