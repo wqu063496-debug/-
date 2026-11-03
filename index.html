@@ -113,6 +113,14 @@ header{border-bottom:3px double #e7bf81!important}
 #mapSwap{z-index:6}
 .mapLegend{z-index:5;pointer-events:none}
 .orbit-hint{font-size:12px}
+
+/* v41: destination preview, player pawn legend and visible coin balance */
+#moveTileInfo{margin-top:10px;min-height:58px;padding:10px 12px;border:1px solid #d7b16a;border-radius:10px;background:linear-gradient(125deg,#202b4c,#101a34);color:#f9e9c5;box-shadow:inset 0 1px #ffffff22}
+#moveTileInfo strong{color:#ffe09c}#moveTileInfo .moveEffect{display:block;margin-top:4px;color:#dce9ff;font-size:13px}
+#fieldMove button:focus-visible{outline:3px solid #ffe6a3;outline-offset:2px}
+.pawnColorDot{display:inline-block;width:17px;height:17px;flex:none;border:2px solid #fff4d8;border-radius:50%;box-shadow:0 0 0 2px #28314e,0 0 11px currentColor;vertical-align:middle}
+.royalRoster .suspect{gap:11px!important}.royalRoster .suspect .pawnColorDot{width:21px;height:21px}
+#royalHud .coinBalance{font-size:clamp(16px,1.7vw,23px);border-color:#ffe19a;background:linear-gradient(125deg,#544015,#161b37);color:#fff1a5;box-shadow:0 0 14px #ffc24755,inset 0 1px #ffffff55}
 </style><style>
 .mapShell{position:relative;border:3px solid #b78c4b;border-radius:18px;overflow:hidden;background:#132b34;box-shadow:0 18px 30px #0009,inset 0 0 25px #f3c96b44}
 #cityCanvas{display:block;width:100%;height:auto;aspect-ratio:4/3}
@@ -355,18 +363,18 @@ main .center>.panel:first-child{border:3px solid #dfac56!important;box-shadow:0 
 #mapSwap{z-index:6}
 .mapLegend{z-index:5;pointer-events:none}
 .orbit-hint{font-size:12px}
-</style></head><body><div id="titleScreen" class="screenLayer"><div class="titleBack"></div><div class="titleContent"><div class="eyebrow">MYSTERY BOARD GAME</div><h1 class="titleLogo">🔎 ミステリー・タウン</h1><p class="titleSub">— 事件の真相を、君の推理で暴け —</p><div class="titleButtons"><button class="goldButton" onclick="beginFromTitle()">▶ ゲームスタート</button><button onclick="openSettings()">⚙ ゲーム設定</button><button onclick="openRules()">📖 ルール・遊び方</button></div><div class="titleNote">4人対戦・BOT最大3人・150マスの立体風グリッド推理ゲーム</div></div></div>
+</style><style>.mapModeBar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}.mapModeBar button{background:#2c75bd;color:white;border:1px solid #b5d9ff}.mapModeBar span{font-size:13px;color:#c9d9eb}#cityCanvas{position:relative;z-index:1}</style></head><body><div id="titleScreen" class="screenLayer"><div class="titleBack"></div><div class="titleContent"><div class="eyebrow">MYSTERY BOARD GAME</div><h1 class="titleLogo">🔎 ミステリー・タウン</h1><p class="titleSub">— 事件の真相を、君の推理で暴け —</p><div class="titleButtons"><button class="goldButton" onclick="beginFromTitle()">▶ ゲームスタート</button><button onclick="openSettings()">⚙ ゲーム設定</button><button onclick="openRules()">📖 ルール・遊び方</button></div><div class="titleNote">4人対戦・BOT最大3人・150マスの立体風グリッド推理ゲーム</div></div></div>
 <div id="settingsScreen" class="screenLayer hidden"><div class="settingsPanel"><button class="closeSettings" onclick="closeSettings()">✕</button><h2>⚙ ゲーム詳細設定</h2><p class="settingsIntro">新しい事件の開始前に変更できます。</p><div class="settingTabs"><button data-tab="basic" onclick="settingsTab('basic')">基本設定</button><button data-tab="player" onclick="settingsTab('player')">プレイヤー</button><button data-tab="effects" onclick="settingsTab('effects')">演出設定</button></div>
 <div class="settingPage" data-page="basic"><label>対戦する人数 <select id="cfgHumans"><option value="1">1人 + BOT3人</option><option value="2">2人 + BOT2人</option><option value="3">3人 + BOT1人</option><option value="4">4人（BOTなし）</option></select></label><div class="settingHelp">プレイヤーは合計4人。複数人の場合は同じPCで順番に操作します。</div><label>BOTの思考速度 <select id="cfgBotSpeed"><option value="1000">ゆっくり</option><option value="420" selected>ふつう</option><option value="80">はやい</option></select></label><div class="settingHelp">事件の抽選や150マスの構成は固定ルールです。</div></div>
 <div class="settingPage hidden" data-page="player"><label>プレイヤー1の名前 <input id="cfgName1" maxlength="18" value="探偵1"></label><label>プレイヤー2の名前 <input id="cfgName2" maxlength="18" value="探偵2"></label><label>プレイヤー3の名前 <input id="cfgName3" maxlength="18" value="探偵3"></label><label>プレイヤー4の名前 <input id="cfgName4" maxlength="18" value="探偵4"></label><div class="settingHelp">BOT枠は名前に関係なく自動操作になります。</div></div>
 <div class="settingPage hidden" data-page="effects"><label class="toggleSetting">サイコロ演出 <input type="checkbox" id="cfgDice" checked></label><label class="toggleSetting">カード演出 <input type="checkbox" id="cfgCard" checked></label><label class="toggleSetting">駒の移動演出 <input type="checkbox" id="cfgMove" checked></label><label>演出の速度 <select id="cfgFxSpeed"><option value="0.65">速い</option><option value="1" selected>標準</option><option value="1.5">ゆっくり</option></select></label><label>画面サイズ <select id="cfgSize"><option value="normal">標準</option><option value="large">大きめ</option></select></label></div>
 <div class="settingsFooter"><button onclick="resetSettings()">初期設定に戻す</button><button class="goldButton" onclick="saveSettings()">設定を保存</button></div></div></div>
 <div id="rulesScreen" class="screenLayer hidden"><div class="settingsPanel"><button class="closeSettings" onclick="closeRules()">✕</button><h2>📖 遊び方</h2><div class="rulesBody"><p>🎲 <b>1. サイコロ</b>：自分の番で振り、出目の数だけ進むか、出目以下のコストの探偵カードを使います。</p><p>🔍 <b>2. 街を調査</b>：証拠品の購入、現場検証、聞き込み、イベントで情報を集めます。</p><p>📒 <b>3. 探偵メモ</b>：自分だけの調査記録・過去の不正解を確認できます。容疑者の特徴は共通公開です。</p><p>🧠 <b>4. 推理タイム</b>：各プレイヤーが5行動するごとに発生。5項目を回答します。</p><p>🏆 <b>5. 勝利</b>：正しい現場エリアにいて、正しい証拠品を持ち、5項目すべて正解すると勝利です。</p></div><button class="goldButton" onclick="closeRules()">閉じる</button></div></div><header><div><div class="muted">ROYAL GRID · DETECTIVE BOARD GAME</div><h1>🕵️ ミステリー・タウン</h1></div><div id="royalHud" aria-live="polite">事件捜査中</div><div class="headerActions"><button onclick="openSettings()">⚙ 設定</button><button onclick="returnToTitle()">⌂ タイトルへ</button><button onclick="beginFromTitle()">新しい事件</button></div></header><div id="privacyGate"><div class="gateCard"><div style="font-size:58px">🕵️‍♀️</div><h2 id="gateTitle">探偵を交代してください</h2><p>前の探偵のメモは非公開です。次の探偵だけが画面を見てください。</p><button onclick="unlockTurn()">自分の番を開始する</button></div></div><div id="murderOpening" class="murderOpening" role="dialog" aria-modal="true" aria-label="事件発生・ゲーム開始演出" aria-hidden="true"><div class="openingNight"></div><div class="openingFrame"><div class="openingEyebrow" id="openingEyebrow">BREAKING NEWS · MYSTERY TOWN</div><div class="openingEmblem" id="openingEmblem">⚠</div><h2 id="openingHeadline">この町で殺人が起きた！！</h2><p id="openingSubtitle">静かな夜を切り裂く、ひとつの事件。</p><div class="openingRule"></div><div class="openingNames" id="openingNames"></div><div class="openingFoot">MYSTERY TOWN · THE CASE BEGINS</div></div></div><div id="fxOverlay" aria-hidden="true"><div class="fx-card" id="fxCard"></div></div><div id="toast" role="status"></div><main>
-<aside class="left"><div class="panel royalRoster"><h2>🏅 4人の探偵</h2><div id="royalPlayers"></div></div><div class="panel sticky notes"><h2>📒 探偵メモ</h2><div class="muted">捜査メモは本人専用。容疑者の特徴だけ全員共通で公開されます。</div><div id="viewer"></div><div id="notes"></div><h2 style="margin-top:20px">👥 容疑者の特徴</h2><div id="suspects"></div></div></aside>
-<section class="center"><div class="panel"><h2>🌙 夜のミステリー・タウン</h2><div class="muted">夜の街を探索！ サイコロを振り、赤く光るマスを選んで移動しよう。</div><div class="guide"><span>① 🎲 サイコロ</span><span>② 👣 移動またはカード</span><span>③ 🔎 マスを調査</span><span>④ 🧠 5行動ごとに推理</span></div><div class="mapShell"><div id="gridHover">マスにカーソルを合わせると詳細を表示</div><canvas id="cityCanvas" width="1320" height="850" aria-label="現在地周辺6×6マスを映す立体風フィールド"></canvas><button id="mapSwap" type="button" onclick="swapMap()" aria-label="近景と全体マップを切り替え"><canvas id="miniCanvas" width="440" height="310"></canvas><span id="miniCaption">全体マップを拡大 ⇄</span></button><div class="mapLegend">🌉 光る石畳の道を移動　🚨 ブザー8か所　🕵️ 情報屋1か所　｜　右上で全体図</div></div><div class="orbit-controls"><button type="button" onclick="orbitCamera(-20,0)">↶ 左回転</button><button type="button" onclick="orbitCamera(20,0)">右回転 ↷</button><button type="button" onclick="orbitCamera(0,12)">視点を上げる</button><button type="button" onclick="orbitCamera(0,-12)">視点を下げる</button><button type="button" onclick="resetOrbit()">視点リセット</button><span id="orbitStatus">角度 0° / 高さ 55°</span></div><div class="orbit-hint">フィールドをドラッグして視点を回転できます。マスをタップすると移動先を選べます。</div><div id="fieldMove" class="field-move"></div><div class="muted" style="margin-top:9px">🔍証拠品　❓イベント　👣現場検証　💬聞き込み　🪙コイン　🃏カード　・通常</div></div><div class="panel" style="margin-top:12px"><h2>🎲 サイコロを振って移動先を選ぼう！</h2><div class="dice-scene"><div id="diceCube" class="dice-cube">⚄</div><div><div class="dice-caption" id="diceCaption">事件の街へ出発！</div><div class="muted">サイコロを振って街を調査</div></div></div><div id="turnArea"></div></div></section>
+<aside class="left"><div class="panel royalRoster"><h2>🏅 4人の探偵</h2><div id="royalPlayers"></div></div><div class="panel sticky notes"><h2>📒 探偵メモ <button type="button" class="memoExpandBtn" onclick="openMemoZoom()" aria-label="探偵メモを拡大">⛶ 拡大</button></h2><div class="muted">捜査メモは本人専用。容疑者の特徴だけ全員共通で公開されます。</div><div id="viewer"></div><div id="notes"></div><h2 style="margin-top:20px">👥 容疑者の特徴</h2><div id="suspects"></div></div></aside>
+<section class="center"><div class="panel"><h2>🌙 夜のミステリー・タウン</h2><div class="muted">夜の街を探索！ サイコロを振り、赤く光るマスを選んで移動しよう。</div><div class="guide"><span>① 🎲 サイコロ</span><span>② 👣 移動またはカード</span><span>③ 🔎 マスを調査</span><span>④ 🧠 5行動ごとに推理</span></div><div class="mapModeBar"><button type="button" id="mapModeToggle" onclick="toggleMapMode()" aria-pressed="true">🗺️ 2Dマップに切り替え</button><span id="mapModeLabel">現在：3Dマップ</span></div><div class="mapShell"><div id="gridHover">マスにカーソルを合わせると詳細を表示</div><canvas id="cityCanvas" width="1320" height="850" aria-label="現在地周辺6×6マスを映す立体風フィールド"></canvas><button id="mapSwap" type="button" onclick="swapMap()" aria-label="近景と全体マップを切り替え"><canvas id="miniCanvas" width="440" height="310"></canvas><span id="miniCaption">全体マップを拡大 ⇄</span></button><div class="mapLegend">🌉 光る石畳の道を移動　🚨 ブザー8か所　🕵️ 情報屋1か所　｜　右上で全体図</div></div><div class="orbit-controls"><button type="button" onclick="orbitCamera(-20,0)">↶ 左回転</button><button type="button" onclick="orbitCamera(20,0)">右回転 ↷</button><button type="button" onclick="orbitCamera(0,12)">視点を上げる</button><button type="button" onclick="orbitCamera(0,-12)">視点を下げる</button><button type="button" onclick="resetOrbit()">視点リセット</button><span id="orbitStatus">角度 0° / 高さ 55°</span></div><div class="orbit-hint">フィールドをドラッグして視点を回転できます。マスをタップすると移動先を選べます。</div><div id="destinationControls" class="field-move"><label for="destinationNumber">🎯 目的地（1～150番）</label> <input id="destinationNumber" type="number" min="1" max="150" placeholder="マス番号" style="width:100px;padding:9px;border-radius:8px"> <button type="button" onclick="setDestination()">番号で設定</button> <label for="destinationZone">または区域を指定：</label> <select id="destinationZone" style="padding:9px;border-radius:8px"><option value="">区域を選択</option><option value="住宅街">住宅街</option><option value="商店街">商店街</option><option value="中心街">中心街</option><option value="裏山">裏山</option></select> <button type="button" onclick="setAreaDestination()">区域内の最寄りマス</button> <button type="button" class="secondary" onclick="clearDestination()">解除</button><div id="destinationStatus" class="muted">目的地は未設定です</div></div><div id="fieldMove" class="field-move"></div><div id="moveTileInfo" role="status" aria-live="polite" hidden></div><div class="muted" style="margin-top:9px">🔍証拠品　❓イベント　👣現場検証　💬聞き込み　🪙コイン　🃏カード　・通常</div></div><div class="panel" style="margin-top:12px"><h2>🎲 サイコロを振って移動先を選ぼう！</h2><div class="dice-scene"><div id="diceCube" class="dice-cube">⚄</div><div><div class="dice-caption" id="diceCaption">事件の街へ出発！</div><div class="muted">サイコロを振って街を調査</div></div></div><div id="turnArea"></div></div></section>
 <aside class="right"><div class="panel" style="display:none"><h2>🏅 プレイヤー</h2><div id="players"></div></div><div class="panel" style="margin-top:12px"><h2>📜 捜査ログ</h2><div id="log" class="log"></div></div><div class="panel" style="margin-top:12px"><h2>ℹ️ 遊び方</h2><div class="muted">サイコロを振り、移動するか出目以下のコストのカードを1枚使います。各プレイヤーが5行動するごとに全員推理タイム。事件の5項目を当て、正しい証拠品を持って正しい現場エリアにいれば勝利です。</div></div></aside></main><div id="royalTicker" role="status">✦ 現在のイベント：事件の捜査が始まります</div><footer>ローカル対戦・BOT対戦｜3D風描画（Canvas）・オンライン通信は未接続</footer><script src="engine.js"></script><script>
-const E=window.MysteryEngine;let g=null,botTimer=null,lastHumanKey=null,gateUnlocked=false,fxBusy=false,fxTimer=null,previousState=null;let memoViewerId=0;let gameSettings={humans:1,botSpeed:420,dice:true,card:true,move:true,fxSpeed:1,size:"normal",names:["探偵1","探偵2","探偵3","探偵4"]};const $=id=>document.getElementById(id),safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const icon={normal:'·',evidence:'🔍',event:'❓',scene:'👣',interview:'💬',coin:'🪙',card:'🃏'};function start(){try{if(fxBusy)return;if(!E)throw Error('engine.jsが読み込まれていません。index.htmlと同じ場所に配置してください。');g=E.newGame({botCount:4-gameSettings.humans,names:gameSettings.names});lastHumanKey=null;gateUnlocked=false;memoViewerId=g.players.find(q=>!q.bot)?.id??0;lastEventSerial=0;render();tickBots()}catch(err){console.error(err);alert('ゲーム開始エラー: '+err.message)}}
-function tickBots(){clearTimeout(botTimer);if(fxBusy)return;if(!g||g.phase==='finished')return;let p=g.phase==='inference'?g.players[g.inference.queue[g.inference.index]]:E.current(g);if(p.bot){botTimer=setTimeout(()=>{const before=g.players.map(q=>q.cards.slice());const wasInference=g.phase==='inference';const infPlayer=wasInference?g.inference.queue[g.inference.index]:-1;const wrongBefore=wasInference?g.players[infPlayer].notes.wrongAnswers.length:0;try{E.botAction(g)}catch(e){alert(e.message)}for(let i=0;i<g.players.length;i++){const previous=before[i];const current=g.players[i].cards.slice();for(const name of current){const idx=previous.indexOf(name);if(idx>=0)previous.splice(idx,1);else notifyCardAcquired(g.players[i],name)}}render();if(wasInference&&g.players[infPlayer].notes.wrongAnswers.length>wrongBefore){showInferenceFailure(g.players[infPlayer].name,true);return}if(!eventFxIfNew())tickBots()},gameSettings.botSpeed)}}
+const E=window.MysteryEngine;let destinationId=null;let destinationZone=null;let lastInterviewSerial=0;let g=null;botTimer=null,lastHumanKey=null,gateUnlocked=false,fxBusy=false,fxTimer=null,previousState=null;let memoViewerId=0;let gameSettings={humans:1,botSpeed:420,dice:true,card:true,move:true,fxSpeed:1,size:"normal",names:["探偵1","探偵2","探偵3","探偵4"]};const $=id=>document.getElementById(id),safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const icon={normal:'·',evidence:'🔍',event:'❓',scene:'👣',interview:'💬',coin:'🪙',card:'🃏'};function start(){try{if(fxBusy)return;if(!E)throw Error('engine.jsが読み込まれていません。index.htmlと同じ場所に配置してください。');g=E.newGame({botCount:4-gameSettings.humans,names:gameSettings.names});lastHumanKey=null;gateUnlocked=false;memoViewerId=g.players.find(q=>!q.bot)?.id??0;lastEventSerial=0;lastSceneSerial=0;lastInterviewSerial=0;destinationId=null;destinationZone=null;render();tickBots()}catch(err){console.error(err);alert('ゲーム開始エラー: '+err.message)}}
+function tickBots(){clearTimeout(botTimer);if(fxBusy)return;if(!g||g.phase==='finished')return;let p=g.phase==='inference'?g.players[g.inference.queue[g.inference.index]]:E.current(g);if(p.bot){botTimer=setTimeout(()=>{const before=g.players.map(q=>q.cards.slice());const wasInference=g.phase==='inference';const infPlayer=wasInference?g.inference.queue[g.inference.index]:-1;const wrongBefore=wasInference?g.players[infPlayer].notes.wrongAnswers.length:0;try{E.botAction(g)}catch(e){alert(e.message)}for(let i=0;i<g.players.length;i++){const previous=before[i];const current=g.players[i].cards.slice();for(const name of current){const idx=previous.indexOf(name);if(idx>=0)previous.splice(idx,1);else notifyCardAcquired(g.players[i],name)}}render();if(wasInference&&g.players[infPlayer].notes.wrongAnswers.length>wrongBefore){showInferenceFailure(g.players[infPlayer].name,true);return}if(!investigationFxIfNew()&&!eventFxIfNew())tickBots()},gameSettings.botSpeed)}}
 function notifyCardAcquired(player,name){
  const box=$('activityFeed');if(!box)return;
  const el=document.createElement('div');el.className='activityToast';el.textContent=`🃏 ${player.name}が「${name}」を取得`;
@@ -402,30 +410,63 @@ function submitInference(){
 function showToast(msg){let t=$('toast');t.textContent=msg;t.style.display='block';clearTimeout(t._timer);t._timer=setTimeout(()=>t.style.display='none',2200)}
 function showCardFx(name){if(!gameSettings.card)return;fxBusy=true;clearTimeout(botTimer);let symbols={'鑑識':'🔬','聞き上手':'💬','タクシーチケット':'🚕','閃く':'💡','足止め':'🛑','監視カメラ確認':'📷','辻褄':'🕰️','宝くじ':'🎟️','情報提供':'📜','証拠品情報':'🗺️','情報屋':'🕵️'};let c=$('fxCard');c.innerHTML=`<div class="muted">DETECTIVE CARD</div><div class="art">${symbols[name]||'🃏'}</div><h2>${safe(name)}</h2><p>探偵カード発動！</p>`;$('fxOverlay').classList.add('show');clearTimeout(fxTimer);fxTimer=setTimeout(()=>{$('fxOverlay').classList.remove('show');fxBusy=false;render();tickBots()},Math.max(1250,1600*gameSettings.fxSpeed))}
 function rollAnimated(){if(fxBusy)return;if(!gameSettings.dice){act(()=>E.roll(g));$('diceCaption').textContent='出目 '+g.roll+'！';return}fxBusy=true;let d=$('diceCube');d.classList.add('rolling');$('diceCaption').textContent='運命のサイコロ…';let ticks=0;let timer=setInterval(()=>{d.textContent=['⚀','⚁','⚂','⚃','⚄','⚅'][Math.floor(Math.random()*6)];ticks++;if(ticks>=Math.round(13*gameSettings.fxSpeed)){clearInterval(timer);try{E.roll(g);d.textContent=['⚀','⚁','⚂','⚃','⚄','⚅'][g.roll-1];$('diceCaption').textContent='出目 '+g.roll+'！';showToast('🎲 '+g.roll+' マス進める！')}catch(e){alert(e.message)}d.classList.remove('rolling');fxBusy=false;render();tickBots()}},75)}
-function moveAnimated(target){if(fxBusy||!g||g.phase!=='choice')return;let p=E.current(g);if(p.bot)return;const path=E.pathTo(g,p.pos,target,g.roll);if(!path){showToast('そのマスには到達できません');return}fxBusy=true;let frame=1;const step=()=>{if(frame<path.length){CITY.preview=path[frame++];drawCity();setTimeout(step,gameSettings.move?Math.max(65,135*gameSettings.fxSpeed):20);return}CITY.preview=null;try{E.move(g,target)}catch(e){alert(e.message)}fxBusy=false;render();if(!eventFxIfNew())tickBots()};step()}
+function moveAnimated(target){if(fxBusy||!g||g.phase!=='choice')return;let p=E.current(g);if(p.bot)return;const path=E.pathTo(g,p.pos,target,g.roll);if(!path){showToast('そのマスには到達できません');return}fxBusy=true;let frame=1;const step=()=>{if(frame<path.length){CITY.preview=path[frame++];drawCity();setTimeout(step,gameSettings.move?Math.max(65,135*gameSettings.fxSpeed):20);return}CITY.preview=null;try{E.move(g,target)}catch(e){alert(e.message)}fxBusy=false;render();if(!investigationFxIfNew()&&!eventFxIfNew())tickBots()};step()}
 function act(fn){if(fxBusy)return;try{fn()}catch(e){alert(e.message)}render();tickBots()}
 function unlockTurn(){const turnOwner=g.phase==='inference'?g.players[g.inference.queue[g.inference.index]]:E.current(g);if(turnOwner&&!turnOwner.bot)memoViewerId=turnOwner.id;gateUnlocked=true;$('privacyGate').style.display='none';render()}
 let shownBuzzerSerial=0;function buzzerNotice(){if(!g?.lastBuzzer||g.lastBuzzer.serial===shownBuzzerSerial)return;shownBuzzerSerial=g.lastBuzzer.serial;const b=g.lastBuzzer;showToast('🚨 ブザー反応！ '+b.playerName+'が正解の証拠品を持って通過！');if($('royalTicker'))$('royalTicker').textContent='🚨 '+b.playerName+'が正解の証拠品を持ってブザーマスを通過！';}
+function resolveDestination(){
+ if(!g)return null;
+ if(!destinationZone)return destinationId;
+ const p=E.current(g);
+ if(!p)return null;
+ // Road-network shortest distance, not straight-line distance. Re-evaluated each render/turn.
+ const candidates=g.board.filter(tile=>tile.zone===destinationZone);
+ if(!candidates.length)return null;
+ candidates.sort((a,b)=>E.shortestDistance(g,p.pos,a.id)-E.shortestDistance(g,p.pos,b.id)||a.id-b.id);
+ return candidates[0].id;
+}
+function destinationRanks(){
+ const target=resolveDestination();
+ if(!g||target===null||g.phase!=='choice'||!gateUnlocked||fxBusy)return new Map();
+ const p=E.current(g);if(!p||p.bot)return new Map();
+ const ids=E.reachable(g,p.pos,g.roll);
+ const ranked=ids.map(id=>({id,d:E.shortestDistance(g,id,target)})).sort((a,b)=>a.d-b.d||a.id-b.id);
+ const result=new Map();ranked.slice(0,3).forEach((v,i)=>result.set(v.id,i===0?'blue':'green'));
+ return result;
+}
+function setDestination(){if(!g)return;const n=Number($('destinationNumber').value);if(!Number.isInteger(n)||n<1||n>g.board.length){showToast('1～150のマス番号を入力してください');return}destinationId=n-1;destinationZone=null;if($('destinationZone'))$('destinationZone').value='';render();showToast('🎯 '+n+'番マスを目的地に設定しました')}
+function setAreaDestination(){if(!g)return;const zone=$('destinationZone').value;if(!E.ZONES.includes(zone)){showToast('区域を選択してください');return}destinationZone=zone;destinationId=null;if($('destinationNumber'))$('destinationNumber').value='';render();const id=resolveDestination();showToast('🎯 '+zone+'の最寄り '+(id+1)+'番マスを目標に設定しました')}
+function clearDestination(){destinationId=null;destinationZone=null;if($('destinationNumber'))$('destinationNumber').value='';if($('destinationZone'))$('destinationZone').value='';render();showToast('目的地を解除しました')}
+function interviewFxIfNew(){
+ if(!g||!g.lastDiscovery||g.lastDiscovery.kind!=='interview'||g.lastDiscovery.serial===lastInterviewSerial)return false;
+ const d=g.lastDiscovery;lastInterviewSerial=d.serial;
+ const investigator=g.players[d.playerId];if(!investigator||investigator.bot||investigator.id!==memoViewerId)return false;
+ fxBusy=true;clearTimeout(botTimer);clearTimeout(fxTimer);
+ $('fxCard').innerHTML=`<div class="muted">MYSTERY TOWN · 聞き込み調査</div><div class="art">💬</div><h2>${safe(d.headline||'聞き込みの結果')}</h2><p style="font-weight:800;color:#ffe4a3;font-size:21px;line-height:1.7">${safe(d.detail||'新しい手掛かりを発見した')}</p>`;
+ $('fxOverlay').classList.add('show');fxTimer=setTimeout(()=>{$('fxOverlay').classList.remove('show');fxBusy=false;render();tickBots()},Math.max(1600,2500*gameSettings.fxSpeed));return true;
+}
+function investigationFxIfNew(){return sceneFxIfNew()||interviewFxIfNew()}
 function render(){if(!g)return;buzzerNotice();let p=E.current(g),inferenceP=g.phase==='inference'?g.players[g.inference.queue[g.inference.index]]:null,viewer=inferenceP||p;
 let humanKey=viewer&&!viewer.bot&&g.phase!=='finished'?viewer.id+':'+(g.phase==='inference'?'infer'+g.inference.index:g.round+'-'+viewer.actions):null;
 if(humanKey!==lastHumanKey){lastHumanKey=humanKey;gateUnlocked=false}
 let gate=!!humanKey&&!gateUnlocked;$('privacyGate').style.display=gate?'flex':'none';
 $('gateTitle').textContent=viewer?viewer.name+' の番です':'探偵を交代してください';if(g.phase==='choice'&&g.roll){$('diceCube').textContent=['⚀','⚁','⚂','⚃','⚄','⚅'][g.roll-1];$('diceCaption').textContent='出目 '+g.roll+'！'}
 drawCity();
+if($('destinationStatus')){const target=resolveDestination();$('destinationStatus').textContent=target===null?'目的地は未設定です':`🎯 ${destinationZone?destinationZone+'内の現在地から最寄り：':''}${target+1}番マス（${g.board[target].zone}）を目指す：青＝最短、緑＝次点2マス、黄＝目的地`;}
 const memoOwner=g.players[memoViewerId]||g.players.find(q=>!q.bot);$('viewer').innerHTML=`<div class="step">🔒 ${safe(memoOwner.name)} の探偵メモ ${p.bot?'（BOTのターン中も固定）':''}</div>`;renderNotes();
 $('suspects').innerHTML=g.traitSets.map((tr,i)=>`<div class="suspect"><span class="face">🕵️</span><div><b>${E.SUSPECTS[i]}</b><small>${tr.join('・')}</small></div></div>`).join('');
-$('players').innerHTML=g.players.map(q=>`<div class="suspect"><span class="face">${q.bot?'🤖':'🕵️'}</span><div><b>${safe(q.name)}</b> ${q.id===p.id?'◀':''}<small>🪙${q.coins}　📦${q.evidence.length}　🃏${q.cards.length}　${q.actions%5}/5行動</small></div></div>`).join('');$('royalPlayers').innerHTML=$('players').innerHTML; $('royalHud').innerHTML=`<span>ターン <b>${g.round+1}</b></span><span>🔎 捜査 <b>${g.allInferenceCount||0}</b></span><span>🪙 コイン <b>${(g.players[memoViewerId]||p).coins}</b></span>`;$('log').innerHTML='<div>🔒 捜査の詳細は各自の探偵メモで確認してください。</div>';
+$('players').innerHTML=g.players.map((q,i)=>`<div class="suspect"><span class="pawnColorDot" style="background:${PAWN_COLORS[i]};color:${PAWN_COLORS[i]}" title="${safe(q.name)}の3D駒の色" aria-label="駒の色"></span><span class="face">${q.bot?'🤖':'🕵️'}</span><div><b>${safe(q.name)}</b> ${q.id===p.id?'◀':''}<small>🪙 ${q.coins}コイン　📦${q.evidence.length}　🃏${q.cards.length}　${q.actions%5}/5行動</small></div></div>`).join('');$('royalPlayers').innerHTML=$('players').innerHTML; $('royalHud').innerHTML=`<span>ターン <b>${g.round+1}</b></span><span>🔎 捜査 <b>${g.allInferenceCount||0}</b></span><span class="coinBalance" title="現在表示中の探偵の所持コイン">🪙 所持コイン <b>${(g.players[memoViewerId]||p).coins}</b></span>`;$('log').innerHTML='<div>🔒 捜査の詳細は各自の探偵メモで確認してください。</div>';
 let html=`<div class="turn"><b>${safe(p.name)}のターン</b>　<span class="muted">第${g.round+1}周目　${g.phase==='choice'?'出目 '+g.roll:''}</span></div>`;
 if(g.phase==='finished')html=`<div class="inference"><h2>🏆 ${safe(g.players[g.winner].name)} の勝利！</h2>事件を解決しました。<div class="muted">証拠品：${g.solution.evidence}／現場：${g.solution.zone}／動機：${g.solution.motive}／死亡時刻：${g.solution.time}／犯人：${g.solution.suspect}</div></div>`;
 else if(g.phase==='inference'){let q=inferenceP;html=`<div class="inference"><h2>🧠 ${safe(q.name)}の推理タイム</h2>${q.bot?'<p>BOTが推理中…</p>':`<div class="muted">5項目を選択。正解の証拠品を所持し、正解の現場にいる必要があります。</div>${[['evidence','証拠品',E.EVIDENCE],['zone','殺人現場',E.ZONES],['motive','動機',E.MOTIVES],['time','死亡時刻',E.TIMES],['suspect','犯人',E.SUSPECTS]].map(([key,label,items])=>inferenceField(q,key,label,items)).join('')}<button onclick="submitInference()">この推理で回答</button>`}</div>`}
 else if(p.bot)html+='<p>🤖 BOTが考えています…</p>';
 else if(g.phase==='roll')html+='<button onclick="rollAnimated()">🎲 サイコロを振る</button>';
-else if(g.phase==='choice'){html+=`<div>🎲 出目：<strong>${g.roll}</strong>　赤く光るマスを選んで一気に移動できます。</div><h2 style="margin-top:15px">探偵カードを使用</h2>`;let usable=p.cards.filter(n=>E.CARDS.find(c=>c.name===n)?.type==='use'&&E.CARDS.find(c=>c.name===n).cost<=g.roll);html+=usable.length?usable.map(n=>`<div class="shop-item"><span>${n}（コスト${E.CARDS.find(c=>c.name===n).cost}）</span><button class="secondary" onclick="cardAction('${n}')">使用</button></div>`).join(''):'<p class="muted">この出目で使用できるカードはありません。</p>'}
-else if(g.phase==='shop'){let t=g.board[p.pos];html+=`<h2>${t.type==='evidence'?'🔍 証拠品散策':'🃏 探偵カード販売'}</h2>`+t.stock.map(n=>{let price=E.CARDS.find(c=>c.name===n)?.price??g.prices[n];return `<div class="shop-item"><span>${n}　🪙${price}</span><button ${p.coins<price?'disabled':''} onclick="purchaseItem('${n}')">購入</button></div>`}).join('')+'<button class="secondary" onclick="act(()=>E.skipShop(g))">買わずに終了</button>'}
+else if(g.phase==='choice'){html+=`<div>🎲 出目：<strong>${g.roll}</strong>　赤く光るマスを選んで一気に移動できます。</div><h2 style="margin-top:15px">探偵カードを使用</h2>`;let usable=E.CARDS.filter(c=>c.type==='use'&&c.cost<=g.roll&&p.cards.includes(c.name));html+=usable.length?`<p class="muted">現在の出目で使用できるカード：${usable.length}種類（カードを使うと移動せずターン終了）</p>`+usable.map(c=>{const count=p.cards.filter(n=>n===c.name).length;return `<div class="shop-item"><span>🃏 <b>${safe(c.name)}</b>　<span class="muted">必要出目${c.cost}以下／所持${count}枚</span></span><button class="secondary" onclick="cardAction('${c.name}')">このカードを使う</button></div>`}).join(''):'<p class="muted">今回の出目で使える探偵カードはありません。赤いマスを選んで移動してください。</p>';let passive=E.CARDS.filter(c=>c.type==='tech'&&p.cards.includes(c.name));if(passive.length)html+=`<p class="muted">常時発動中：${passive.map(c=>safe(c.name)).join('・')}（選択不要）</p>`}
+else if(g.phase==='shop'){let t=g.board[p.pos];html+=`<h2>${t.type==='evidence'?'🔍 証拠品散策':'🃏 探偵カード販売'}</h2>`+t.stock.map(n=>{let price=E.CARDS.find(c=>c.name===n)?.price??g.prices[n];let owned=t.type==='evidence'&&p.evidence.includes(n);return `<div class="shop-item"><span>${safe(n)}　🪙${price}${owned?'　<span class="muted">（購入済み）</span>':''}</span><button ${owned||p.coins<price?'disabled':''} onclick="purchaseItem('${n}')">${owned?'購入済み':'購入'}</button></div>`}).join('')+'<button class="secondary" onclick="act(()=>E.skipShop(g))">買わずに終了</button>'}
 else if(g.phase==='informant'){html+=`<h2>🕵️ 情報屋</h2><p>300コインで事件の正解情報を1項目だけ入手できます。現在の所持金：${p.coins}コイン</p><div class="actions">${[['evidence','証拠品'],['zone','殺人現場'],['motive','動機'],['time','死亡時刻'],['suspect','犯人']].map(([k,v])=>`<button ${p.coins<300?'disabled':''} onclick="buyInformant('${k}')">${v}を調べる（300）</button>`).join('')}</div><button class="secondary" onclick="act(()=>E.skipInformant(g))">利用せず終了</button>`}
 else if(g.phase==='interview-choice')html+='<h2>💬 聞き上手</h2><div class="actions"><button onclick="act(()=>E.interviewChoice(g,\'trait\'))">犯人の特徴を調べる</button><button onclick="act(()=>E.interviewChoice(g,\'motive\'))">動機を調べる</button></div>';
 $('turnArea').innerHTML=html;
- const fm=$('fieldMove');if(fm){if(g.phase==='choice'&&!p.bot&&gateUnlocked){const ends=E.reachable(g,p.pos,g.roll);fm.innerHTML='<strong>🚩 移動先を選ぶ（赤いマス）</strong><div>出目 '+g.roll+'：到達可能 '+ends.length+' マス</div>'+ends.map(id=>`<button onclick="moveAnimated(${id})">${id+1}番 ${safe(g.board[id].zone)} ${icon[g.board[id].type]}</button>`).join('')}else fm.innerHTML='';}
+ const fm=$('fieldMove');if(fm){if(g.phase==='choice'&&!p.bot&&gateUnlocked){const ends=E.reachable(g,p.pos,g.roll);const ranks=destinationRanks();fm.innerHTML='<strong>🚩 移動先を選ぶ（目的地設定時：青＝最短、緑＝次点、その他＝赤）</strong><div>出目 '+g.roll+'：到達可能 '+ends.length+' マス</div>'+ends.map(id=>`<button style="${ranks.get(id)==='blue'?'background:#45a5ff':ranks.get(id)==='green'?'background:#63d88c':''}" onmouseenter="showMoveTileInfo(${id})" onfocus="showMoveTileInfo(${id})" ontouchstart="showMoveTileInfo(${id})" onclick="moveAnimated(${id})" aria-label="${id+1}番 ${safe(g.board[id].zone)} ${safe((MOVE_TILE_DESCRIPTIONS[g.board[id].type]||MOVE_TILE_DESCRIPTIONS.normal)[0])}：${safe((MOVE_TILE_DESCRIPTIONS[g.board[id].type]||MOVE_TILE_DESCRIPTIONS.normal)[1])}">${ranks.get(id)==='blue'?'🔵 ':ranks.get(id)==='green'?'🟢 ':''}${id+1}番 ${safe(g.board[id].zone)} ${icon[g.board[id].type]}</button>`).join('')}else{fm.innerHTML='';clearMoveTileInfo();}}
 }
 
 // Live board renderer: interactive spaces come from g.board; scenery uses a reference image and procedural drawing.
@@ -433,14 +474,41 @@ const CITY={overviewMain:false,preview:null};
 const TILE_COLORS={normal:'#f2dcae',evidence:'#70dbc6',event:'#d49cff',scene:'#fa947e',interview:'#91baff',coin:'#ffd46b',card:'#8fdf87',buzzer:'#ff5474',informant:'#56ddf6'};
 const TILE_ICONS={normal:'',evidence:'◆',event:'?',scene:'!',interview:'●',coin:'$',card:'★',buzzer:'🚨',informant:'ℹ'};
 const PAWN_COLORS=['#4bbaff','#ff5f6b','#61df9a','#ffcf58'];
-function swapMap(){CITY.overviewMain=!CITY.overviewMain;drawCity()}
+const MOVE_TILE_DESCRIPTIONS={
+ normal:['通常マス','特別な効果はありません。'],
+ evidence:['証拠品ショップ','売られている証拠品をコインで購入できます。同じ証拠品は重複購入できません。'],
+ event:['イベントマス','ランダムなイベントが発生します。'],
+ scene:['現場検証マス','この区域が事件現場か調査し、手がかりを得ます。'],
+ interview:['聞き込みマス','犯人の特徴や動機について情報を集めます。'],
+ coin:['コインマス','コインを獲得します。5周ごとに獲得範囲が10コイン増加します。'],
+ card:['探偵カードショップ','探偵カードをコインで購入できます。'],
+ buzzer:['ブザーマス','正しい証拠品を持つ探偵が通過すると、全員に通知されます。'],
+ informant:['情報屋マス','300コインで事件の正解情報を1項目教えてもらえます。']
+};
+function showMoveTileInfo(id){const el=$('moveTileInfo');if(!el||!g||!g.board[id])return;const tile=g.board[id],desc=MOVE_TILE_DESCRIPTIONS[tile.type]||MOVE_TILE_DESCRIPTIONS.normal;el.hidden=false;el.innerHTML=`<strong>${id+1}番マス｜${safe(tile.zone)}｜${safe(desc[0])}</strong><span class="moveEffect">${safe(desc[1])}</span>`;}
+function clearMoveTileInfo(){const el=$('moveTileInfo');if(el){el.hidden=true;el.textContent='';}}
+
+// 2D/3D切替。3D未読み込み時は2Dを維持する。
+let MAP_MODE='3d';
+function applyMapMode(){
+ const world=$('world3d'),flat=$('cityCanvas'),btn=$('mapModeToggle'),label=$('mapModeLabel');
+ const threeReady=!!(world&&world.querySelector('canvas'));
+ if(MAP_MODE==='3d'&&!threeReady)MAP_MODE='2d';
+ if(world)world.style.display=MAP_MODE==='3d'?'block':'none';
+ if(flat){flat.style.visibility=MAP_MODE==='2d'?'visible':'hidden';flat.style.pointerEvents=MAP_MODE==='2d'?'auto':'none';}
+ if(btn){btn.textContent=MAP_MODE==='3d'?'🗺️ 2Dマップに切り替え':'🏙️ 3Dマップに切り替え';btn.setAttribute('aria-pressed',String(MAP_MODE==='3d'));}
+ if(label)label.textContent='現在：'+(MAP_MODE==='3d'?'3Dマップ':'2Dマップ');
+}
+function toggleMapMode(){MAP_MODE=MAP_MODE==='3d'?'2d':'3d';applyMapMode();drawCity();}
+function swapMap(){toggleMapMode()}
+
 function drawCity(spot=null){
  if(!g)return;
  const focus=spot===null?(g.players.find(p=>!p.bot)?.pos??E.current(g).pos):spot;
  let main=$('cityCanvas'),mini=$('miniCanvas');if(!main||!mini)return;
  if(CITY.overviewMain){renderOverview(main,focus);renderClose(mini,focus,true)}
  else{renderClose(main,focus,false);renderOverview(mini,focus)}
- $('miniCaption').textContent=CITY.overviewMain?'近くのマスを拡大 ⇄':'全体マップを拡大 ⇄';
+ $('miniCaption').textContent=MAP_MODE==='3d'?'タップで2D表示 ⇄':'タップで3D表示 ⇄';
 }
 function fillPoly(c,pts,color,stroke='#172336',width=2){c.beginPath();c.moveTo(pts[0][0],pts[0][1]);pts.slice(1).forEach(p=>c.lineTo(p[0],p[1]));c.closePath();c.fillStyle=color;c.fill();if(stroke){c.lineWidth=width;c.strokeStyle=stroke;c.stroke()}}
 function rect(c,x,y,w,h,color){c.fillStyle=color;c.fillRect(x,y,w,h)}
@@ -870,7 +938,21 @@ const EVENT_CATALOG=[
  ['⏳','予期せぬ足止め','次の自分の行動が1回休み！'],['🚧','捜査妨害','別の探偵が1回休み！'],
  ['🎭','犯人の正体が明らかに','犯人の名前が全員に公開！'],['🧤','証拠品を発見','証拠品を1つ獲得！'],['🪙','幸運の報酬','10コインを獲得！']
 ];
-let lastEventSerial=0,eventFxTimer=null;
+let lastEventSerial=0,lastSceneSerial=0,eventFxTimer=null;
+function sceneFxIfNew(){
+ if(!g||!g.lastDiscovery||g.lastDiscovery.kind!=='scene'||g.lastDiscovery.serial===lastSceneSerial)return false;
+ const d=g.lastDiscovery;lastSceneSerial=d.serial;
+ // Other detectives' private findings must not be disclosed.
+ const investigator=g.players[d.playerId];
+ if(!investigator||investigator.bot||investigator.id!==memoViewerId)return false;
+ const isScene=g.players[d.playerId].notes.zones[d.zone]===true;
+ fxBusy=true;clearTimeout(botTimer);clearTimeout(fxTimer);
+ const c=$('fxCard');
+ c.innerHTML=`<div class="muted">MYSTERY TOWN · 現場検証</div><div class="art">${isScene?'🔎':'🚫'}</div><h2>${isScene?'現場を特定！':'現場検証の結果'}</h2><p style="font-weight:800;color:${isScene?'#ffe4a3':'#ffb6bd'};font-size:21px;line-height:1.7">${safe(d.zone)}は${isScene?'殺人現場だった！':'現場ではなかった'}</p>${d.timeResult?`<p style="color:#ffe4a3;font-weight:700">${safe(d.timeResult)}</p>`:''}`;
+ $('fxOverlay').classList.add('show');
+ fxTimer=setTimeout(()=>{$('fxOverlay').classList.remove('show');fxBusy=false;render();tickBots()},Math.max(1600,2500*gameSettings.fxSpeed));
+ return true;
+}
 function eventFxIfNew(){if(!g||!g.lastEvent||g.lastEvent.serial===lastEventSerial)return false;
  const ev=g.lastEvent;lastEventSerial=ev.serial;if(g.players[ev.playerId]?.bot)return false;const [symbol,title,detail]=EVENT_CATALOG[ev.id]||['❓','謎のイベント','何かが起きた！'];
  fxBusy=true;clearTimeout(botTimer);clearTimeout(eventFxTimer);
@@ -922,4 +1004,15 @@ function beginFromTitle(){if(g&&g.phase!=='finished'&&!$('titleScreen').classLis
 function returnToTitle(){cancelOpening();fxBusy=false;clearTimeout(botTimer);if(g&&g.phase!=='finished'&&!confirm('タイトルに戻りますか？ 現在の事件の進行は保持されません。'))return;g=null;gateUnlocked=false;lastHumanKey=null;$('privacyGate').style.display='none';$('titleScreen').classList.remove('hidden')}
 function initTitle(){syncSettings();settingsTab('basic');$('titleScreen').classList.remove('hidden')}
 initTitle();
-</script><div id="eventCurtain" role="alert" aria-live="assertive"></div><div id="activityFeed" role="status" aria-live="polite"></div><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.1/three.min.js"></script><script src="world3d.js"></script></body></html>
+</script><div id="eventCurtain" role="alert" aria-live="assertive"></div><div id="activityFeed" role="status" aria-live="polite"></div><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.1/three.min.js"></script><script src="world3d.js"></script><div id="memoZoom" class="memoZoomOverlay" role="dialog" aria-modal="true" aria-label="探偵メモ拡大表示" hidden><div class="memoZoomPanel"><div class="memoZoomHead"><h2>📒 探偵メモ（拡大表示）</h2><button type="button" onclick="closeMemoZoom()">✕ 閉じる</button></div><div id="memoZoomOwner"></div><div id="memoZoomBody"></div></div></div><style>
+.memoExpandBtn{float:right;font-size:13px;padding:5px 10px;border:1px solid #d9b56c;border-radius:8px;background:#25314b;color:#ffe2a6;cursor:pointer}
+.memoZoomOverlay[hidden]{display:none!important}.memoZoomOverlay{position:fixed;inset:0;z-index:99999;background:rgba(5,9,25,.88);display:flex;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(8px)}
+.memoZoomPanel{width:min(1000px,96vw);max-height:90vh;overflow:auto;background:linear-gradient(135deg,#1a2942,#101626);border:2px solid #d7b56b;box-shadow:0 18px 65px #000b;border-radius:16px;padding:20px;color:#f7ebce}
+.memoZoomHead{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid #9c814e;padding-bottom:12px;margin-bottom:15px}
+.memoZoomHead button{background:#533348;border:1px solid #e2b77a;border-radius:8px;padding:9px 16px;color:white;cursor:pointer}
+#memoZoomBody{font-size:1.15rem;line-height:1.8}#memoZoomBody table{width:100%}#memoZoomBody td{padding:12px;border-bottom:1px solid #64738b}#memoZoomBody .panel{background:#24314b;border:1px solid #6f7b93}
+</style><script>
+function openMemoZoom(){const gate=document.getElementById('privacyGate');if(typeof g==='undefined'||!g||gate&&getComputedStyle(gate).display!=='none'){return alert('交代確認後に探偵メモを開けます')}const overlay=document.getElementById('memoZoom');document.getElementById('memoZoomOwner').textContent=document.getElementById('viewer').textContent;document.getElementById('memoZoomBody').innerHTML=document.getElementById('notes').innerHTML;overlay.hidden=false}
+function closeMemoZoom(){document.getElementById('memoZoom').hidden=true}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMemoZoom()});
+</script></body></html>
