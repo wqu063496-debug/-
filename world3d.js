@@ -4,7 +4,7 @@
 'use strict';
 if(!window.THREE){console.warn('Three.js CDN unavailable: using 2D fallback');return;}
 const $3=id=>document.getElementById(id);
-let scene,camera,renderer,world,raycaster,mouse,canvas,liveGame=null,oldBoard=null,oldRoads=null,positions=[],stations=[],pawnMeshes=[],pickables=[],reachRings=[],reachCache="",destinationMarker=null,thiefPawn=null,angle=.72,elevation=.78,distance=46,drag=null,ready=false,frame=0;
+let scene,camera,renderer,world,raycaster,mouse,canvas,liveGame=null,oldBoard=null,oldRoads=null,positions=[],stations=[],pawnMeshes=[],pickables=[],reachRings=[],reachCache="",destinationMarker=null,thiefPawn=null,angle=.72,elevation=.78,distance=46,drag=null,ready=false,frame=0,lastFrame=0,needsFrame=true,lastHoverId=null;
 const TILE_NAMES={normal:'通常マス',evidence:'証拠品ショップ',event:'イベントマス',scene:'現場検証マス',interview:'聞き込みマス',coin:'コインマス',card:'探偵カードショップ',buzzer:'ブザーマス',informant:'情報屋マス'};
 const ICONS={normal:'•',evidence:'🔎',event:'❗',scene:'🔬',interview:'💬',coin:'🪙',card:'🃏',buzzer:'🚨',informant:'🕵'};
 const C={normal:0xc9b99c,evidence:0x22c7b6,event:0xa75aff,scene:0xff754c,interview:0x438dff,coin:0xffc329,card:0x54c64b,buzzer:0xff244e,informant:0x19d7ed};
@@ -18,15 +18,19 @@ function cone(r,h,m,x,y,z,parent){return mesh(new THREE.ConeGeometry(r,h,5),m,x,
 function seeded(i){const v=Math.sin(i*98.371+4.77)*43758.545;return v-Math.floor(v)}
 function init(){if(!window.THREE)return false;const shell=$3('cityCanvas')?.parentElement;if(!shell)return false;
  canvas=document.createElement('div');canvas.id='world3d';canvas.title='3Dフィールド：ドラッグで回転・ホイールで拡大・マスをタップして移動';shell.appendChild(canvas);
+ const tip=document.createElement('div');tip.id='tileCursorTooltip';tip.setAttribute('role','tooltip');tip.style.cssText='position:fixed;z-index:10000;pointer-events:none;display:none;max-width:270px;padding:9px 12px;border-radius:9px;background:rgba(13,24,44,.96);color:#ffe6b3;border:1px solid #c9a76b;box-shadow:0 6px 25px #0009;font:600 13px/1.55 sans-serif;white-space:pre-line';document.body.appendChild(tip);
  scene=new THREE.Scene();scene.background=new THREE.Color(0x0c1533);scene.fog=new THREE.FogExp2(0x0c1533,.009);
- camera=new THREE.PerspectiveCamera(48,1,.1,220);renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.35;canvas.appendChild(renderer.domElement);if(typeof applyMapMode==='function')applyMapMode();
- scene.add(new THREE.HemisphereLight(0x93b9ff,0x1c251c,2.0));const moon=new THREE.DirectionalLight(0xc9dcff,2.6);moon.position.set(-13,28,12);moon.castShadow=true;moon.shadow.mapSize.set(2048,2048);moon.shadow.camera.left=-30;moon.shadow.camera.right=30;moon.shadow.camera.top=30;moon.shadow.camera.bottom=-30;scene.add(moon);
+ camera=new THREE.PerspectiveCamera(48,1,.1,220);renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.25));renderer.shadowMap.enabled=false;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.35;canvas.appendChild(renderer.domElement);if(typeof applyMapMode==='function')applyMapMode();
+ scene.add(new THREE.HemisphereLight(0x93b9ff,0x1c251c,2.0));const moon=new THREE.DirectionalLight(0xc9dcff,2.6);moon.position.set(-13,28,12);moon.castShadow=false;moon.shadow.mapSize.set(512,512);moon.shadow.camera.left=-30;moon.shadow.camera.right=30;moon.shadow.camera.top=30;moon.shadow.camera.bottom=-30;scene.add(moon);
  const warm=new THREE.PointLight(0xffb35d,55,30);warm.position.set(0,9,0);scene.add(warm);
  raycaster=new THREE.Raycaster();mouse=new THREE.Vector2();
  const dom=renderer.domElement;dom.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,px:e.clientX,py:e.clientY,moved:false};dom.setPointerCapture(e.pointerId)});
- dom.addEventListener('pointermove',e=>{if(drag){const dx=e.clientX-drag.px,dy=e.clientY-drag.py;drag.px=e.clientX;drag.py=e.clientY;if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>6)drag.moved=true;if(drag.moved){angle-=dx*.009;elevation=Math.max(.25,Math.min(1.47,elevation+dy*.006));updateCamera();}}else{const id=pick(e);if(id!==null&&liveGame){const t=liveGame.board[id];{const can=reachableIds().has(id);$3('gridHover').textContent=`${id+1}番マス｜${TILE_NAMES[t.type]||t.type}｜${t.zone}${can?'｜🔴 移動可能':''}`;dom.style.cursor=can?'pointer':'grab'}}}});
- dom.addEventListener('pointerleave',()=>{if(!drag){$3('gridHover').textContent='マスにカーソルを合わせると詳細を表示';dom.style.cursor='grab'}});
- dom.addEventListener('pointerup',e=>{if(drag&&!drag.moved){const id=pick(e);if(id!==null&&liveGame){if(typeof g!=='undefined'&&g.phase==='choice'&&!E.current(g).bot&&!fxBusy&&gateUnlocked){if(E.reachable(g,E.current(g).pos,g.roll).includes(id))moveAnimated(id);else showToast('出目の歩数で到達できません')}}}drag=null});
+ const tipEl=()=>document.getElementById('tileCursorTooltip');
+ const tileDescriptions={normal:'特別な効果はありません',evidence:'証拠品を購入できます',event:'ランダムイベントが発生します',scene:'殺人現場を検証します',interview:'聞き込みで手掛かりを入手します',coin:'コインを獲得します',card:'探偵カードを購入できます',buzzer:'指定の証拠品を持って通るとブザーが鳴ります',informant:'コインを支払って情報を入手します'};
+ const hideTip=()=>{const t=tipEl();if(t)t.style.display='none';lastHoverId=null};
+ dom.addEventListener('pointermove',e=>{if(drag){hideTip();const dx=e.clientX-drag.px,dy=e.clientY-drag.py;drag.px=e.clientX;drag.py=e.clientY;if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>6)drag.moved=true;if(drag.moved){angle-=dx*.009;elevation=Math.max(.25,Math.min(1.47,elevation+dy*.006));updateCamera();needsFrame=true;}}else{const id=pick(e),tip=tipEl();if(id!==null&&liveGame&&liveGame.board[id]){const t=liveGame.board[id],can=reachableIds().has(id);if(lastHoverId!==id){tip.textContent=`${id+1}番｜${TILE_NAMES[t.type]||t.type}｜${t.zone}\n${tileDescriptions[t.type]||''}${can?'\n🔴 移動可能':''}`;lastHoverId=id;}tip.style.display='block';tip.style.left=Math.min(e.clientX+16,window.innerWidth-tip.offsetWidth-8)+'px';tip.style.top=Math.min(e.clientY+18,window.innerHeight-tip.offsetHeight-8)+'px';dom.style.cursor=can?'pointer':'grab';}else{hideTip();dom.style.cursor='grab'}}});
+ dom.addEventListener('pointerleave',()=>{if(!drag){hideTip();dom.style.cursor='grab'}});
+ dom.addEventListener('pointerup',e=>{if(drag&&!drag.moved){const id=pick(e);if(id!==null&&liveGame){if(typeof g!=='undefined'&&g.phase==='choice'&&!E.current(g).bot&&!fxBusy&&gateUnlocked){if(E.reachable(g,E.current(g).pos,g.roll).includes(id))moveAnimated(id);else showToast('出目の歩数で到達できません')}}}drag=null;hideTip();needsFrame=true});
  dom.addEventListener('wheel',e=>{e.preventDefault();distance=Math.max(7,Math.min(90,distance+Math.sign(e.deltaY)*2));updateCamera()},{passive:false});
  window.addEventListener('resize',resize);window.MysteryTown3DZoom=function(delta){distance=Math.max(7,Math.min(90,distance+delta));updateCamera();};resize();updateCamera();ready=true;if(typeof applyMapMode==='function')applyMapMode();requestAnimationFrame(animate);return true;
 }
@@ -222,7 +226,11 @@ function sync(){if(!ready||typeof g==='undefined'||!g)return;if(g!==liveGame||g.
  updatePawns(g)}
  syncReachable();
 }
-function animate(){requestAnimationFrame(animate);if(!ready)return;if(++frame%5===0)sync();renderer.render(scene,camera)}
+function animate(now){requestAnimationFrame(animate);if(!ready)return;
+ // Limit 3D to 30 FPS; pause entirely when the page or 3D view is hidden.
+ if(document.hidden||!canvas||getComputedStyle(canvas).display==='none'||!canvas.getClientRects().length)return;
+ if(now-lastFrame<33)return;lastFrame=now;
+ if(++frame%3===0)sync();renderer.render(scene,camera)}
 function controls(){const oldOrbit=window.orbitCamera;window.orbitCamera=(dy,dp)=>{angle+=dy*Math.PI/180;elevation=Math.max(.25,Math.min(1.47,elevation+dp*Math.PI/180));updateCamera()};window.resetOrbit=()=>{angle=.72;elevation=.78;distance=46;updateCamera()};const oldDraw=window.drawCity;window.drawCity=function(...args){if(typeof oldDraw==='function')oldDraw(...args);sync()};}
 window.addEventListener('DOMContentLoaded',()=>{try{if(init())controls();else console.warn('Three.js unavailable; using the original playable Canvas map')}catch(err){console.error('3D initialization failed, Canvas fallback active',err);canvas?.remove()}});
 })();
